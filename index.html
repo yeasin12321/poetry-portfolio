@@ -3,291 +3,318 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Yeasin Kabir | Portfolio</title>
+    <title>Yeasin Kabir | The Developer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Orbitron:wght@500;700&display=swap');
 
-        /* === বেসিক স্টাইল === */
+        :root {
+            --primary: #00ffcc;
+            --secondary: #ff0055;
+            --bg: #050505;
+        }
+
+        /* === BASIC SETUP === */
+        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+        
         body {
-            background-color: #050505;
+            background-color: var(--bg);
             color: #e0e0e0;
             font-family: 'Hind Siliguri', sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
+            margin: 0; padding: 0;
+            display: flex; justify-content: center;
             min-height: 100vh;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
+            user-select: none; overflow-x: hidden;
         }
 
+        /* Animated Background */
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 10% 20%, rgba(255, 0, 85, 0.2) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, rgba(0, 255, 204, 0.2) 0%, transparent 40%);
+            z-index: -2; animation: moveBg 10s infinite alternate;
+        }
+        @keyframes moveBg { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
+
+        /* === PRELOADER === */
+        #preloader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 9999;
+            display: flex; justify-content: center; align-items: center; flex-direction: column;
+            color: var(--primary); font-family: 'Orbitron', sans-serif;
+        }
+        .progress-bar { width: 200px; height: 2px; background: #333; margin-top: 10px; }
+        .progress { width: 0%; height: 100%; background: var(--primary); animation: load 2s ease-out forwards; }
+        @keyframes load { 100% { width: 100%; } }
+
+        /* === MUSIC BUTTON === */
+        .music-btn {
+            position: fixed; bottom: 20px; right: 20px;
+            width: 50px; height: 50px;
+            background: rgba(0,0,0,0.8);
+            border: 2px solid var(--secondary);
+            border-radius: 50%; color: var(--secondary);
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer; z-index: 1000;
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.4);
+            transition: 0.3s;
+        }
+        .music-btn.playing { border-color: var(--primary); color: var(--primary); animation: spin 4s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* === APP CONTAINER === */
         #app-container {
-            width: 100%;
-            max-width: 500px;
-            background: #111;
-            min-height: 100vh;
-            position: relative;
-            box-shadow: 0 0 50px rgba(0, 255, 204, 0.1);
-            overflow-x: hidden;
-            padding-bottom: 50px;
+            width: 100%; max-width: 500px;
+            background: rgba(10, 10, 10, 0.6);
+            backdrop-filter: blur(20px);
+            min-height: 100vh; position: relative;
+            box-shadow: 0 0 80px rgba(0,0,0,0.8);
+            border-left: 1px solid rgba(255,255,255,0.05);
+            border-right: 1px solid rgba(255,255,255,0.05);
         }
 
-        /* RGB Light */
-        .rgb-corner {
-            position: fixed;
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            filter: blur(80px);
-            z-index: 1;
-            opacity: 0.5;
-            pointer-events: none;
-        }
-        .tl { top: -50px; left: -50px; background: #ff0055; }
-        .tr { top: -50px; right: -50px; background: #00ffcc; }
-        .bl { bottom: -50px; left: -50px; background: #cc00ff; }
-        .br { bottom: -50px; right: -50px; background: #ffff00; }
-
-        /* Profile */
+        /* === PROFILE === */
         .profile-header {
-            text-align: center;
-            padding: 40px 20px 20px 20px;
-            background: linear-gradient(180deg, rgba(0,255,204,0.1) 0%, rgba(0,0,0,0) 100%);
-            border-bottom: 1px solid #333;
+            text-align: center; padding: 50px 20px 30px 20px;
+            background: linear-gradient(180deg, rgba(0,255,204,0.05) 0%, transparent 100%);
         }
-        
         .avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 3px solid #00ffcc;
-            margin: 0 auto 15px;
-            object-fit: cover;
-            display: block;
-            box-shadow: 0 0 20px rgba(0, 255, 204, 0.3);
-            background-color: #222;
+            width: 120px; height: 120px; border-radius: 50%;
+            border: 3px solid var(--primary); margin: 0 auto 15px;
+            object-fit: cover; box-shadow: 0 0 20px rgba(0,255,204,0.3);
         }
-
-        h1 { margin: 0; color: #fff; font-size: 1.8rem; }
-        .designation { color: #00ffcc; font-size: 0.9rem; letter-spacing: 2px; margin-top: 5px; display: block; }
-        .location { color: #666; font-size: 0.8rem; margin-top: 5px; display: block; }
-
-        /* Social Buttons */
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
+        h1 {
+            margin: 0; font-size: 2.2rem;
+            background: linear-gradient(to right, #fff, #aaa);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-family: 'Orbitron', sans-serif;
         }
+        .typing-text { color: var(--primary); font-size: 0.9rem; letter-spacing: 2px; height: 20px; font-weight: bold; margin-top: 5px;}
+        
+        .social-links { display: flex; justify-content: center; gap: 15px; margin-top: 25px; }
         .social-btn {
-            text-decoration: none;
-            padding: 8px 20px;
-            border-radius: 25px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+            width: 40px; height: 40px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            background: rgba(255,255,255,0.05); color: #fff; text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.1); transition: 0.3s;
         }
-        .whatsapp { background: rgba(37, 211, 102, 0.1); color: #25D366; border: 1px solid #25D366; }
-        .whatsapp:hover { background: #25D366; color: #fff; box-shadow: 0 0 15px rgba(37, 211, 102, 0.4); }
-        .facebook { background: rgba(24, 119, 242, 0.1); color: #1877F2; border: 1px solid #1877F2; }
-        .facebook:hover { background: #1877F2; color: #fff; box-shadow: 0 0 15px rgba(24, 119, 242, 0.4); }
+        .social-btn:hover { background: var(--primary); color: #000; transform: translateY(-3px); }
 
-        /* Poem List */
-        .list-container { padding: 20px; z-index: 10; position: relative; }
-        .section-title { color: #888; font-size: 0.9rem; margin-bottom: 15px; border-left: 3px solid #00ffcc; padding-left: 10px; }
-
+        /* === LIST === */
+        .list-container { padding: 25px; }
+        .section-title { color: #888; font-size: 0.8rem; margin-bottom: 15px; letter-spacing: 2px; border-bottom: 1px solid #333; }
+        
         .poem-btn {
-            background: #1a1a1a;
-            color: #ddd;
-            width: 100%;
-            padding: 15px;
-            margin-bottom: 12px;
-            border: 1px solid #333;
-            border-radius: 10px;
-            text-align: left;
-            font-family: 'Hind Siliguri', sans-serif;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            background: linear-gradient(90deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+            padding: 18px; margin-bottom: 15px;
+            border-left: 3px solid #333; border-radius: 0 10px 10px 0;
+            cursor: pointer; transition: 0.4s;
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 1.15rem; color: #ddd;
         }
-        .poem-btn:hover { background: #222; border-color: #00ffcc; transform: translateX(5px); }
-        .poem-btn::after { content: '➔'; color: #555; font-size: 0.9rem; }
-        .poem-btn:hover::after { color: #00ffcc; }
+        .poem-btn:hover { border-left-color: var(--primary); padding-left: 25px; color: #fff; background: rgba(255,255,255,0.05); }
 
-        .video-menu-btn {
-            background: linear-gradient(45deg, #1a1a1a, #2a0011);
-            border: 1px solid #ff0055;
-            color: #ff0055;
-            font-weight: bold;
-        }
-        .video-menu-btn:hover { background: #ff0055; color: #fff; }
-        .video-menu-btn::after { content: '🎥'; color: #ff0055; }
+        .video-menu-btn { border-left-color: var(--secondary); background: linear-gradient(90deg, rgba(255,0,85,0.1) 0%, transparent 100%); }
+        .video-menu-btn:hover { border-left-color: #fff; background: var(--secondary); }
 
-        /* Views */
+        /* === VIEWS === */
         .full-view {
-            display: none;
-            position: absolute;
-            top: 0; left: 0; width: 100%; min-height: 100vh;
-            background: #0d0d0d;
-            z-index: 100;
-            padding: 20px;
-            box-sizing: border-box;
-            animation: slideIn 0.3s ease-out;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 500; padding: 20px; overflow-y: auto;
+            animation: slideUp 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
         .back-btn {
-            background: transparent;
-            border: none;
-            color: #00ffcc;
-            font-size: 1rem;
-            cursor: pointer;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 10px 0;
-            font-family: 'Hind Siliguri', sans-serif;
-            font-weight: bold;
+            background: transparent; border: none; color: var(--primary);
+            font-size: 1.1rem; cursor: pointer; margin-bottom: 20px;
+            display: flex; align-items: center; gap: 8px; font-weight: bold;
         }
         
-        #poem-title-display { color: #00ffcc; font-size: 1.8rem; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        #poem-content-display { font-size: 1.25rem; line-height: 1.9; white-space: pre-line; color: #ccc; margin-top: 20px; padding-bottom: 20px;}
-
-        /* === INTERACTION BAR === */
-        .action-bar {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            border-top: 1px solid #333;
-            padding-top: 20px;
-            margin-top: 30px;
-            margin-bottom: 40px;
+        #poem-title-display {
+            font-size: 2.5rem; background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px;
         }
-        .action-btn {
-            background: transparent;
-            border: none;
-            color: #888;
-            font-size: 1.5rem;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-            transition: 0.2s;
-            width: 80px;
-        }
-        .count-text { font-size: 0.9rem; font-family: sans-serif; color: #aaa; font-weight: bold; }
-        .liked { color: #ff0055; animation: pop 0.3s ease; }
-        .liked .count-text { color: #ff0055; }
-        @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.4); } 100% { transform: scale(1); } }
+        #poem-content-display { font-size: 1.3rem; line-height: 2; color: #ccc; padding-bottom: 50px; }
 
-        /* Updated Video Styles */
+        /* === STATS === */
+        .action-bar { display: flex; justify-content: space-around; border-top: 1px solid #222; margin-top: 30px; padding-top: 20px; }
+        .action-btn { background: transparent; border: none; color: #666; font-size: 1.4rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .count-text { font-size: 0.8rem; font-weight: bold; }
+        .liked { color: var(--secondary); }
+        .liked .count-text { color: var(--secondary); }
+
+        /* === VIDEO === */
         .video-container {
-            margin-bottom: 40px;
-            background: #000;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid #333;
-            display: flex;
-            justify-content: center;
-            padding: 5px;
+            margin-bottom: 30px; border-radius: 12px; overflow: hidden;
+            border: 1px solid #333; background: #000; display: flex; justify-content: center;
         }
-        /* Make sure iframes are responsive */
-        .video-container iframe {
-            max-width: 100%;
+        iframe { max-width: 100%; }
+        
+        /* HIDDEN PLAYER STYLES (OPACITY 0 for Mobile Compat) */
+        #youtube-audio {
+            position: absolute; top: -9999px; left: -9999px; 
+            width: 1px; height: 1px; opacity: 0; pointer-events: none;
         }
 
-        .footer { text-align: center; font-size: 0.7rem; color: #444; margin-top: 30px; }
+        .footer { text-align: center; color: #444; font-size: 0.7rem; margin-top: 40px; letter-spacing: 2px; }
     </style>
 </head>
 <body>
 
-    <div class="rgb-corner tl"></div>
-    <div class="rgb-corner tr"></div>
-    <div class="rgb-corner bl"></div>
-    <div class="rgb-corner br"></div>
+    <div id="preloader">
+        <div style="font-size: 3rem;">YK</div>
+        <div class="progress-bar"><div class="progress"></div></div>
+        <div style="margin-top:10px; letter-spacing:2px;">INITIALIZING...</div>
+    </div>
+
+    <div id="youtube-audio"></div>
+
+    <div class="music-btn" onclick="toggleYouTubeMusic()">
+        <i class="fas fa-play" id="music-icon"></i>
+    </div>
 
     <div id="app-container">
-        
         <div id="home-view">
             <div class="profile-header">
-                <img src="profile.jpg" class="avatar" alt="Yeasin Kabir">
+                <img src="profile.jpg" class="avatar" alt="YK">
                 <h1>Yeasin Kabir</h1>
-                <span class="designation">&lt; DEVELOPER /&gt;</span>
-                <span class="location">Satkhira, Bangladesh</span>
+                <span class="typing-text" id="typewriter"></span>
+                <span style="display:block; color:#666; font-size:0.8rem; margin-top:5px;">Satkhira, Bangladesh</span>
+                
                 <div class="social-links">
-                    <a href="https://wa.me/8801851715713" class="social-btn whatsapp" target="_blank">WhatsApp</a>
-                    <a href="https://www.facebook.com/share/14LP9NJQ2KQ/" class="social-btn facebook" target="_blank">Facebook</a>
+                    <a href="https://wa.me/8801851715713" class="social-btn" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.facebook.com/share/14LP9NJQ2KQ/" class="social-btn" target="_blank"><i class="fab fa-facebook-f"></i></a>
                 </div>
             </div>
 
             <div class="list-container">
-                <div class="section-title">মেনু</div>
+                <div class="section-title">Media</div>
                 <div class="poem-btn video-menu-btn" onclick="openVideoGallery()">
-                    🎥 আমার ভিডিও গ্যালারি
+                    <span>🎥 ভিডিও গ্যালারি</span> <i class="fas fa-chevron-right"></i>
                 </div>
-                <div class="section-title" style="margin-top: 20px;">আমার কবিতাসমূহ</div>
+
+                <div class="section-title" style="margin-top: 25px;">Poetry</div>
                 <div id="buttons-list"></div>
-                <div class="footer">&copy; 2026 Yeasin Kabir</div>
+                <div class="footer">DESIGNED BY YEASIN KABIR &copy; 2026</div>
             </div>
         </div>
 
         <div id="reader-view" class="full-view">
-            <button class="back-btn" onclick="goBack()">← ফিরে যান</button>
-            <h2 id="poem-title-display">কবিতার নাম</h2>
-            <div id="poem-content-display">কবিতার লাইন...</div>
+            <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK</button>
+            <h2 id="poem-title-display">Title</h2>
+            <div id="poem-content-display">Content</div>
             
             <div class="action-bar">
                 <button class="action-btn" id="like-btn" onclick="handleLike()">
-                    <i id="like-icon">♡</i>
+                    <i id="like-icon" class="far fa-heart"></i>
                     <span id="like-count" class="count-text">--</span>
                 </button>
                 <button class="action-btn" onclick="handleComment()">
-                    <i>💬</i>
+                    <i class="far fa-comment"></i>
                     <span id="comment-count" class="count-text">--</span>
                 </button>
                 <button class="action-btn" onclick="handleShare()">
-                    <i>🔗</i>
+                    <i class="fas fa-share-alt"></i>
                     <span id="share-count" class="count-text">--</span>
                 </button>
             </div>
         </div>
 
         <div id="video-view" class="full-view">
-            <button class="back-btn" onclick="goBack()">← ফিরে যান</button>
-            <h2 style="color: #ff0055; border-bottom: 1px solid #333; padding-bottom: 10px;">ভিডিও গ্যালারি</h2>
+            <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK</button>
+            <h2 style="color: var(--secondary); border-bottom: 1px solid #333; padding-bottom: 10px;">ভিডিও গ্যালারি</h2>
             
             <div class="video-container">
                 <iframe src="https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F638665279178407%2F&show_text=true&width=560&t=0" width="560" height="429" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
             </div>
-
             <div class="video-container">
                 <iframe src="https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1237556408133054%2F&show_text=true&width=560&t=0" width="560" height="429" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
             </div>
-
             <div class="video-container">
                 <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F24799104436398615%2F&show_text=true&width=267&t=0" width="267" height="591" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
             </div>
-
             <div class="video-container">
                 <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F774608981691534%2F&show_text=true&width=267&t=0" width="267" height="591" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
             </div>
-
             <div class="video-container">
                 <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1993816241440381%2F&show_text=true&width=267&t=0" width="267" height="591" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
             </div>
-            
         </div>
     </div>
 
+    <script src="https://www.youtube.com/iframe_api"></script>
+
     <script>
+        // === LOGIC START ===
+        
+        // 1. Preloader
+        window.onload = () => setTimeout(() => document.getElementById('preloader').style.display = 'none', 2000);
+
+        // 2. YouTube Music (Fixed for Mobile & PC)
+        var player, isPlaying = false;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-audio', {
+                height: '1', 
+                width: '1', 
+                videoId: 'pDnlgHylz_g', // Sanson Ki Mala Pe
+                playerVars: { 
+                    'autoplay': 0, 
+                    'loop': 1, 
+                    'playlist': 'pDnlgHylz_g', 
+                    'controls': 0,
+                    'origin': window.location.origin // Security Fix
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange,
+                    'onError': onPlayerError
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            console.log("Music Player Ready!");
+        }
+
+        function onPlayerStateChange(event) {
+            // Optional: You can add logic here if needed
+        }
+
+        function onPlayerError(event) {
+            console.error("YouTube Error:", event.data);
+            alert("Music Error! Please check internet or open file via a local server.");
+        }
+
+        function toggleYouTubeMusic() {
+            var btn = document.querySelector('.music-btn');
+            var icon = document.getElementById('music-icon');
+            
+            if(isPlaying) { 
+                player.pauseVideo(); 
+                btn.classList.remove('playing'); 
+                icon.className='fas fa-play'; 
+            } else { 
+                player.playVideo(); 
+                btn.classList.add('playing'); 
+                icon.className='fas fa-pause'; 
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // 3. Typing Effect
+        const words = ["< DEVELOPER />", "< WRITER />", "< DREAMER />"];
+        let i = 0, j = 0, isDeleting = false;
+        function type() {
+            const current = words[i];
+            document.getElementById('typewriter').textContent = isDeleting ? current.substring(0, j--) : current.substring(0, j++);
+            if (!isDeleting && j === current.length + 1) { isDeleting = true; setTimeout(type, 2000); }
+            else if (isDeleting && j === 0) { isDeleting = false; i = (i + 1) % words.length; setTimeout(type, 500); }
+            else { setTimeout(type, isDeleting ? 50 : 100); }
+        }
+        type();
+
+        // 4. Content Data
         const allPoems = [
             { title: "হযবরল", text: `চোখে চোখ পড়ে গেলেই বিস্ফোরণ,\nনিয়ন্ত্রণের বাইরে চলে যায় শিহরণ\nআর ব্যারিকেড ভেঙ্গে প্রেম\nছুটে যায় অসীমে।\nএকদিকে অঙ্কের খাতায়\nপ্রমানিত হয় সমস্ত সূত্র ভুল,\nঅন্যদিকে কবিতার পাতায়\nশব্দগুলো অস্থির হয়ে ওঠে\nবুকের ধুকপুকানি শোনার জন্যে।\nএকনিমেষে মন\nবারনের সব সংজ্ঞা ভুলে থমকে দাঁড়ায়,\nবোধহয় মতন সে\nআবেগ ঢালতে থাকে কারোর নামে।\nগোটা বিশ্বব্রহ্মাণ্ড জুড়ে\nযেন শোরগোল পড়ে যায়,\nসেই চেনা ঠিকানায় -\nআমি আবার ফিরবো বলে॥` },
             { title: "তাকে আমি পাইনি", text: `যে গান শুনতে সে ভালোবাসে,\nসেই গান আমি শুনেছি অজস্রবার।\nযে ঘরে তার আড্ডা হাসির\nমুহূর্তগুলো রয়ে গেছে,\nসেই ঘরেরই দেওয়ালে আমি\nতার নাম লিখে রেখেছি।\nযে ঘাসে আনমনে আঙুল বুলিয়ে\nসে স্বপ্ন বোনে নিজের জন্য,\nসেই ঘাস ছুঁয়ে আমি তার উপস্থিতি\nখুঁজেছি হন্য হয়ে।\nযে পথ দিয়ে তার প্রতিদিন আসা-যাওয়া,\nসেই পথ ধরে আমি হেঁটে গেছি উদ্দেশ্যহীনভাবে।\nতার প্রিয় ফুলের গাছ\nনিজের বাগানে লাগিয়েছি বড়ো যত্নে।\nতার অভ্যেস, বদঅভ্যেস সবটাই\nআপন করেছি তার ভাবনায়।\nযে দুঃখে সে রোজ তপ্ত হয়,\nসেই দুঃখের আগুনে পুড়ে\nআমি ছাই হয়েও দেখেছি।\nতবু তাকে আমি পাইনি॥` },
@@ -314,172 +341,105 @@
 পরের প্রতিটা জন্মেও সঙ্গে থেকে যাবে।\nঅথচ এই জন্মেই তার\nভালোবাসা বদলে গেছে।\nআমি ন্যূনতম আঘাত পেলে\nউৎকণ্ঠায় যার বুক ফেটে যেত,\nসে যাবার বেলায় সামান্য খেয়ালটুকু করেনি\nনিজেই কতখানি ক্ষতবিক্ষত\nকরেছে আমায়॥` }
         ];
 
-        // === SMART STATS (Persistent per User) ===
+        // 5. Smart Stats Logic (Persistent + Live)
         allPoems.forEach((poem, index) => {
-            let storedStats = localStorage.getItem(`poem_stats_${index}`);
-            if (storedStats) {
-                const stats = JSON.parse(storedStats);
-                poem.fakeLikes = stats.likes;
-                poem.fakeComments = stats.comments;
-                poem.fakeShares = stats.shares;
-            } else {
-                poem.fakeLikes = Math.floor(Math.random() * (2500 - 1000 + 1)) + 1000;
-                poem.fakeComments = Math.floor(Math.random() * (400 - 50 + 1)) + 50;
-                poem.fakeShares = Math.floor(Math.random() * (150 - 20 + 1)) + 20;
-
-                localStorage.setItem(`poem_stats_${index}`, JSON.stringify({
-                    likes: poem.fakeLikes,
-                    comments: poem.fakeComments,
-                    shares: poem.fakeShares
-                }));
+            let stats = localStorage.getItem(`p_${index}`);
+            if (stats) { Object.assign(poem, JSON.parse(stats)); } 
+            else {
+                poem.fakeLikes = Math.floor(Math.random()*1500)+1000;
+                poem.fakeComments = Math.floor(Math.random()*350)+50;
+                poem.fakeShares = Math.floor(Math.random()*130)+20;
+                localStorage.setItem(`p_${index}`, JSON.stringify({fakeLikes:poem.fakeLikes, fakeComments:poem.fakeComments, fakeShares:poem.fakeShares}));
             }
         });
+        
+        setInterval(() => {
+            allPoems.forEach((poem, index) => {
+                poem.fakeLikes++;
+                localStorage.setItem(`p_${index}`, JSON.stringify({fakeLikes:poem.fakeLikes, fakeComments:poem.fakeComments, fakeShares:poem.fakeShares}));
+            });
+            if(currentIndex !== -1) document.getElementById('like-count').innerText = (allPoems[currentIndex].fakeLikes + (localStorage.getItem(`l_${currentIndex}`)==='t'?1:0)).toLocaleString();
+        }, 60000); // Increases every minute
 
-        function formatCount(num) {
-            return num.toLocaleString();
-        }
-
+        // 6. Navigation & Render
         const listDiv = document.getElementById('buttons-list');
-        const homeView = document.getElementById('home-view');
-        const readerView = document.getElementById('reader-view');
-        const videoView = document.getElementById('video-view');
-        const poemTitle = document.getElementById('poem-title-display');
-        const poemContent = document.getElementById('poem-content-display');
-        
-        const likeBtn = document.getElementById('like-btn');
-        const likeIcon = document.getElementById('like-icon');
-        const likeCountDisplay = document.getElementById('like-count');
-        const commentCountDisplay = document.getElementById('comment-count');
-        const shareCountDisplay = document.getElementById('share-count');
-        
-        let currentPoemIndex = -1;
+        let currentIndex = -1;
 
         allPoems.forEach((poem, index) => {
             const btn = document.createElement('div');
             btn.className = 'poem-btn';
-            btn.innerText = poem.title;
+            btn.innerHTML = `<span>${poem.title}</span> <i class="fas fa-chevron-right"></i>`;
             btn.onclick = () => openPoem(index);
             listDiv.appendChild(btn);
         });
 
         function openPoem(index) {
-            currentPoemIndex = index;
-            const poem = allPoems[index];
-            poemTitle.innerText = poem.title;
-            poemContent.innerText = poem.text;
-            
-            likeCountDisplay.innerText = formatCount(poem.fakeLikes);
-            commentCountDisplay.innerText = formatCount(poem.fakeComments);
-            shareCountDisplay.innerText = formatCount(poem.fakeShares);
-
-            const isLiked = localStorage.getItem(`liked_${index}`);
-            if (isLiked === 'true') {
-                likeBtn.classList.add('liked');
-                likeIcon.innerText = '❤';
-                likeCountDisplay.innerText = formatCount(poem.fakeLikes + 1);
-            } else {
-                likeBtn.classList.remove('liked');
-                likeIcon.innerText = '♡';
-            }
-
-            history.pushState({ view: 'reader' }, null, '');
-            homeView.style.display = 'none';
-            readerView.style.display = 'block';
-            window.scrollTo(0,0);
+            currentIndex = index;
+            document.getElementById('poem-title-display').innerText = allPoems[index].title;
+            document.getElementById('poem-content-display').innerText = allPoems[index].text;
+            updateStatsUI(index);
+            switchView('reader-view');
         }
 
-        function openVideoGallery() {
-            history.pushState({ view: 'video' }, null, '');
-            homeView.style.display = 'none';
-            videoView.style.display = 'block';
-            window.scrollTo(0,0);
+        function updateStatsUI(index) {
+            const poem = allPoems[index];
+            const isLiked = localStorage.getItem(`l_${index}`) === 't';
+            
+            document.getElementById('like-count').innerText = (poem.fakeLikes + (isLiked?1:0)).toLocaleString();
+            document.getElementById('comment-count').innerText = poem.fakeComments.toLocaleString();
+            document.getElementById('share-count').innerText = poem.fakeShares.toLocaleString();
+            
+            const btn = document.getElementById('like-btn');
+            const icon = document.getElementById('like-icon');
+            if(isLiked) { btn.classList.add('liked'); icon.className='fas fa-heart'; }
+            else { btn.classList.remove('liked'); icon.className='far fa-heart'; }
         }
 
         function handleLike() {
-            if (currentPoemIndex === -1) return;
-            const isLiked = likeBtn.classList.contains('liked');
-            const baseLikes = allPoems[currentPoemIndex].fakeLikes;
-            
-            if (isLiked) {
-                likeBtn.classList.remove('liked');
-                likeIcon.innerText = '♡';
-                localStorage.setItem(`liked_${currentPoemIndex}`, 'false');
-                likeCountDisplay.innerText = formatCount(baseLikes);
-            } else {
-                likeBtn.classList.add('liked');
-                likeIcon.innerText = '❤';
-                localStorage.setItem(`liked_${currentPoemIndex}`, 'true');
-                likeCountDisplay.innerText = formatCount(baseLikes + 1);
-            }
+            if(currentIndex === -1) return;
+            const isLiked = localStorage.getItem(`l_${currentIndex}`) === 't';
+            localStorage.setItem(`l_${currentIndex}`, isLiked ? 'f' : 't');
+            updateStatsUI(currentIndex);
         }
 
         function handleComment() {
-            if (currentPoemIndex === -1) return;
-            const poemName = allPoems[currentPoemIndex].title;
-            const msg = `হাই ইয়াসিন, আমি তোমার "${poemName}" কবিতাটি পড়ে কিছু বলতে চাই: `;
-            const url = `https://wa.me/8801851715713?text=${encodeURIComponent(msg)}`;
-            window.open(url, '_blank');
+            if(currentIndex === -1) return;
+            window.open(`https://wa.me/8801851715713?text=Hi, loved your poem "${allPoems[currentIndex].title}"!`, '_blank');
         }
 
-        async function handleShare() {
-            if (currentPoemIndex === -1) return;
-            const poemName = allPoems[currentPoemIndex].title;
-            const poemText = allPoems[currentPoemIndex].text.substring(0, 50) + "...";
-            const shareData = {
-                title: poemName,
-                text: `${poemName} - ইয়াসিন কবিরের লেখা কবিতা।\n\n"${poemText}"\n\nপুরোটা পড়তে এখানে এসো:`,
-                url: window.location.href
-            };
-
-            try {
-                if (navigator.share) {
-                    await navigator.share(shareData);
-                } else {
-                    navigator.clipboard.writeText(window.location.href);
-                    alert('Link Copied to Clipboard!');
-                }
-            } catch (err) {
-                console.log('Error sharing:', err);
-            }
+        function handleShare() {
+            if(currentIndex === -1) return;
+            const text = `${allPoems[currentIndex].title}\n${allPoems[currentIndex].text.substring(0,50)}... Read more at: ${window.location.href}`;
+            if(navigator.share) navigator.share({title:'Poetry', text:text, url:window.location.href});
+            else { navigator.clipboard.writeText(window.location.href); alert('Link Copied!'); }
         }
 
-        window.onpopstate = function(event) {
-            if (!event.state) {
-                readerView.style.display = 'none';
-                videoView.style.display = 'none';
-                homeView.style.display = 'block';
-            }
+        function openVideoGallery() { switchView('video-view'); }
+        function goBack() { 
+            history.back(); 
+            // Fallback if no history
+            document.getElementById('reader-view').style.display = 'none';
+            document.getElementById('video-view').style.display = 'none';
+            document.getElementById('home-view').style.display = 'block';
+        }
+        
+        function switchView(viewId) {
+            history.pushState({view: viewId}, null, '');
+            document.getElementById('home-view').style.display = 'none';
+            document.getElementById(viewId).style.display = 'block';
+            window.scrollTo(0,0);
+        }
+
+        window.onpopstate = () => {
+            document.getElementById('reader-view').style.display = 'none';
+            document.getElementById('video-view').style.display = 'none';
+            document.getElementById('home-view').style.display = 'block';
         };
 
-        function goBack() { history.back(); }
-
+        // Security
         document.addEventListener('contextmenu', e => e.preventDefault());
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'PrintScreen') {
-                document.body.style.display = 'none';
-                alert("Screenshot Prohibited!");
-                setTimeout(() => document.body.style.display = 'flex', 500);
-                return false;
-            }
-        });
+        document.addEventListener('keydown', e => { if(e.key=='PrintScreen') { document.body.style.display='none'; alert('Protected!'); setTimeout(()=>document.body.style.display='flex',500); return false; } });
 
-        // === AUTO INCREMENT SYSTEM (প্রতি ১ মিনিটে বাড়বে) ===
-        setInterval(() => {
-            allPoems.forEach((poem, index) => {
-                poem.fakeLikes += 1;
-                let storedStats = JSON.parse(localStorage.getItem(`poem_stats_${index}`));
-                if(storedStats) {
-                   storedStats.likes = poem.fakeLikes;
-                   localStorage.setItem(`poem_stats_${index}`, JSON.stringify(storedStats));
-                }
-            });
-
-            if(currentPoemIndex !== -1) {
-                 const isLiked = localStorage.getItem(`liked_${currentPoemIndex}`) === 'true';
-                 const displayValue = isLiked ? allPoems[currentPoemIndex].fakeLikes + 1 : allPoems[currentPoemIndex].fakeLikes;
-                 likeCountDisplay.innerText = formatCount(displayValue);
-            }
-        }, 60000); 
     </script>
 </body>
 </html>
