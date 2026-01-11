@@ -23,7 +23,7 @@
         /* === মূল কন্টেইনার (মোবাইলের মতো লুক) === */
         #app-container {
             width: 100%;
-            max-width: 500px; /* মোবাইলের মতো সাইজ */
+            max-width: 500px;
             background: #111;
             min-height: 100vh;
             position: relative;
@@ -51,29 +51,64 @@
         /* === প্রোফাইল সেকশন === */
         .profile-header {
             text-align: center;
-            padding: 40px 20px;
+            padding: 40px 20px 20px 20px;
             background: linear-gradient(180deg, rgba(0,255,204,0.1) 0%, rgba(0,0,0,0) 100%);
             border-bottom: 1px solid #333;
         }
         
+        /* ছবির স্টাইল */
         .avatar {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
             border: 3px solid #00ffcc;
             margin: 0 auto 15px;
-            background: #222; /* এখানে তোমার ছবি দিতে পারো */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            color: #00ffcc;
+            object-fit: cover; /* ছবি চ্যাপ্টা হবে না */
+            display: block;
             box-shadow: 0 0 20px rgba(0, 255, 204, 0.3);
+            background-color: #222;
         }
 
         h1 { margin: 0; color: #fff; font-size: 1.8rem; }
         .designation { color: #00ffcc; font-size: 0.9rem; letter-spacing: 2px; margin-top: 5px; display: block; }
         .location { color: #666; font-size: 0.8rem; margin-top: 5px; display: block; }
+
+        /* === সোশ্যাল মিডিয়া বাটন === */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-btn {
+            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* হোয়াটসঅ্যাপ বাটন */
+        .whatsapp {
+            background: rgba(37, 211, 102, 0.1);
+            color: #25D366;
+            border: 1px solid #25D366;
+        }
+        .whatsapp:hover { background: #25D366; color: #fff; box-shadow: 0 0 15px rgba(37, 211, 102, 0.4); }
+
+        /* ফেসবুক বাটন */
+        .facebook {
+            background: rgba(24, 119, 242, 0.1);
+            color: #1877F2;
+            border: 1px solid #1877F2;
+        }
+        .facebook:hover { background: #1877F2; color: #fff; box-shadow: 0 0 15px rgba(24, 119, 242, 0.4); }
+
 
         /* === কবিতার লিস্ট === */
         .list-container {
@@ -113,7 +148,7 @@
 
         /* === কবিতা পড়ার ভিউ (Hidden by default) === */
         #reader-view {
-            display: none; /* শুরুতে লুকানো থাকবে */
+            display: none;
             position: absolute;
             top: 0; left: 0; width: 100%; min-height: 100vh;
             background: #0d0d0d;
@@ -139,11 +174,12 @@
             align-items: center;
             gap: 5px;
             padding: 10px 0;
+            font-family: 'Hind Siliguri', sans-serif;
+            font-weight: bold;
         }
-        .back-btn:hover { text-decoration: underline; }
-
-        #poem-title-display { color: #00ffcc; font-size: 2rem; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        #poem-content-display { font-size: 1.3rem; line-height: 1.9; white-space: pre-line; color: #ccc; margin-top: 20px; padding-bottom: 50px;}
+        
+        #poem-title-display { color: #00ffcc; font-size: 1.8rem; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        #poem-content-display { font-size: 1.25rem; line-height: 1.9; white-space: pre-line; color: #ccc; margin-top: 20px; padding-bottom: 50px;}
 
         /* কপিরাইট */
         .footer { text-align: center; font-size: 0.7rem; color: #444; margin-top: 30px; }
@@ -160,9 +196,20 @@
         
         <div id="home-view">
             <div class="profile-header">
-                <div class="avatar">YK</div> <h1>Yeasin Kabir</h1>
+                <img src="profile.jpg" class="avatar" alt="Yeasin Kabir">
+                
+                <h1>Yeasin Kabir</h1>
                 <span class="designation">&lt; DEVELOPER /&gt;</span>
                 <span class="location">Satkhira, Bangladesh</span>
+
+                <div class="social-links">
+                    <a href="https://wa.me/8801851715713" class="social-btn whatsapp" target="_blank">
+                        WhatsApp
+                    </a>
+                    <a href="https://www.facebook.com/share/14LP9NJQ2KQ/" class="social-btn facebook" target="_blank">
+                        Facebook
+                    </a>
+                </div>
             </div>
 
             <div class="list-container">
@@ -242,6 +289,122 @@
             },
             {
                 title: "অপূর্ণ পূর্ণতা",
+                text: "খামখেয়ালী আমরা দুজন\nনিখুঁত ভালোবাসায়,\nঅপূর্ণ পূর্ণতা বলে সেটাকে\nপ্রকাশ করলে ভাষায়।\nমিলনের অভিপ্রায়ে দুজনায়\nনেই হাজার ঝুঁকি,\nমনের ঠিকানায় পৌঁছাতে\nএসে দাঁড়াই মুখোমুখি।\nতখন সব ভাসিয়ে ইচ্ছেমতো\nআমরা আবেগ ঢালি,
+                তাও অবশেষে মনদুটো\nথেকে যায় খালি।\nকাছে গিয়েও কেন জানিনা আমি\nছুঁতে পারিনা তাকে,\nসেও যেন ব্যাকুল হয়ে আমায়\nকাছে পেতে ডাকে।\nএই গল্পে মিলন নেই ঠিকই\nতবে তাতে বিচ্ছেদও নেই লেখা,\nঅপূর্ণ পূর্ণতা অব্দিই টানা\nআমাদের ভালোবাসার সীমারেখা॥"
+            },
+            {
+                title: "যদি আমার হতে",
+                text: "যদি আমার হতে মন্দ হত না তবে,\nআমি করতাম না তোয়াক্কা দুনিয়াটার,\nশীত আর বসন্তের মাঝে পার্থক্যও করতাম না।\nভাঁড়ের চায়ে চুমুক দিয়ে\nবিষাদের পরিবর্তে ভালোবাসার স্বাদ নিতাম।\nঘাটে বসে সূর্যাস্ত দেখার\nভঙ্গিমাও অন্যরকম হত।\nমানুষের ভিড়ে হারিয়ে যেতাম না,\nনিজের একটা ছায়া আশ্রয় খুঁজতে\nরোজ বাড়ি ছেড়ে দূরে কোথাও পালিয়ে যেতাম না।\nএই মনের কোলাহলের থেকে মুক্তি পেতাম,\nচিরন্তন অপেক্ষাগুলোও বিদায় নিত।\nস্মৃতি জমানোর জন্য সুন্দর\nএকটা সংসার হত,\nঅন্তত পিছু ফিরে দেখতে হত না।\nহয়তো কবিতার বদলে\nকটা গল্প লিখতাম\nতুমি যদি আমার হতে॥"
+            },
+            {
+                title: "বদল",
+                text: "যার রাখার কথা ছিল আমার মন,\nসে আমায় মনেই রাখেনি।\nবেশ সুন্দর নতুনের মাঝে\nনিজেকে খাপ খাইয়ে নিয়েছে।\nঅন্য কোথাও, অন্য আড্ডায়\nসে যখন হেসে ওঠে,\nতখন স্পষ্ট বোঝা যায় -\nবদলেছে সময়, সে আর পাশের মানুষটা;\nবাকি তার হাসিটা কিন্তু একটুও বদলায়নি।\nপ্রতিশ্রুতি দিয়েছিল -\nপরের প্রতিটা জন্মেও সঙ্গে থেকে যাবে।\nঅথচ এই জন্মেই তার\nভালোবাসা বদলে গেছে।\nআমি ন্যূনতম আঘাত পেলে\nউৎকণ্ঠায় যার বুক ফেটে যেত,\nসে যাবার বেলায় সামান্য খেয়ালটুকু করেনি\nনিজেই কতখানি ক্ষতবিক্ষত\nকরেছে আমায়॥"
+            }
+        ];
+
+        // === লিস্ট তৈরি করা ===
+        const listDiv = document.getElementById('buttons-list');
+        const homeView = document.getElementById('home-view');
+        const readerView = document.getElementById('reader-view');
+        const poemTitle = document.getElementById('poem-title-display');
+        const poemContent = document.getElementById('poem-content-display');
+
+        allPoems.forEach((poem, index) => {
+            const btn = document.createElement('div');
+            btn.className = 'poem-btn';
+            btn.innerText = poem.title;
+            btn.onclick = () => openPoem(index);
+            listDiv.appendChild(btn);
+        });
+
+        function openPoem(index) {
+            const poem = allPoems[index];
+            poemTitle.innerText = poem.title;
+            poemContent.innerText = poem.text;
+            
+            homeView.style.display = 'none';
+            readerView.style.display = 'block';
+            window.scrollTo(0,0);
+        }
+
+        function goBack() {
+            readerView.style.display = 'none';
+            homeView.style.display = 'block';
+        }
+
+        // === সিকিউরিটি (স্ক্রিনশট অফ) ===
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'PrintScreen') {
+                document.body.style.display = 'none';
+                alert("Screenshot Prohibited!");
+                setTimeout(() => document.body.style.display = 'flex', 500);
+                return false;
+            }
+        });
+
+    </script>
+<script>
+        // === সব কবিতার ডাটাবেজ ===
+        const allPoems = [
+            {
+                title: "হযবরল",
+                text: "চোখে চোখ পড়ে গেলেই বিস্ফোরণ,\nনিয়ন্ত্রণের বাইরে চলে যায় শিহরণ\nআর ব্যারিকেড ভেঙ্গে প্রেম\nছুটে যায় অসীমে।\nএকদিকে অঙ্কের খাতায়\nপ্রমানিত হয় সমস্ত সূত্র ভুল,\nঅন্যদিকে কবিতার পাতায়\nশব্দগুলো অস্থির হয়ে ওঠে\nবুকের ধুকপুকানি শোনার জন্যে।\nএকনিমেষে মন\nবারনের সব সংজ্ঞা ভুলে থমকে দাঁড়ায়,\nবোধহয় মতন সে\nআবেগ ঢালতে থাকে কারোর নামে।\nগোটা বিশ্বব্রহ্মাণ্ড জুড়ে\nযেন শোরগোল পড়ে যায়,\nসেই চেনা ঠিকানায় -\nআমি আবার ফিরবো বলে॥"
+            },
+            {
+                title: "তাকে আমি পাইনি",
+                text: "যে গান শুনতে সে ভালোবাসে,\nসেই গান আমি শুনেছি অজস্রবার।\nযে ঘরে তার আড্ডা হাসির\nমুহূর্তগুলো রয়ে গেছে,\nসেই ঘরেরই দেওয়ালে আমি\nতার নাম লিখে রেখেছি।\nযে ঘাসে আনমনে আঙুল বুলিয়ে\nসে স্বপ্ন বোনে নিজের জন্য,\nসেই ঘাস ছুঁয়ে আমি তার উপস্থিতি\nখুঁজেছি হন্য হয়ে।\nযে পথ দিয়ে তার প্রতিদিন আসা-যাওয়া,\nসেই পথ ধরে আমি হেঁটে গেছি উদ্দেশ্যহীনভাবে।\nতার প্রিয় ফুলের গাছ\nনিজের বাগানে লাগিয়েছি বড়ো যত্নে।\nতার অভ্যেস, বদঅভ্যেস সবটাই\nআপন করেছি তার ভাবনায়।\nযে দুঃখে সে রোজ তপ্ত হয়,\nসেই দুঃখের আগুনে পুড়ে\nআমি ছাই হয়েও দেখেছি।\nতবু তাকে আমি পাইনি॥"
+            },
+            {
+                title: "তোমার সাথে",
+                text: "একদিন হারিয়ে যাবো তোমার সাথে\nকোনো এক পাহাড়ের দেশে।\nজানবে না কেউ সেই ঠিকানা\nআমরা দুজন ছাড়া।\nভালোবাসার রঙে\nমিলেমিশে তুমি আমি হবো একাকার।\nসেখানে সাজানো থাকবে পথ\nএকসাথে চলার জন্যে।\nএভাবে চলতে চলতে\nমেঘদের সঙ্গে হবে আলাপ।\nসেদিন তুমি আমি মিলে\nসূর্যাস্তের সৌন্দর্যে প্রশংসা ঢালবো ইচ্ছেমতো।\nতখন জড়িয়ে ধরে তোমায়,\nআমি নিজেকে আরও বেশি করে\nঠেলে দেবো তোমার দিকে।\nফেরার সময় গায়ে শান্তি মুড়িয়ে নিয়ে\nফিরবো ঘরে তোমার সাথে॥"
+            },
+            {
+                title: "অন্দরমহল",
+                text: "আমি একবার তার ভাবনায় ঢুকে জানতে চাই\nআদৌ কি সে আমায় কথা ভাবতো!\nচোখে চোখ পড়ার আগের মুহূর্ত অবধি\nতাকিয়ে কি শুধু দূরত্বটুকুই মাপতো?\nশুনেছি একলা ঘরে আপন খেয়ালে ভেসে\nসে আমায় নিয়ে গল্প সাজাতো রোজ,\nআমার পরিচিত ছিল যারা তার চেনা\nনিয়ম করে তাদের থেকে নিত আমার খোঁজ।\nহতে পারে এসব মনগড়া কথা\nঅথবা সত্যিই ছিলাম তার কাছে খুব দামী,\nযদি সম্ভব হত পড়তাম তার মন\nদেখতাম সেই মনে কোথায় আমি।\nআচ্ছা সে কি আদৌ ভুলতে পেরেছে\nআমায়?\nওদিকে আমিই কি তাকে ভুলতে পেরেছি নাকি!\nগল্পটা হয়তো শেষ হয়েছে অনেক আগেই\nকিন্তু রয়ে গেছে এতে\nএখনও কিছু বাকি॥"
+            },
+            {
+                title: "সেদিন",
+                text: "সেদিন ওই তোমার হাতে\nআমার হাতটা ছিল,\nছিল সঙ্গে দুজনার\nদুটো মনের মিলও।\nসেদিন তোমায় আমার বয়েস\nসবেমাত্র কুড়ি;\nইচ্ছেমতো তখন আকাশে\nউড়িয়েছি ঘুড়ি।\nতারপর সম্পর্ক ভেঙেছি\nরান্নাবাটি খেলার ছলে,\nকত সহজেই বলো আমরা\nআবেগ ভাসিয়েছি জলে!\nহয়তো সেদিন ভালোবাসা বোঝার জন্য\nআমরা আনাড়ি ছিলাম,\nআর আজ মুখোমুখি দুজনেই\nমুখ ফিরিয়ে নিলাম॥"
+            },
+            {
+                title: "মনের মানুষ",
+                text: "সে বারণের সব ব্যারিকেড ভেঙ্গে,\nবিষন্নতার ভিড়-ভাট্টা থেকে বের করে এনে\nনিজের মনের মানুষটিকে\nরোজ নতুন করে বাঁচতে শেখায়।\nসে জানে তার মনের মানুষ\nদর কষাকষিতে বড়ই কাঁচা।\nমানুষের মাঝে নিখোঁজ হয়ে যায়।\nখেই হারিয়ে খুব সহজে\nউলটপালট করে ফেলে সব।\nভুলোমনা বলে কত কাজে যে তার\nহাত পড়ে না,\nতার হিসেব নেই।\nমনের মানুষে খামতি প্রচুর,\nতবু কমতি নেই তার ভালোবাসায়।\nকারণ সে ভালোবাসতে জানে,\nভালোবেসে পৃথিবীর সমস্ত সুখ\nকুড়িয়ে আনে মনের মানুষের জন্য॥"
+            },
+            {
+                title: "ঘরবাড়ি",
+                text: "তুমি আসবে ভালোবাসবে ভেবেই\nদরজা খোলা রাখি।\nবকবে, ভীষণ বকবে জেনেই\nছন্নছাড়া থাকি।\nগুছিয়ে দেবে ঘরবাড়ি তাই\nরাখি অগোছালো,\nআলোও নিভিয়ে দিই\nযাতে তুমি এসে জ্বালো।\nএভাবে হেলাফেলায় পড়ে থাকে\nঅবাধ্য সংসার,\nএকটু যত্ন পাওয়ার জন্য\nথাকে অপেক্ষায় আসার।\nএখানেই জমিয়েছি ভালোবাসা তপ্ত যেন\nবড্ড ফাঁকা বুক;\nএবার শুধু তুমি এলেই সারবে\nমনের অসুখ॥"
+            },
+            {
+                title: "অনুসন্ধান",
+                text: "তুমি না এলেও চলবে,\nআমি রোজ খুঁজে নেবো তোমায় তোমার অনুপস্থিতিতে।\nকখনো আকাশের নীলে\nমেঘদের আনাগোনায়,\nকখনো রাতের অন্ধকারে\nজোনাকিদের অবাধ বিচরণে।\nকখনো বইয়ের ভাঁজে পছন্দের গল্প-কবিতায়,\nকখনো বা কোনো অচিন শহরে\nবহুদিনের খোয়া যাওয়া কোনো\nলাইনের সঙ্গে সহসা সাক্ষাতে।\nকখনো ঝরাপাতার প্রতি মাটির ভালোবাসায়,\nঅথবা খুব চেনা কোনো ফুলের সুবাসে\nআর কখনো বন্ধ ঘরে ভাবনায় পরিসরে।\nকখনো পুরোনো গলির মোড়ে\nফেলে আসা অপেক্ষা\nআর প্রিয় গানের পুনর্মিলনে,\nকখনো বা বসন্তের রঙিন আবহে\nকিংবা শীতের জরাজীর্ণতায়।\nআমি ঠিক খুঁজে নেবো তোমায়\nনিজের মতন করে॥"
+            },
+            {
+                title: "আবার আগামীকাল",
+                text: "আবার আগামীকাল\nদেখা হবে তোমার সাথে,\nহাঁটবো নদীর ধারে\nরেখে হাত তোমার হাতে।\nসময়- প্রতিদিনের মতই\nপাক্কা বিকেল চারটে,\nআর তখনই তুমি দেবে বলেছিলে\nআমায় উপহারটা।\nআমি অপেক্ষায় ছটফট করছি\nকূল পাইনা ভেবে,\nআগামীকাল দেখা হলে\nতুমি ঠিক কী দেবে।\nসময় মতই আসবে\nকথা দিয়েছো গা ছুঁয়ে,\nবিকেল তখন চারটে\nতুমি চিতায় শুয়ে॥"
+            },
+            {
+                title: "যায় আসে না",
+                text: "সে তো আমার হতেও পারতো!\nকিন্তু সে আমায় ভালোবাসে না,\nভালোবাসে অন্যকাউকে।\nএতে আমার কিছুই যায় আসে না।\nঅন্যকেউ তার ভাবনায় আসে,\nঅন্যকারোর সাথে কল্পনায় ঘর বাঁধে,\nঅন্যকারোর সাথেই তার যত ভুলবোঝাবুঝি।\nঅন্যকেউ তার মনে আঘাত করে যায়,\nঅন্যকারোর জন্য সে যন্ত্রনায় কাতরায়,\nঅপেক্ষায় ছটফটায়।\nসে মনে মনে খোঁজে অন্যকারোর\nঠিকানা।\nদিনের শুরু থেকে শেষ সবটা সময়\nলেখা অন্যকারোর নামে।\nএতে আমার কিছুই যায় আসে না,\nযদি আমার কিছু যায় আসতো,\nতার কিছুই যায় আসে না॥"
+            },
+            {
+                title: "কী আমি?",
+                text: "তোমার গ্যারেজে রাখা\nভাঙ্গা সাইকেলটা আমি নই,\nযেটা বিক্রির জন্য তুমি ভাঙাড়িওয়ালা খুঁজছো।\nভরদুপুরে একঘেয়েমি কাটানোর\nকোনো গল্পের বই নই,\nনই কোনো গান যে তুমি আমায় শুনবে।\nতোমার আকাশের তারাও আমি নই\nযে রোজ বিষন্ন হয়ে\nতুমি ছুটে ছাদে আসবে\nঅগুন্তির মাঝে আমায় গুনতে।\nআমি নই মলম\nযে ব্যথা পেলে তুমি\nহন্য হয়ে খুঁজবে আমায়\nওষুধের বাক্সে।\nতোমার সবচেয়ে প্রিয় বেড়াতে যাবার\nজায়গাটাও আমি নই।\nনই তোমার ডায়েরির পাতা\nযে লেখায় ভুল হলে\nতুমি ছিঁড়ে আমায় ছুঁড়ে ফেলে দেবে॥"
+            },
+            {
+                title: "অভিযোগ",
+                text: "তোমায় নিয়ে কীসের অভিযোগ!\nতুমি আমার হয়ে ছিলে কি কখনো?\nতোমার গালভরা হাসি\nআর কথোপকথনে আমি যে জড়াবো,\nতুমি কি তা জানতে!\nতোমার চোখের গভীরতায় গিয়ে\nহারিয়েছি আমি নিজেই।\nঅনুমতি ছাড়াই\nকত মেঘ পাঠিয়েছি তোমার ঠিকানায়,\nভেবেছি তুমি ফিরবে।\nযে ভালোবাসায় কখনোই তুমি থাকোনি,\nসেখানেই থেকে মনটা পুড়িয়েছি\nভালোবাসো - এই ভুল ধারণায়।\nতাহলে বলো\nকী নিয়ে করবো তোমার অভিযোগ?"
+            },
+            {
+                title: "জানবে কেমন করে!",
+                text: "জানবে কেমন করে -\nআদতে কী চলছে আমার ভেতরে!\nঠকে গিয়ে আমি নিজের\nঠিকানায় ফিরে আসি,\nবারবার হ্যাঁ বারবার\nভুল মানুষকেই ভালোবাসি।\nকী করে এটা বলবো তোমায় -\nতুমিও তাদেরই দলে।\nসব কথা কি আর\nমুখে বলে দিলে চলে?\nতাই নিজের ভেতরেই\nসমস্ত কথা জমিয়ে রাখি,\nআর তুমিই কিনা এসে প্রশ্ন করো -\nমনখারাপ! সঙ্গে থাকি?"
+            },
+            {
+                title: "অপেক্ষায় একজন",
+                text: "সে জানে তার মনের মানুষ\nভালোবাসে কাকে,\nশুধু জানে না তা জানার পরও কেন\nতারই অপেক্ষায় থাকে।\nএই অপেক্ষা তার অভ্যেস\nএকপ্রকার বায়না,\nআগলে সে না পাওয়াটা\nমেনে নিতে চায়না।\nতাই মনে মনে খুব গোপনে\nগল্প বানায় রোজ,\nতাতে বাস্তবের দুনিয়াটা\nথাকলে থাকুক নিখোঁজ।\nএভাবে মনগড়া সুখের ভিড়ে ঢেকে\nগিলছে তারই আবেগ,\nপারলে আড়ালে সে ক্ষত লুকাবে\nধরবে ভালো থাকার ভেক।\nতবু মানবে না সে মিলবে না\nতার ভালোবাসার হিসেবনিকেশ,\nআর এই অপেক্ষা চিরকালের\nনেই কোনো তার শেষ॥"
+            },
+            {
+                title: "অপূর্ণ পূর্ণতা",
                 text: "খামখেয়ালী আমরা দুজন\nনিখুঁত ভালোবাসায়,\nঅপূর্ণ পূর্ণতা বলে সেটাকে\nপ্রকাশ করলে ভাষায়।\nমিলনের অভিপ্রায়ে দুজনায়\nনেই হাজার ঝুঁকি,\nমনের ঠিকানায় পৌঁছাতে\nএসে দাঁড়াই মুখোমুখি।\nতখন সব ভাসিয়ে ইচ্ছেমতো\nআমরা আবেগ ঢালি,\nতাও অবশেষে মনদুটো\nথেকে যায় খালি।\nকাছে গিয়েও কেন জানিনা আমি\nছুঁতে পারিনা তাকে,\nসেও যেন ব্যাকুল হয়ে আমায়\nকাছে পেতে ডাকে।\nএই গল্পে মিলন নেই ঠিকই\nতবে তাতে বিচ্ছেদও নেই লেখা,\nঅপূর্ণ পূর্ণতা অব্দিই টানা\nআমাদের ভালোবাসার সীমারেখা॥"
             },
             {
@@ -261,35 +424,30 @@
         const poemTitle = document.getElementById('poem-title-display');
         const poemContent = document.getElementById('poem-content-display');
 
-        // সব কবিতা লুপ করে বাটন বানানো
         allPoems.forEach((poem, index) => {
             const btn = document.createElement('div');
             btn.className = 'poem-btn';
             btn.innerText = poem.title;
-            // বাটনে ক্লিক করলে কি হবে
             btn.onclick = () => openPoem(index);
             listDiv.appendChild(btn);
         });
 
-        // কবিতা ওপেন করার ফাংশন
         function openPoem(index) {
             const poem = allPoems[index];
             poemTitle.innerText = poem.title;
             poemContent.innerText = poem.text;
             
-            // ভিউ চেঞ্জ (Home Hide -> Reader Show)
             homeView.style.display = 'none';
             readerView.style.display = 'block';
             window.scrollTo(0,0);
         }
 
-        // ব্যাকে আসার ফাংশন
         function goBack() {
             readerView.style.display = 'none';
             homeView.style.display = 'block';
         }
 
-        // === সিকিউরিটি ===
+        // === সিকিউরিটি (স্ক্রিনশট অফ) ===
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('keydown', function(e) {
             if (e.key === 'PrintScreen') {
@@ -299,7 +457,6 @@
                 return false;
             }
         });
-
     </script>
-</body>
+    </body>
 </html>
