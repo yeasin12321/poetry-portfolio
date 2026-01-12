@@ -3,132 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Yeasin Kabir | The Developer</title>
+    <title>Yeasin Kabir | The Poet</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Orbitron:wght@500;700&display=swap');
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Hind+Siliguri:wght@300;400;600;700&family=Orbitron:wght@500&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
 
-        :root { --primary: #00ffcc; --secondary: #ff0055; --bg: #050505; }
+    <style>
+        :root { 
+            --primary: #ffb7b2; 
+            --secondary: #ff4d6d; 
+            --accent: #ffd700; 
+            --bg: #0f0505; 
+        }
+        
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
         
         body {
-            background-color: var(--bg); color: #e0e0e0;
+            background-color: var(--bg); color: #fff0f5;
             font-family: 'Hind Siliguri', sans-serif;
             margin: 0; padding: 0; display: flex; justify-content: center;
             min-height: 100vh; user-select: none; overflow-x: hidden;
         }
 
-        /* Animated Background */
+        /* === ROMANTIC BACKGROUND === */
         body::before {
             content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 10% 20%, rgba(255, 0, 85, 0.2) 0%, transparent 40%),
-                        radial-gradient(circle at 90% 80%, rgba(0, 255, 204, 0.2) 0%, transparent 40%);
-            z-index: -2; animation: moveBg 10s infinite alternate;
+            background: linear-gradient(160deg, #2b0510 0%, #1a0005 50%, #000000 100%);
+            z-index: -3;
         }
-        @keyframes moveBg { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
-
-        /* Canvas */
+        body::after {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(255, 77, 109, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255, 215, 0, 0.05) 0%, transparent 50%);
+            z-index: -2; pointer-events: none;
+            animation: pulseGlow 5s infinite alternate;
+        }
+        @keyframes pulseGlow { 0% { opacity: 0.5; } 100% { opacity: 1; } }
+        
         #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
 
-        /* Preloader */
+        /* === PRELOADER === */
         #preloader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 9999;
+            background: #000; z-index: 99999;
             display: flex; justify-content: center; align-items: center; flex-direction: column;
-            color: var(--primary); font-family: 'Orbitron', sans-serif;
         }
-        .progress-bar { width: 200px; height: 2px; background: #333; margin-top: 10px; }
-        .progress { width: 0%; height: 100%; background: var(--primary); animation: load 2s ease-out forwards; }
-        @keyframes load { 100% { width: 100%; } }
+        .intro-heart { 
+            font-size: 4rem; margin-bottom: 20px; 
+            animation: heartBeat 1.5s infinite alternate; 
+            filter: drop-shadow(0 0 20px var(--secondary)); 
+        }
+        .intro-text { 
+            font-family: 'Great Vibes', cursive; color: var(--secondary); 
+            font-size: 3rem; text-align: center; 
+            text-shadow: 0 0 10px rgba(255, 77, 109, 0.8); 
+            animation: fadeInUp 2s ease; 
+        }
+        @keyframes heartBeat { from { transform: scale(1); opacity: 0.8; } to { transform: scale(1.2); opacity: 1; } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Music Button */
+        /* === MUSIC PLAYER === */
+        .music-wrapper { position: fixed; bottom: 20px; right: 20px; z-index: 1000; display: flex; align-items: center; justify-content: center; }
+        .visualizer-bars { display: flex; gap: 3px; position: absolute; bottom: 55px; opacity: 0; transition: 0.3s; }
+        .bar { width: 4px; background: var(--secondary); border-radius: 2px; animation: sound 0ms -800ms linear infinite alternate; }
+        .music-wrapper.playing .visualizer-bars { opacity: 1; }
+        .music-wrapper.playing .bar { animation-duration: 400ms; }
         .music-btn {
-            position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px;
-            background: rgba(0,0,0,0.8); border: 2px solid var(--secondary);
-            border-radius: 50%; color: var(--secondary);
+            width: 50px; height: 50px; background: rgba(20, 0, 5, 0.8);
+            border: 2px solid var(--secondary); border-radius: 50%; color: var(--secondary);
             display: flex; justify-content: center; align-items: center;
-            cursor: pointer; z-index: 1000; transition: 0.3s;
-            box-shadow: 0 0 20px rgba(255, 0, 85, 0.4);
+            cursor: pointer; box-shadow: 0 0 15px rgba(255, 77, 109, 0.4); transition: 0.3s;
         }
-        .music-btn.playing { border-color: var(--primary); color: var(--primary); animation: spin 4s linear infinite; }
+        .music-wrapper.playing .music-btn { border-color: var(--primary); color: var(--primary); animation: spin 5s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes sound { 0% { height: 5px; opacity: .35; } 100% { height: 25px; opacity: 1; } }
 
-        /* App Container */
+        /* === MAIN CONTAINER === */
         #app-container {
             width: 100%; max-width: 500px;
-            background: rgba(10, 10, 10, 0.6); backdrop-filter: blur(20px);
+            background: rgba(30, 10, 15, 0.3); backdrop-filter: blur(8px);
             min-height: 100vh; position: relative;
-            box-shadow: 0 0 80px rgba(0,0,0,0.8);
-            border-left: 1px solid rgba(255,255,255,0.05);
-            border-right: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            border-left: 1px solid rgba(255, 77, 109, 0.1);
+            border-right: 1px solid rgba(255, 77, 109, 0.1);
         }
 
         /* Profile */
         .profile-header {
-            text-align: center; padding: 50px 20px 30px 20px;
-            background: linear-gradient(180deg, rgba(0,255,204,0.05) 0%, transparent 100%);
+            text-align: center; padding: 60px 20px 30px 20px;
+            background: linear-gradient(180deg, rgba(255, 77, 109, 0.05) 0%, transparent 100%);
         }
         .avatar {
-            width: 120px; height: 120px; border-radius: 50%;
-            border: 3px solid var(--primary); margin: 0 auto 15px;
-            object-fit: cover; box-shadow: 0 0 20px rgba(0,255,204,0.3);
-            transition: transform 0.3s;
+            width: 130px; height: 130px; border-radius: 50%;
+            border: 3px solid var(--secondary); margin: 0 auto 15px;
+            object-fit: cover; box-shadow: 0 0 25px rgba(255, 77, 109, 0.4);
+            transition: transform 0.3s; cursor: pointer;
         }
-        .avatar:hover { transform: scale(1.1) rotate(5deg); }
+        .avatar:hover { transform: scale(1.05); }
         h1 {
-            margin: 0; font-size: 2.2rem;
-            background: linear-gradient(to right, #fff, #aaa);
+            margin: 0; font-size: 3rem; font-family: 'Great Vibes', cursive;
+            background: linear-gradient(to right, #ff9a9e, #fecfef);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 10px rgba(255, 77, 109, 0.3);
         }
-        .typing-text { color: var(--primary); font-size: 0.9rem; letter-spacing: 2px; height: 20px; font-weight: bold; margin-top: 5px;}
-        
+        .typing-text { 
+            color: var(--primary); font-family: 'Cinzel', serif; 
+            font-size: 0.9rem; letter-spacing: 3px; height: 20px; 
+            font-weight: bold; margin-top: 5px; opacity: 0.8;
+        }
         .social-links { display: flex; justify-content: center; gap: 15px; margin-top: 25px; }
         .social-btn {
             width: 40px; height: 40px; border-radius: 50%;
             display: flex; justify-content: center; align-items: center;
-            background: rgba(255,255,255,0.05); color: #fff; text-decoration: none;
-            border: 1px solid rgba(255,255,255,0.1); transition: 0.3s;
+            background: rgba(255, 255, 255, 0.05); color: #fff; text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.1); transition: 0.3s;
         }
-        .social-btn:hover { background: var(--primary); color: #000; transform: translateY(-3px); }
+        .social-btn:hover { background: var(--secondary); color: #fff; transform: translateY(-3px); box-shadow: 0 0 15px var(--secondary); }
 
         /* List & Buttons */
         .list-container { padding: 25px; }
-        .section-title { color: #888; font-size: 0.8rem; margin-bottom: 15px; letter-spacing: 2px; border-bottom: 1px solid #333; }
-        
-        .poem-btn {
-            background: linear-gradient(90deg, rgba(255,255,255,0.03) 0%, transparent 100%);
-            padding: 18px; margin-bottom: 15px;
-            border-left: 3px solid #333; border-radius: 0 10px 10px 0;
-            cursor: pointer; transition: 0.2s;
-            display: flex; justify-content: space-between; align-items: center;
-            font-size: 1.15rem; color: #ddd; position: relative; overflow: hidden;
+        .section-title { 
+            color: var(--primary); font-family: 'Cinzel', serif; font-size: 0.9rem; 
+            margin-bottom: 20px; letter-spacing: 2px; border-bottom: 1px solid rgba(255,255,255,0.1); 
+            text-align: center; padding-bottom: 10px;
         }
-        .poem-btn:hover { border-left-color: var(--primary); padding-left: 25px; color: #fff; background: rgba(255,255,255,0.05); }
+        .poem-btn {
+            background: rgba(255, 255, 255, 0.03); padding: 18px; margin-bottom: 15px;
+            border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer; transition: 0.3s; display: flex; justify-content: space-between; align-items: center;
+            font-size: 1.1rem; color: #eee; position: relative; overflow: hidden;
+        }
+        .poem-btn:hover { 
+            border-color: var(--secondary); 
+            background: linear-gradient(90deg, rgba(255, 77, 109, 0.1) 0%, transparent 100%);
+            padding-left: 22px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .video-menu-btn { border-color: var(--accent); color: var(--accent); }
+        .app-install-btn { border-color: #00aaff; color: #00aaff; }
 
-        .video-menu-btn { border-left-color: var(--secondary); background: linear-gradient(90deg, rgba(255,0,85,0.1) 0%, transparent 100%); }
-        .video-menu-btn:hover { border-left-color: #fff; background: var(--secondary); }
-        .app-install-btn { border-left-color: #0088cc; background: linear-gradient(90deg, rgba(0,136,204,0.1) 0%, transparent 100%); }
-
-        /* Views */
+        /* Reader View */
         .full-view {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 500; padding: 20px; overflow-y: auto;
-            animation: slideUp 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            animation: slideUp 0.5s ease;
         }
         @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
         .back-btn {
-            background: transparent; border: none; color: var(--primary);
-            font-size: 1.1rem; cursor: pointer; margin-bottom: 20px;
-            display: flex; align-items: center; gap: 8px; font-weight: bold;
+            background: transparent; border: none; color: var(--secondary);
+            font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: bold;
         }
-        
         #poem-title-display {
-            font-size: 2.5rem; background: linear-gradient(to right, var(--primary), var(--secondary));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px;
+            font-size: 2.2rem; font-family: 'Hind Siliguri', serif; color: var(--secondary);
+            margin-bottom: 20px; text-align: center; text-shadow: 0 0 5px rgba(255, 77, 109, 0.5);
         }
-        #poem-content-display { font-size: 1.3rem; line-height: 2; color: #ccc; padding-bottom: 50px; }
+        #poem-container-box {
+            background: rgba(40, 10, 20, 0.8); padding: 25px; border-radius: 20px;
+            border: 1px solid rgba(255, 77, 109, 0.3);
+            box-shadow: 0 0 30px rgba(255, 77, 109, 0.15);
+            backdrop-filter: blur(5px); margin-bottom: 30px;
+        }
+        #poem-content-display { 
+            font-size: 1.3rem; line-height: 2; color: #ffe6ea; 
+            white-space: pre-line; font-family: 'Hind Siliguri', sans-serif;
+        }
+        #poem-signature-display {
+            font-family: 'Great Vibes', cursive; font-size: 1.8rem;
+            color: var(--secondary); text-align: right; margin-top: 30px;
+            opacity: 0.9; transform: rotate(-2deg);
+        }
 
         .action-bar { display: flex; justify-content: space-around; border-top: 1px solid #222; margin-top: 30px; padding-top: 20px; }
         .action-btn { background: transparent; border: none; color: #666; font-size: 1.4rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px; }
@@ -136,14 +181,72 @@
         .liked { color: var(--secondary); }
         .liked .count-text { color: var(--secondary); }
 
+        /* Video */
         .video-container {
             margin-bottom: 30px; border-radius: 12px; overflow: hidden;
             border: 1px solid #333; background: #000; display: flex; justify-content: center;
         }
         iframe { max-width: 100%; }
+
+        /* === SECRET VAULT DIARY === */
+        #secret-vault { background: linear-gradient(135deg, #2b0a1d 0%, #000000 100%); padding: 0; }
+        .vault-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 77, 109, 0.2); position: relative; z-index: 100; }
+        .diary-page { display: none; padding: 30px 20px; text-align: center; height: calc(100vh - 80px); overflow-y: auto; animation: fadeInPage 1s ease; }
+        .diary-page.active { display: block; }
+        @keyframes fadeInPage { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         
-        .visitor-counter { text-align: center; font-family: 'Orbitron'; font-size: 0.7rem; color: #555; margin-top: 30px; }
-        .footer { text-align: center; color: #444; font-size: 0.7rem; margin-top: 10px; letter-spacing: 2px; padding-bottom: 20px;}
+        .page-title { font-family: 'Great Vibes', cursive; color: var(--secondary); font-size: 2.8rem; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255, 77, 109, 0.5); }
+        .diary-text { font-family: 'Hind Siliguri', sans-serif; color: #ffe6ea; font-size: 1.2rem; line-height: 1.8; background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 15px; border: 1px dashed rgba(255, 77, 109, 0.3); text-align: left; white-space: pre-line; margin-bottom: 20px; }
+        
+        /* === FIXED EYE IMAGE STYLE (Full View) === */
+        .her-eyes {
+            width: 100%;
+            max-width: 320px;
+            /* Auto height allows full image display without cropping */
+            height: auto; 
+            display: block;
+            margin: 0 auto 20px;
+            
+            /* Romantic Style */
+            border-radius: 15px;
+            border: 3px solid var(--secondary);
+            box-shadow: 0 0 30px rgba(255, 77, 109, 0.5);
+            
+            /* Floating Animation */
+            animation: romanticFloat 5s ease-in-out infinite;
+        }
+
+        @keyframes romanticFloat {
+            0%, 100% { transform: translateY(0); box-shadow: 0 0 25px rgba(255, 77, 109, 0.5); }
+            50% { transform: translateY(-8px); box-shadow: 0 0 50px rgba(255, 77, 109, 0.8); }
+        }
+
+        /* Features */
+        .open-when-btn { display: block; width: 100%; padding: 15px; margin: 10px 0; background: rgba(255, 77, 109, 0.2); border: 1px solid var(--secondary); border-radius: 10px; color: #fff; cursor: pointer; text-align: left; font-size: 1.1rem; }
+        .open-when-msg { display: none; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; margin-bottom: 15px; color: var(--primary); font-style: italic; }
+        .bucket-item { display: flex; align-items: center; gap: 10px; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; }
+        .bucket-check { color: var(--secondary); }
+        .magic-heart-btn { font-size: 5rem; color: var(--secondary); cursor: pointer; animation: heartbeat 1s infinite; background: none; border: none; margin: 20px 0; }
+        #love-reason { min-height: 50px; font-size: 1.3rem; color: var(--primary); font-family: 'Great Vibes'; margin-top: 20px; }
+        .fingerprint-area { width: 100px; height: 100px; border: 2px dashed var(--secondary); border-radius: 50%; margin: 30px auto; display: flex; justify-content: center; align-items: center; cursor: pointer; position: relative; }
+        .fingerprint-icon { font-size: 3rem; color: #555; transition: 0.3s; }
+        .fingerprint-area.scanning .fingerprint-icon { color: var(--secondary); }
+        .scan-line { position: absolute; width: 100%; height: 2px; background: var(--secondary); top: 0; display: none; animation: scan 1.5s infinite linear; }
+        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+
+        /* Petals */
+        .petal { position: absolute; top: -50px; background: rgba(255, 0, 80, 0.6); border-radius: 150% 0 150% 0; animation: fall linear infinite; z-index: 50; }
+        @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
+
+        .nav-buttons { position: absolute; bottom: 20px; width: 100%; display: flex; justify-content: center; gap: 20px; left: 0; z-index: 100; }
+        .diary-btn { background: var(--secondary); color: white; border: none; padding: 10px 20px; border-radius: 30px; font-size: 1rem; cursor: pointer; box-shadow: 0 0 15px var(--secondary); }
+
+        #love-clock { font-family: 'Orbitron', sans-serif; color: var(--primary); font-size: 0.9rem; margin-top: 15px; padding: 10px; border: 1px solid var(--secondary); border-radius: 10px; background: rgba(255, 77, 109, 0.1); }
+        .heart { position: absolute; bottom: -20px; color: rgba(255, 77, 109, 0.6); font-size: 20px; animation: floatUp 6s linear infinite; z-index: 1; }
+        @keyframes floatUp { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; } }
+
+        .visitor-counter { text-align: center; font-family: 'Orbitron'; font-size: 0.7rem; color: #666; margin-top: 30px; }
+        .footer { text-align: center; color: #555; font-size: 0.7rem; margin-top: 10px; letter-spacing: 2px; padding-bottom: 20px;}
     </style>
 </head>
 <body>
@@ -151,27 +254,29 @@
     <canvas id="particles"></canvas>
 
     <div id="preloader">
-        <div style="font-size: 3rem;">YK</div>
-        <div class="progress-bar"><div class="progress"></div></div>
-        <div style="margin-top:10px; letter-spacing:2px;">INITIALIZING...</div>
+        <div class="intro-heart">❤️</div>
+        <div class="intro-text">Welcome to<br>Yeasin's Poem</div>
     </div>
 
-    <audio id="bg-music" loop>
-        <source src="music.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="bg-music" loop> <source src="music.mp3" type="audio/mpeg"> </audio>
+    <audio id="vault-audio" loop> <source src="her_song.mp3" type="audio/mpeg"> </audio>
 
-    <div class="music-btn" onclick="toggleMusic()">
-        <i class="fas fa-play" id="music-icon"></i>
+    <div class="music-wrapper" id="music-wrap">
+        <div class="visualizer-bars">
+            <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+        </div>
+        <div class="music-btn" onclick="toggleMusic()">
+            <i class="fas fa-play" id="music-icon"></i>
+        </div>
     </div>
 
     <div id="app-container">
         <div id="home-view">
-            <div class="profile-header" data-tilt>
-                <img src="profile.jpg" class="avatar" alt="YK">
+            <div class="profile-header" data-tilt data-aos="fade-down">
+                <img src="profile.jpg" class="avatar" alt="YK" onclick="openSecretVaultInput()">
                 <h1>Yeasin Kabir</h1>
                 <span class="typing-text" id="typewriter"></span>
-                <span style="display:block; color:#666; font-size:0.8rem; margin-top:5px;">Satkhira, Bangladesh</span>
-                
+                <span style="display:block; color:#aaa; font-size:0.8rem; margin-top:5px;">Satkhira, Bangladesh</span>
                 <div class="social-links">
                     <a href="https://wa.me/8801851715713" class="social-btn" target="_blank"><i class="fab fa-whatsapp"></i></a>
                     <a href="https://www.facebook.com/share/14LP9NJQ2KQ/" class="social-btn" target="_blank"><i class="fab fa-facebook-f"></i></a>
@@ -179,139 +284,286 @@
             </div>
 
             <div class="list-container">
-                <div class="section-title">System Menu</div>
-                
-                <div class="poem-btn app-install-btn" data-tilt onclick="installApp()">
+                <div class="section-title" data-aos="fade-in">Experience</div>
+                <div class="poem-btn app-install-btn" data-tilt data-aos="fade-up" onclick="installApp()">
                     <span>📱 Install App</span> <i class="fas fa-download"></i>
                 </div>
-
-                <div class="poem-btn video-menu-btn" data-tilt onclick="openVideoGallery()">
+                <div class="poem-btn video-menu-btn" data-tilt data-aos="fade-up" onclick="openVideoGallery()">
                     <span>🎥 ভিডিও গ্যালারি</span> <i class="fas fa-chevron-right"></i>
                 </div>
-
-                <div class="section-title" style="margin-top: 25px;">Poetry Database</div>
+                <div class="section-title" style="margin-top: 30px;" data-aos="fade-in">Poetry Collection</div>
                 <div id="buttons-list"></div>
             </div>
 
-            <div class="visitor-counter">> TOTAL_VISITORS: <span style="color:var(--primary)" id="total-visitors">--</span></div>
-            <div class="footer">DESIGNED BY YEASIN KABIR &copy; 2026</div>
+            <div class="visitor-counter">> READERS: <span style="color:var(--secondary)" id="total-visitors">--</span></div>
+            <div class="footer">WRITTEN WITH LOVE BY YEASIN</div>
         </div>
 
-        <div id="reader-view" class="full-view">
-            <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK</button>
+        <div id="reader-view" class="full-view" style="padding-top: 80px;">
+            <div style="position: fixed; top:0; left:0; width:100%; padding: 20px; background: rgba(20, 5, 10, 0.9); backdrop-filter: blur(10px); z-index: 10;">
+                 <button class="back-btn" onclick="goBack()" style="margin:0;"><i class="fas fa-arrow-left"></i> BACK TO COLLECTION</button>
+            </div>
             <h2 id="poem-title-display">Title</h2>
-            <div id="poem-content-display">Content</div>
-            
+            <div id="poem-container-box">
+                <div id="poem-content-display">Content</div>
+                <div id="poem-signature-display">- ইয়াছিন কবির</div>
+            </div>
             <div class="action-bar">
-                <button class="action-btn" id="like-btn" onclick="handleLike()">
-                    <i id="like-icon" class="far fa-heart"></i>
-                    <span id="like-count" class="count-text">--</span>
-                </button>
-                <button class="action-btn" onclick="handleComment()">
-                    <i class="far fa-comment"></i>
-                    <span id="comment-count" class="count-text">--</span>
-                </button>
-                <button class="action-btn" onclick="handleShare()">
-                    <i class="fas fa-share-alt"></i>
-                    <span id="share-count" class="count-text">--</span>
-                </button>
+                <button class="action-btn" id="like-btn" onclick="handleLike()"><i id="like-icon" class="far fa-heart"></i><span id="like-count" class="count-text">--</span></button>
+                <button class="action-btn" onclick="handleComment()"><i class="far fa-comment"></i><span id="comment-count" class="count-text">--</span></button>
+                <button class="action-btn" onclick="handleShare()"><i class="fas fa-share-alt"></i><span id="share-count" class="count-text">--</span></button>
             </div>
         </div>
 
         <div id="video-view" class="full-view">
             <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK</button>
-            <h2 style="color: var(--secondary); border-bottom: 1px solid #333; padding-bottom: 10px;">ভিডিও গ্যালারি</h2>
-            
-            <div class="video-container"><iframe src="https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F638665279178407%2F&show_text=true&width=560&t=0" width="560" height="429" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe></div>
-            <div class="video-container"><iframe src="https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1237556408133054%2F&show_text=true&width=560&t=0" width="560" height="429" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe></div>
-            <div class="video-container"><iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F24799104436398615%2F&show_text=true&width=267&t=0" width="267" height="591" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe></div>
-            <div class="video-container"><iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F774608981691534%2F&show_text=true&width=267&t=0" width="267" height="591" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe></div>
-            <div class="video-container"><iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1993816241440381%2F&show_text=true&width=267&t=0" width="267" height="591" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe></div>
+            <h2 style="color: var(--secondary); border-bottom: 1px solid #333; padding-bottom: 10px; font-family: 'Hind Siliguri'">ভিডিও গ্যালারি</h2>
+            <div class="video-container" data-aos="fade-up"><iframe src="https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F638665279178407%2F&show_text=true&width=560&t=0" width="560" height="429" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe></div>
+            <div class="video-container" data-aos="fade-up"><iframe src="https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1237556408133054%2F&show_text=true&width=560&t=0" width="560" height="429" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe></div>
+            <div class="video-container" data-aos="fade-up"><iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F24799104436398615%2F&show_text=true&width=267&t=0" width="267" height="591" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe></div>
+            <div class="video-container" data-aos="fade-up"><iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F774608981691534%2F&show_text=true&width=267&t=0" width="267" height="591" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe></div>
+            <div class="video-container" data-aos="fade-up"><iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1993816241440381%2F&show_text=true&width=267&t=0" width="267" height="591" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe></div>
+        </div>
+
+        <div id="secret-vault" class="full-view">
+            <div class="vault-header">
+                <button class="back-btn" onclick="closeVault()" style="color: #ffccd5; border-color: #ffccd5; margin:0;"><i class="fas fa-lock"></i> LOCK</button>
+                <div style="color: var(--secondary); font-family: 'Great Vibes'; font-size: 1.8rem;">My Rumi ❤️</div>
+            </div>
+            <div id="petals-container"></div>
+
+            <div id="page-1" class="diary-page active">
+                <h2 class="page-title">এক সন্ধ্যেবেলায়</h2>
+                <div class="diary-text">
+                    তোমার সাথে সন্ধ্যেবেলায়<br>ছাদে বসে হাওয়া খাবো।<br>সে কথা থাক বা না থাক,<br>আকাশের দিকে তাকিয়ে<br>তারাদের নিশ্চুপ কোলাহল শুনবো।<br><br>আমি গুনগুন করে গান গাইবো,<br>তুমি আস্তে করে আলতো ছোঁয়ায়<br>মাথাটা আমার কাঁধে রেখে-<br>আমার সাথে সুর মেলাবে।<br><br>তখন তুমি না হয় আলিংগনে<br>আমার বুকের ধুকপুকানি শুনবে,<br>আর আমি তোমার শ্বাস গুনবো।<br>তাও যদি দূরত্ব না দূর হয়,<br>চোখে চোখ রেখে<br>সেটাও মিটিয়ে দেবো।<br><br>ব্যাস, এরকম একটা সন্ধ্যেবেলা চাই,<br>আর আমার পাশে শুধু তোমায়।।
+                </div>
+            </div>
+
+            <div id="page-2" class="diary-page">
+                <h2 class="page-title">Happy New Year</h2>
+                <div class="diary-text">
+                    <span style="color:var(--secondary); font-weight:bold;">My Love,</span><br><br>
+                    ক্যালেন্ডারের পাতা উল্টে ২০২৬ আসছে, কিন্তু আমার হৃদয়ের ক্যালেন্ডারে আমাদের প্রথম দিনের তারিখটা আজও জ্বলজ্বল করছে।<br><br>
+                    সেদিন কি আমরা জানতাম, আমরা এতটা পথ একসাথে হাঁটবো? তোমার সেই লাজুক হাসি আর মায়াবী চোখ আজও আমাকে প্রেমে ফেলে।<br><br>
+                    নতুন বছরে আমার একটাই চাওয়া—তোমার হাতটা এভাবেই ধরে রাখতে চাই, ঠিক যেমনটা সেই প্রথম দিন ধরেছিলাম।<br><br>
+                    অনেক ভালোবাসি তোমাকে। ❤️
+                </div>
+            </div>
+
+            <div id="page-3" class="diary-page">
+                <h2 class="page-title">রুমি, তোমার চোখ</h2>
+                <img src="eye.jpg" alt="Rumi's Eyes" class="her-eyes">
+                <div class="diary-text" style="text-align: center;">
+                    "এই দুটি চোখেই আমি আমার পৃথিবী খুঁজে পেয়েছি। রুমি, তোমার চোখের গভীরতায় হারিয়ে যাওয়াটাই আমার সবচেয়ে প্রিয় নেশা।"
+                </div>
+            </div>
+
+            <div id="page-4" class="diary-page">
+                <h2 class="page-title">প্রথম দেখা...</h2>
+                <div class="diary-text">
+                    মনে পড়ে? ইন্টার ফার্স্ট ইয়ার ভর্তির সেই দিনটা?<br>
+                    কলেজের করিডোরে হাজারো মানুষের ভিড়, কিন্তু আমার চোখ আটকে গিয়েছিল শুধু তোমার দিকে। সেদিনই মনে হয়েছিল, এই মেয়েটাই আমার গল্পের নায়িকা হবে।<br><br>
+                    <span style="color:var(--secondary);">আমরা একসাথে পার করেছি:</span>
+                    <div id="love-clock">Loading...</div><br>
+                    আর আমার প্রিয় ডাকনামটা মনে আছে তো?<br>
+                    <h1 style="color:var(--secondary); text-align:center; margin-top:20px; font-family:'Hind Siliguri'">মোটু (Motu) ❤️</h1>
+                </div>
+            </div>
+
+            <div id="page-5" class="diary-page">
+                <h2 class="page-title">Love Letter</h2>
+                <div class="diary-text">
+                    প্রিয় রুমি,<br><br>
+                    জানি না কতটা ভালোবাসলে ভালোবাসা পূর্ণ হয়, তবে আমি তোমাকে আমার সবটুকু দিয়ে ভালোবাসি। আমার প্রতিটা নিশ্বাস, প্রতিটা ভাবনা শুধু তোমাকে ঘিরে।<br><br>
+                    তুমি আমার সুখ, আমার শান্তি, আমার সব অভিমান আর ভালোবাসার ঠিকানা। সারাজীবন এভাবেই থেকো আমার হয়ে।<br><br>
+                    <div style="text-align: center; font-size: 1.5rem; margin-top: 30px; color: var(--secondary); font-family: 'Great Vibes';">
+                        I Love You, Rumi ❤️
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-6" class="diary-page">
+                <h2 class="page-title">Open When...</h2>
+                <button class="open-when-btn" onclick="toggleMsg('msg1')">💌 When You Miss Me</button>
+                <div id="msg1" class="open-when-msg">"চোখ বন্ধ করো আর বুকে হাত রাখো, আমি আছি ঠিক সেখানেই। দূরত্ব শুধু শরীরের, মনের নয়।"</div>
+                
+                <button class="open-when-btn" onclick="toggleMsg('msg2')">💌 When You Are Sad</button>
+                <div id="msg2" class="open-when-msg">"কান্না করো না প্লিজ! তোমার হাসিতেই আমার পৃথিবী আলো হয়। সব ঠিক হয়ে যাবে, আমি আছি তো।"</div>
+                
+                <button class="open-when-btn" onclick="toggleMsg('msg3')">💌 When You Are Angry</button>
+                <div id="msg3" class="open-when-msg">"রাগ করলে তোমাকে আরও কিউট লাগে! কিন্তু বেশিক্ষণ রেগে থেকো না, তোমার মোটু কষ্ট পাবে।"</div>
+            </div>
+
+            <div id="page-7" class="diary-page">
+                <h2 class="page-title">Our Bucket List</h2>
+                <div class="diary-text">
+                    <div class="bucket-item"><i class="fas fa-check-circle bucket-check"></i> প্রথম দেখা করা</div>
+                    <div class="bucket-item"><i class="far fa-circle"></i> একসাথে বৃষ্টিতে ভেজা</div>
+                    <div class="bucket-item"><i class="far fa-circle"></i> কালো শাড়ি আর পাঞ্জাবি পরে ছবি তোলা</div>
+                    <div class="bucket-item"><i class="far fa-circle"></i> তোমার পছন্দের জায়গায় ঘুরতে যাওয়া</div>
+                    <div class="bucket-item"><i class="far fa-circle"></i> সারাজীবন একসাথে থাকা</div>
+                </div>
+            </div>
+
+            <div id="page-8" class="diary-page">
+                <h2 class="page-title">Why I Love You</h2>
+                <button class="magic-heart-btn" onclick="generateReason()">❤️</button>
+                <div style="color:#aaa; font-size:0.8rem;">Click the heart</div>
+                <div id="love-reason"></div>
+            </div>
+
+            <div id="page-9" class="diary-page">
+                <h2 class="page-title">Forever Promise</h2>
+                <div class="diary-text" style="text-align: center;">
+                    "Touch & Hold to promise that you will never leave me."
+                </div>
+                <div class="fingerprint-area" onmousedown="startScan()" onmouseup="stopScan()" ontouchstart="startScan()" ontouchend="stopScan()">
+                    <i class="fas fa-fingerprint fingerprint-icon"></i>
+                    <div class="scan-line" id="scanLine"></div>
+                </div>
+                <div id="promise-msg" style="color:var(--primary); font-size:1.2rem; margin-top:20px; display:none;">
+                    Promise Accepted! <br> You are mine forever. ❤️
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="diary-btn" onclick="prevPage()"><i class="fas fa-arrow-left"></i></button>
+                <span style="color:#fff; margin-top:10px;" id="page-num">1 / 9</span>
+                <button class="diary-btn" onclick="nextPage()"><i class="fas fa-arrow-right"></i></button>
+            </div>
         </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
     <script>
-        // === 1. PARTICLES & SETUP ===
-        window.onload = () => setTimeout(() => document.getElementById('preloader').style.display = 'none', 2000);
+        window.onload = () => {
+            setTimeout(() => document.getElementById('preloader').style.display = 'none', 3000);
+            AOS.init({ duration: 800, once: true });
+        };
 
-        const canvas = document.getElementById('particles');
-        const ctx = canvas.getContext('2d');
+        let currentVaultPage = 1; const totalVaultPages = 9;
+        const vaultAudio = document.getElementById('vault-audio');
+        const bgMusic = document.getElementById('bg-music');
+        let petalInterval;
+
+        function openSecretVaultInput() {
+            let pass = prompt("ENTER ACCESS CODE:");
+            if (pass === "3460") {
+                document.getElementById('home-view').style.display = 'none';
+                document.getElementById('secret-vault').style.display = 'block';
+                bgMusic.pause();
+                document.querySelector('.music-wrapper').classList.remove('playing');
+                vaultAudio.currentTime = 0; vaultAudio.play();
+                startPetals(); window.scrollTo(0,0);
+            } else if (pass != null) { alert("ACCESS DENIED! 🚫"); }
+        }
+
+        function closeVault() {
+            document.getElementById('secret-vault').style.display = 'none';
+            document.getElementById('home-view').style.display = 'block';
+            vaultAudio.pause(); stopPetals();
+            currentVaultPage = 1; showPage(1);
+        }
+
+        function showPage(pageNum) {
+            for(let i=1; i<=totalVaultPages; i++) document.getElementById(`page-${i}`).classList.remove('active');
+            document.getElementById(`page-${pageNum}`).classList.add('active');
+            document.getElementById('page-num').innerText = `${pageNum} / ${totalVaultPages}`;
+        }
+        function nextPage() { if(currentVaultPage < totalVaultPages) { currentVaultPage++; showPage(currentVaultPage); } }
+        function prevPage() { if(currentVaultPage > 1) { currentVaultPage--; showPage(currentVaultPage); } }
+
+        /* Rose Petals */
+        function startPetals() {
+            const container = document.getElementById('petals-container');
+            petalInterval = setInterval(() => {
+                const petal = document.createElement('div'); petal.classList.add('petal');
+                petal.style.left = Math.random() * 100 + "vw";
+                petal.style.width = Math.random() * 15 + 10 + "px"; petal.style.height = petal.style.width;
+                petal.style.animationDuration = Math.random() * 3 + 3 + "s";
+                container.appendChild(petal);
+                setTimeout(() => { petal.remove(); }, 6000);
+            }, 300);
+        }
+        function stopPetals() { clearInterval(petalInterval); document.getElementById('petals-container').innerHTML = ''; }
+
+        /* Interactive Features */
+        function toggleMsg(id) {
+            let el = document.getElementById(id);
+            el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+        }
+
+        const reasons = [
+            "তোমার ওই মায়াবী চোখের জন্য",
+            "তুমি আমার রাগ ভাঙাতে পারো",
+            "তোমার হাসিতে আমার দিন ভালো হয়ে যায়",
+            "তুমি আমাকে আমার চেয়ে ভালো বোঝো",
+            "তোমার সাথে কথা বললে সব ক্লান্তি দূর হয়ে যায়",
+            "তুমি আমার স্বপ্ন, আমার বর্তমান, আমার ভবিষ্যৎ"
+        ];
+        function generateReason() {
+            let r = reasons[Math.floor(Math.random() * reasons.length)];
+            document.getElementById('love-reason').innerText = r;
+        }
+
+        let scanTimer;
+        function startScan() {
+            document.getElementById('scanLine').style.display = 'block';
+            document.querySelector('.fingerprint-area').classList.add('scanning');
+            scanTimer = setTimeout(() => {
+                document.getElementById('promise-msg').style.display = 'block';
+                document.getElementById('scanLine').style.display = 'none';
+                navigator.vibrate(200);
+            }, 1500);
+        }
+        function stopScan() {
+            clearTimeout(scanTimer);
+            document.getElementById('scanLine').style.display = 'none';
+            document.querySelector('.fingerprint-area').classList.remove('scanning');
+        }
+
+        /* Clock & Particles */
+        const startDate = new Date("2024-09-14T00:00:00").getTime(); 
+        setInterval(() => {
+            const now = new Date().getTime(); const distance = now - startDate;
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            document.getElementById("love-clock").innerHTML = `${days} Days : ${hours} Hr : ${minutes} Min : ${seconds} Sec`;
+        }, 1000);
+
+        /* Common JS */
+        const canvas = document.getElementById('particles'); const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         let particlesArray = [];
-
         class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 1;
-                this.speedX = Math.random() * 1 - 0.5;
-                this.speedY = Math.random() * 1 - 0.5;
-                this.color = Math.random() > 0.5 ? '#00ffcc' : '#ff0055';
-            }
-            update() {
-                this.x += this.speedX; this.y += this.speedY;
-                if(this.x > canvas.width || this.x < 0) this.speedX *= -1;
-                if(this.y > canvas.height || this.y < 0) this.speedY *= -1;
-            }
-            draw() {
-                ctx.fillStyle = this.color; ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
-            }
+            constructor() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.size = Math.random() * 2; this.speedX = Math.random() * 0.5 - 0.25; this.speedY = Math.random() * 0.5 - 0.25; this.opacity = Math.random(); }
+            update() { this.x += this.speedX; this.y += this.speedY; if(this.x > canvas.width) this.x=0; if(this.x<0) this.x=canvas.width; if(this.y > canvas.height) this.y=0; if(this.y<0) this.y=canvas.height; this.opacity += (Math.random() - 0.5) * 0.05; if(this.opacity < 0) this.opacity=0; if(this.opacity > 1) this.opacity=1; }
+            draw() { ctx.fillStyle = `rgba(255, 215, 0, ${this.opacity})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
         }
-        function initParticles() { particlesArray = []; for(let i=0; i<60; i++) particlesArray.push(new Particle()); }
-        function animateParticles() {
-            ctx.clearRect(0,0,canvas.width,canvas.height);
-            for(let i=0; i<particlesArray.length; i++) {
-                particlesArray[i].update(); particlesArray[i].draw();
-                for(let j=i; j<particlesArray.length; j++) {
-                    const dx = particlesArray[i].x - particlesArray[j].x;
-                    const dy = particlesArray[i].y - particlesArray[j].y;
-                    const distance = Math.sqrt(dx*dx + dy*dy);
-                    if(distance < 100) {
-                        ctx.beginPath(); ctx.strokeStyle = `rgba(255,255,255, ${0.1 - distance/1000})`;
-                        ctx.lineWidth = 0.5; ctx.moveTo(particlesArray[i].x, particlesArray[i].y);
-                        ctx.lineTo(particlesArray[j].x, particlesArray[j].y); ctx.stroke();
-                    }
-                }
-            }
-            requestAnimationFrame(animateParticles);
-        }
+        function initParticles() { particlesArray = []; for(let i=0; i<80; i++) particlesArray.push(new Particle()); }
+        function animateParticles() { ctx.clearRect(0,0,canvas.width,canvas.height); for(let i=0; i<particlesArray.length; i++) { particlesArray[i].update(); particlesArray[i].draw(); } requestAnimationFrame(animateParticles); }
         initParticles(); animateParticles();
-        window.addEventListener('resize', ()=>{ canvas.width=window.innerWidth; canvas.height=window.innerHeight; initParticles(); });
 
-        // === 2. LOCAL AUDIO PLAYER ===
-        const audio = document.getElementById('bg-music');
-        const musicBtn = document.querySelector('.music-btn');
-        const musicIcon = document.getElementById('music-icon');
         let isPlaying = false;
-
         function toggleMusic() {
-            if (isPlaying) {
-                audio.pause();
-                musicBtn.classList.remove('playing');
-                musicIcon.className = 'fas fa-play';
-            } else {
-                audio.play().catch(e => alert("Please interact with the page first or check if music.mp3 exists!"));
-                musicBtn.classList.add('playing');
-                musicIcon.className = 'fas fa-pause';
-            }
+            const wrap = document.getElementById('music-wrap');
+            if (isPlaying) { bgMusic.pause(); wrap.classList.remove('playing'); document.getElementById('music-icon').className = 'fas fa-play'; } 
+            else { bgMusic.play().catch(e => alert("File not found!")); wrap.classList.add('playing'); document.getElementById('music-icon').className = 'fas fa-pause'; }
             isPlaying = !isPlaying;
         }
 
-        // === 3. TYPING & DATA ===
-        const words = ["< DEVELOPER />", "< WRITER />", "< DREAMER />"];
-        let i = 0, j = 0, isDeleting = false;
+        const words = ["< POET />", "< LOVER />", "< DREAMER />"]; let i = 0, j = 0, isDeleting = false;
         function type() {
-            const current = words[i];
-            document.getElementById('typewriter').textContent = isDeleting ? current.substring(0, j--) : current.substring(0, j++);
-            if (!isDeleting && j === current.length + 1) { isDeleting = true; setTimeout(type, 2000); }
-            else if (isDeleting && j === 0) { isDeleting = false; i = (i + 1) % words.length; setTimeout(type, 500); }
-            else { setTimeout(type, isDeleting ? 50 : 100); }
+            const current = words[i]; document.getElementById('typewriter').textContent = isDeleting ? current.substring(0, j--) : current.substring(0, j++);
+            if (!isDeleting && j === current.length + 1) { isDeleting = true; setTimeout(type, 2000); } else if (isDeleting && j === 0) { isDeleting = false; i = (i + 1) % words.length; setTimeout(type, 500); } else { setTimeout(type, isDeleting ? 50 : 100); }
         }
         type();
 
+        /* Poems */
         const allPoems = [
             { title: "হযবরল", text: `চোখে চোখ পড়ে গেলেই বিস্ফোরণ,\nনিয়ন্ত্রণের বাইরে চলে যায় শিহরণ\nআর ব্যারিকেড ভেঙ্গে প্রেম\nছুটে যায় অসীমে।\nএকদিকে অঙ্কের খাতায়\nপ্রমানিত হয় সমস্ত সূত্র ভুল,\nঅন্যদিকে কবিতার পাতায়\nশব্দগুলো অস্থির হয়ে ওঠে\nবুকের ধুকপুকানি শোনার জন্যে।\nএকনিমেষে মন\nবারনের সব সংজ্ঞা ভুলে থমকে দাঁড়ায়,\nবোধহয় মতন সে\nআবেগ ঢালতে থাকে কারোর নামে।\nগোটা বিশ্বব্রহ্মাণ্ড জুড়ে\nযেন শোরগোল পড়ে যায়,\nসেই চেনা ঠিকানায় -\nআমি আবার ফিরবো বলে॥` },
             { title: "তাকে আমি পাইনি", text: `যে গান শুনতে সে ভালোবাসে,\nসেই গান আমি শুনেছি অজস্রবার।\nযে ঘরে তার আড্ডা হাসির\nমুহূর্তগুলো রয়ে গেছে,\nসেই ঘরেরই দেওয়ালে আমি\nতার নাম লিখে রেখেছি।\nযে ঘাসে আনমনে আঙুল বুলিয়ে\nসে স্বপ্ন বোনে নিজের জন্য,\nসেই ঘাস ছুঁয়ে আমি তার উপস্থিতি\nখুঁজেছি হন্য হয়ে।\nযে পথ দিয়ে তার প্রতিদিন আসা-যাওয়া,\nসেই পথ ধরে আমি হেঁটে গেছি উদ্দেশ্যহীনভাবে।\nতার প্রিয় ফুলের গাছ\nনিজের বাগানে লাগিয়েছি বড়ো যত্নে।\nতার অভ্যেস, বদঅভ্যেস সবটাই\nআপন করেছি তার ভাবনায়।\nযে দুঃখে সে রোজ তপ্ত হয়,\nসেই দুঃখের আগুনে পুড়ে\nআমি ছাই হয়েও দেখেছি।\nতবু তাকে আমি পাইনি॥` },
@@ -325,10 +577,8 @@
             { title: "যায় আসে না", text: `সে তো আমার হতেও পারতো!\nকিন্তু সে আমায় ভালোবাসে না,\nভালোবাসে অন্যকাউকে।\nএতে আমার কিছুই যায় আসে না।\nঅন্যকেউ তার ভাবনায় আসে,\nঅন্যকারোর সাথে কল্পনায় ঘর বাঁধে,\nঅন্যকারোর সাথেই তার যত ভুলবোঝাবুঝি।\nঅন্যকেউ তার মনে আঘাত করে যায়,\nঅন্যকারোর জন্য সে যন্ত্রনায় কাতরায়,\nঅপেক্ষায় ছটফটায়।\nসে মনে মনে খোঁজে অন্যকারোর\nঠিকানা।\nদিনের শুরু থেকে শেষ সবটা সময়\nলেখা অন্যকারোর নামে।\nএতে আমার কিছুই যায় আসে না,\nযদি আমার কিছু যায় আসতো,\nতার কিছুই যায় আসে না॥` },
             { title: "কী আমি?", text: `তোমার গ্যারেজে রাখা\nভাঙ্গা সাইকেলটা আমি নই,\nযেটা বিক্রির জন্য তুমি ভাঙাড়িওয়ালা খুঁজছো।\nভরদুপুরে একঘেয়েমি কাটানোর\nকোনো গল্পের বই নই,\nনই কোনো গান যে তুমি আমায় শুনবে।\nতোমার আকাশের তারাও আমি নই\nযে রোজ বিষন্ন হয়ে\nতুমি ছুটে ছাদে আসবে\nঅগুন্তির মাঝে আমায় গুনতে।\nআমি নই মলম\nযে ব্যথা পেলে তুমি\nহন্য হয়ে খুঁজবে আমায়\nওষুধের বাক্সে।\nতোমার সবচেয়ে প্রিয় বেড়াতে যাবার\nজায়গাটাও আমি নই।\nনই তোমার ডায়েরির পাতা\nযে লেখায় ভুল হলে\nতুমি ছিঁড়ে আমায় ছুঁড়ে ফেলে দেবে॥` },
             { title: "অভিযোগ", text: `তোমায় নিয়ে কীসের অভিযোগ!\nতুমি আমার হয়ে ছিলে কি কখনো?\nতোমার গালভরা হাসি\nআর কথোপকথনে আমি যে জড়াবো,\nতুমি কি তা জানতে!\nতোমার চোখের গভীরতায় গিয়ে\nহারিয়েছি আমি নিজেই।\nঅনুমতি ছাড়াই\nকত মেঘ পাঠিয়েছি তোমার ঠিকানায়,\nভেবেছি তুমি ফিরবে।\nযে ভালোবাসায় কখনোই তুমি থাকোনি,\nসেখানেই থেকে মনটা পুড়িয়েছি\nভালোবাসো - এই ভুল ধারণায়।\nতাহলে বলো\nকী নিয়ে করবো তোমার অভিযোগ?` },
-            { title: "জানবে কেমন করে!", text: `জানবে কেমন করে -
-আদতে কী চলছে আমার ভেতরে!
-ঠকে গিয়ে আমি নিজের\nঠিকানায় ফিরে আসি,\nবারবার হ্যাঁ বারবার\nভুল মানুষকেই ভালোবাসি।\nকী করে এটা বলবো তোমায় -
-তুমিও তাদেরই দলে।\nসব কথা কি আর\nমুখে বলে দিলে চলে?\nতাই নিজের ভেতরেই\nসমস্ত কথা জমিয়ে রাখি,\nআর তুমিই কিনা এসে প্রশ্ন করো -\nমনখারাপ! সঙ্গে থাকি?` },
+            { title: "জানবে কেমন করে!", text: `জানবে কেমন করে -\nআদতে কী চলছে আমার ভেতরে!
+ঠকে গিয়ে আমি নিজের\nঠিকানায় ফিরে আসি,\nবারবার হ্যাঁ বারবার\nভুল মানুষকেই ভালোবাসি।\nকী করে এটা বলবো তোমায় -\nতুমিও তাদেরই দলে।\nসব কথা কি আর\nমুখে বলে দিলে চলে?\nতাই নিজের ভেতরেই\nসমস্ত কথা জমিয়ে রাখি,\nআর তুমিই কিনা এসে প্রশ্ন করো -\nমনখারাপ! সঙ্গে থাকি?` },
             { title: "অপেক্ষায় একজন", text: `সে জানে তার মনের মানুষ\nভালোবাসে কাকে,\nশুধু জানে না তা জানার পরও কেন\nতারই অপেক্ষায় থাকে।\nএই অপেক্ষা তার অভ্যেস\nএকপ্রকার বায়না,\nআগলে সে না পাওয়াটা\nমেনে নিতে চায়না।\nতাই মনে মনে খুব গোপনে\nগল্প বানায় রোজ,\nতাতে বাস্তবের দুনিয়াটা\nথাকলে থাকুক নিখোঁজ।\nএভাবে মনগড়া সুখের ভিড়ে ঢেকে\nগিলছে তারই আবেগ,\nপারলে আড়ালে সে ক্ষত লুকাবে\nধরবে ভালো থাকার ভেক।\nতবু মানবে না সে মিলবে না\nতার ভালোবাসার হিসেবনিকেশ,\nআর এই অপেক্ষা চিরকালের\nনেই কোনো তার শেষ॥` },
             { title: "অপূর্ণ পূর্ণতা", text: `খামখেয়ালী আমরা দুজন\nনিখুঁত ভালোবাসায়,\nঅপূর্ণ পূর্ণতা বলে সেটাকে\nপ্রকাশ করলে ভাষায়।\nমিলনের অভিপ্রায়ে দুজনায়\nনেই হাজার ঝুঁকি,\nমনের ঠিকানায় পৌঁছাতে\nএসে দাঁড়াই মুখোমুখি।\nতখন সব ভাসিয়ে ইচ্ছেমতো\nআমরা আবেগ ঢালি,\nতাও অবশেষে মনদুটো\nথেকে যায় খালি।\nকাছে গিয়েও কেন জানিনা আমি\nছুঁতে পারিনা তাকে,\nসেও যেন ব্যাকুল হয়ে আমায়\nকাছে পেতে ডাকে।\nএই গল্পে মিলন নেই ঠিকই\nতবে তাতে বিচ্ছেদও নেই লেখা,\nঅপূর্ণ পূর্ণতা অব্দিই টানা\nআমাদের ভালোবাসার সীমারেখা॥` },
             { title: "যদি আমার হতে", text: `যদি আমার হতে মন্দ হত না তবে,\nআমি করতাম না তোয়াক্কা দুনিয়াটার,\nশীত আর বসন্তের মাঝে পার্থক্যও করতাম না।\nভাঁড়ের চায়ে চুমুক দিয়ে\nবিষাদের পরিবর্তে ভালোবাসার স্বাদ নিতাম।\nঘাটে বসে সূর্যাস্ত দেখার\nভঙ্গিমাও অন্যরকম হত।\nমানুষের ভিড়ে হারিয়ে যেতাম না,\nনিজের একটা ছায়া আশ্রয় খুঁজতে\nরোজ বাড়ি ছেড়ে দূরে কোথাও পালিয়ে যেতাম না।\nএই মনের কোলাহলের থেকে মুক্তি পেতাম,\nচিরন্তন অপেক্ষাগুলোও বিদায় নিত।\nস্মৃতি জমানোর জন্য সুন্দর\nএকটা সংসার হত,\nঅন্তত পিছু ফিরে দেখতে হত না।\nহয়তো কবিতার বদলে\nকটা গল্প লিখতাম\nতুমি যদি আমার হতে॥` },
@@ -337,7 +587,6 @@
 পরের প্রতিটা জন্মেও সঙ্গে থেকে যাবে।\nঅথচ এই জন্মেই তার\nভালোবাসা বদলে গেছে।\nআমি ন্যূনতম আঘাত পেলে\nউৎকণ্ঠায় যার বুক ফেটে যেত,\nসে যাবার বেলায় সামান্য খেয়ালটুকু করেনি\nনিজেই কতখানি ক্ষতবিক্ষত\nকরেছে আমায়॥` }
         ];
 
-        // Visitor Counter & Stats
         let visitors = localStorage.getItem('tv') || 14200;
         visitors = parseInt(visitors) + Math.floor(Math.random()*3);
         localStorage.setItem('tv', visitors);
@@ -362,7 +611,6 @@
             if(currentIndex !== -1) updateStatsUI(currentIndex);
         }, 60000); 
 
-        // Render List
         const listDiv = document.getElementById('buttons-list');
         let currentIndex = -1;
 
@@ -370,6 +618,7 @@
             const btn = document.createElement('div');
             btn.className = 'poem-btn';
             btn.setAttribute('data-tilt', ''); btn.setAttribute('data-tilt-scale', '1.02');
+            btn.setAttribute('data-aos', 'fade-up');
             btn.innerHTML = `<span>${poem.title}</span> <i class="fas fa-chevron-right"></i>`;
             btn.onclick = () => openPoem(index);
             listDiv.appendChild(btn);
@@ -380,6 +629,7 @@
             currentIndex = index;
             document.getElementById('poem-title-display').innerText = allPoems[index].title;
             document.getElementById('poem-content-display').innerText = allPoems[index].text;
+            document.getElementById('poem-signature-display').innerText = "- ইয়াছিন কবির";
             updateStatsUI(index);
             switchView('reader-view');
         }
@@ -421,7 +671,10 @@
             history.back(); 
             document.getElementById('reader-view').style.display = 'none';
             document.getElementById('video-view').style.display = 'none';
+            document.getElementById('secret-vault').style.display = 'none';
             document.getElementById('home-view').style.display = 'block';
+            stopPetals();
+            vaultAudio.pause();
         }
         function switchView(viewId) {
             history.pushState({view: viewId}, null, '');
@@ -432,7 +685,9 @@
         window.onpopstate = () => {
             document.getElementById('reader-view').style.display = 'none';
             document.getElementById('video-view').style.display = 'none';
+            document.getElementById('secret-vault').style.display = 'none';
             document.getElementById('home-view').style.display = 'block';
+            stopPetals();
         };
 
         document.addEventListener('contextmenu', e => e.preventDefault());
