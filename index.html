@@ -25,14 +25,11 @@
         @keyframes heartBeat { from { transform: scale(1); opacity: 0.8; } to { transform: scale(1.2); opacity: 1; } }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Music Notification Toast */
-        #music-toast {
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-            background: rgba(255, 77, 109, 0.9); color: white; padding: 10px 20px;
-            border-radius: 30px; font-size: 0.9rem; z-index: 10000;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5); display: none; animation: slideDown 0.5s ease;
-        }
-        @keyframes slideDown { from { top: -50px; } to { top: 20px; } }
+        /* Music Button (Restored & Fixed) */
+        .music-wrapper { position: fixed; bottom: 30px; right: 20px; z-index: 2000; }
+        .music-btn { width: 50px; height: 50px; background: rgba(0, 0, 0, 0.8); border: 2px solid var(--secondary); border-radius: 50%; color: var(--secondary); display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 0 15px rgba(255, 77, 109, 0.6); transition: 0.3s; }
+        .music-wrapper.playing .music-btn { border-color: var(--accent); color: var(--accent); animation: spin 4s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
 
         /* Container */
         #app-container { width: 100%; max-width: 500px; background: rgba(30, 10, 15, 0.3); backdrop-filter: blur(8px); min-height: 100vh; position: relative; box-shadow: 0 0 50px rgba(0,0,0,0.5); border-left: 1px solid rgba(255, 77, 109, 0.1); border-right: 1px solid rgba(255, 77, 109, 0.1); }
@@ -40,7 +37,6 @@
         /* Profile */
         .profile-header { text-align: center; padding: 60px 20px 30px 20px; }
         .avatar { width: 130px; height: 130px; border-radius: 50%; border: 3px solid var(--secondary); margin: 0 auto 15px; object-fit: cover; box-shadow: 0 0 25px rgba(255, 77, 109, 0.4); transition: transform 0.3s; cursor: pointer; }
-        .avatar:hover { transform: scale(1.05); }
         h1 { margin: 0; font-size: 3rem; font-family: 'Great Vibes', cursive; background: linear-gradient(to right, #ff9a9e, #fecfef); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .typing-text { color: var(--primary); font-family: 'Cinzel', serif; font-size: 0.9rem; letter-spacing: 3px; font-weight: bold; margin-top: 5px; opacity: 0.8; }
         .social-links { display: flex; justify-content: center; gap: 15px; margin-top: 25px; }
@@ -77,22 +73,21 @@
         .story-text { 
             font-size: 1.2rem; line-height: 1.9; color: #ddd; 
             text-align: justify; white-space: pre-line; 
-            padding-bottom: 150px; /* Added extra padding so text isn't hidden */
+            padding-bottom: 150px; /* Extra padding so text is readable */
             animation: fadeIn 1s; 
         }
         
         .chapter-controls { 
             display: flex; justify-content: space-between; 
             position: fixed; 
-            bottom: 60px; /* Raised Higher for Mobile */
+            bottom: 80px; /* MOVED UP FOR MOBILE */
             left: 50%; transform: translateX(-50%); 
             width: 90%; max-width: 450px; 
-            background: rgba(0,0,0,0.9); /* Darker background */
-            padding: 15px; border-radius: 30px; 
-            border: 1px solid var(--secondary); 
-            backdrop-filter: blur(10px); 
-            z-index: 999; /* Ensure on top */
-            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.95); 
+            padding: 10px; border-radius: 30px; 
+            border: 1px solid #444; 
+            backdrop-filter: blur(5px); 
+            z-index: 1500;
         }
         .ctrl-btn { background: transparent; color: #fff; border: none; font-size: 1.5rem; padding: 0 20px; cursor: pointer; }
         .ctrl-btn:disabled { color: #444; }
@@ -100,7 +95,7 @@
         /* Poem Reader & Action Bar */
         #poem-container-box { background: rgba(40, 10, 20, 0.8); padding: 25px; border-radius: 20px; border: 1px solid rgba(255, 77, 109, 0.3); margin-bottom: 30px; }
         #poem-content-display { font-size: 1.3rem; line-height: 2; color: #ffe6ea; white-space: pre-line; }
-        .action-bar { display: flex; justify-content: space-around; border-top: 1px solid #333; margin-top: 30px; padding-top: 20px; }
+        .action-bar { display: flex; justify-content: space-around; border-top: 1px solid #333; margin-top: 30px; padding-top: 20px; padding-bottom: 50px; }
         .action-btn { background: transparent; border: none; color: #666; font-size: 1.4rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px; }
         .count-text { font-size: 0.8rem; font-weight: bold; }
         .liked { color: var(--secondary); } .liked .count-text { color: var(--secondary); }
@@ -142,10 +137,14 @@
         <div class="intro-text">Welcome to<br>Yeasin's World</div>
     </div>
 
-    <div id="music-toast"><i class="fas fa-music"></i> Tap anywhere to play music</div>
-
     <audio id="bg-music" loop> <source src="music.mp3" type="audio/mpeg"> </audio>
     <audio id="vault-audio" loop> <source src="her_song.mp3" type="audio/mpeg"> </audio>
+
+    <div class="music-wrapper">
+        <div class="music-btn" onclick="toggleMusic()">
+            <i class="fas fa-play" id="music-icon"></i>
+        </div>
+    </div>
 
     <div id="app-container">
         <div id="home-view">
@@ -260,11 +259,6 @@
             setTimeout(() => document.getElementById('preloader').style.display = 'none', 3000);
             AOS.init({ duration: 800, once: true });
             
-            // Auto-play Music Toast
-            const toast = document.getElementById('music-toast');
-            toast.style.display = 'block';
-            setTimeout(() => toast.style.display = 'none', 5000);
-
             // Visitor Counter
             let visitors = localStorage.getItem('tv') || 14200;
             visitors = parseInt(visitors) + Math.floor(Math.random()*3);
@@ -284,16 +278,18 @@
             });
             renderNovelLibrary();
             
-            // Music Auto-play on Touch
+            // Auto-play music on first touch if failed
             const music = document.getElementById('bg-music');
-            const startMusic = () => { 
-                music.play().catch(()=>{}); 
-                toast.style.display = 'none';
-                document.removeEventListener('click', startMusic); 
-                document.removeEventListener('touchstart', startMusic); 
+            const attemptPlay = () => {
+                music.play().then(() => {
+                    document.querySelector('.music-wrapper').classList.add('playing');
+                    document.getElementById('music-icon').className = 'fas fa-pause';
+                }).catch(()=>{});
+                document.removeEventListener('click', attemptPlay);
+                document.removeEventListener('touchstart', attemptPlay);
             };
-            document.addEventListener('click', startMusic);
-            document.addEventListener('touchstart', startMusic);
+            document.addEventListener('click', attemptPlay);
+            document.addEventListener('touchstart', attemptPlay);
         };
 
         // --- POEMS DATABASE ---
@@ -458,6 +454,24 @@
         function openNovelLibrary() { switchView('novel-library'); }
         function backToLibrary() { switchView('novel-library'); }
 
+        // Music Logic
+        let isPlaying = false;
+        const bgMusic = document.getElementById('bg-music');
+        
+        function toggleMusic() {
+            if (isPlaying) {
+                bgMusic.pause();
+                document.querySelector('.music-wrapper').classList.remove('playing');
+                document.getElementById('music-icon').className = 'fas fa-play';
+            } else {
+                bgMusic.play().then(() => {
+                    document.querySelector('.music-wrapper').classList.add('playing');
+                    document.getElementById('music-icon').className = 'fas fa-pause';
+                }).catch(e => console.log(e));
+            }
+            isPlaying = !isPlaying;
+        }
+
         // Navigation
         function goBack() { history.back(); document.querySelectorAll('.full-view').forEach(el => el.style.display='none'); document.getElementById('home-view').style.display='block'; stopPetals(); }
         function switchView(viewId) { 
@@ -502,9 +516,6 @@
         // Utils
         const words = ["< POET />", "< WRITER />", "< DREAMER />"]; let i=0,j=0,isDeleting=false;
         function type() { const current = words[i]; document.getElementById('typewriter').textContent = isDeleting ? current.substring(0, j--) : current.substring(0, j++); if (!isDeleting && j === current.length + 1) { isDeleting = true; setTimeout(type, 2000); } else if (isDeleting && j === 0) { isDeleting = false; i = (i + 1) % words.length; setTimeout(type, 500); } else { setTimeout(type, isDeleting ? 50 : 100); } } type();
-        
-        let isPlaying = false; const bgMusic = document.getElementById('bg-music');
-        function toggleMusic() { if (isPlaying) { bgMusic.pause(); document.querySelector('.music-wrapper').classList.remove('playing'); } else { bgMusic.play(); document.querySelector('.music-wrapper').classList.add('playing'); } isPlaying = !isPlaying; }
         
         // Particles
         const canvas = document.getElementById('particles'); const ctx = canvas.getContext('2d'); canvas.width = window.innerWidth; canvas.height = window.innerHeight;
