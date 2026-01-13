@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Yeasin Kabir | The Poet</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Hind+Siliguri:wght@300;400;600;700&family=Orbitron:wght@500&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
@@ -24,12 +25,22 @@
         @keyframes heartBeat { from { transform: scale(1); opacity: 0.8; } to { transform: scale(1.2); opacity: 1; } }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* Music Notification Toast */
+        #music-toast {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            background: rgba(255, 77, 109, 0.9); color: white; padding: 10px 20px;
+            border-radius: 30px; font-size: 0.9rem; z-index: 10000;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5); display: none; animation: slideDown 0.5s ease;
+        }
+        @keyframes slideDown { from { top: -50px; } to { top: 20px; } }
+
         /* Container */
         #app-container { width: 100%; max-width: 500px; background: rgba(30, 10, 15, 0.3); backdrop-filter: blur(8px); min-height: 100vh; position: relative; box-shadow: 0 0 50px rgba(0,0,0,0.5); border-left: 1px solid rgba(255, 77, 109, 0.1); border-right: 1px solid rgba(255, 77, 109, 0.1); }
 
         /* Profile */
         .profile-header { text-align: center; padding: 60px 20px 30px 20px; }
         .avatar { width: 130px; height: 130px; border-radius: 50%; border: 3px solid var(--secondary); margin: 0 auto 15px; object-fit: cover; box-shadow: 0 0 25px rgba(255, 77, 109, 0.4); transition: transform 0.3s; cursor: pointer; }
+        .avatar:hover { transform: scale(1.05); }
         h1 { margin: 0; font-size: 3rem; font-family: 'Great Vibes', cursive; background: linear-gradient(to right, #ff9a9e, #fecfef); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .typing-text { color: var(--primary); font-family: 'Cinzel', serif; font-size: 0.9rem; letter-spacing: 3px; font-weight: bold; margin-top: 5px; opacity: 0.8; }
         .social-links { display: flex; justify-content: center; gap: 15px; margin-top: 25px; }
@@ -58,12 +69,31 @@
         .rating-area { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
         .stars i { color: #555; cursor: pointer; } .stars i.active { color: var(--accent); }
 
-        /* Novel Reader */
+        /* Novel Reader - FIXED NAVIGATION */
         #novel-reader { background: #0c0c10; }
         .reader-nav { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 20px; }
         #chapter-dropdown { background: #222; color: #fff; border: 1px solid #444; padding: 8px; border-radius: 5px; font-family: 'Hind Siliguri'; max-width: 150px; font-size: 0.9rem; }
-        .story-text { font-size: 1.2rem; line-height: 1.9; color: #ddd; text-align: justify; white-space: pre-line; padding-bottom: 60px; animation: fadeIn 1s; }
-        .chapter-controls { display: flex; justify-content: space-between; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 450px; background: rgba(0,0,0,0.8); padding: 10px; border-radius: 30px; border: 1px solid #444; backdrop-filter: blur(5px); }
+        
+        .story-text { 
+            font-size: 1.2rem; line-height: 1.9; color: #ddd; 
+            text-align: justify; white-space: pre-line; 
+            padding-bottom: 150px; /* Added extra padding so text isn't hidden */
+            animation: fadeIn 1s; 
+        }
+        
+        .chapter-controls { 
+            display: flex; justify-content: space-between; 
+            position: fixed; 
+            bottom: 60px; /* Raised Higher for Mobile */
+            left: 50%; transform: translateX(-50%); 
+            width: 90%; max-width: 450px; 
+            background: rgba(0,0,0,0.9); /* Darker background */
+            padding: 15px; border-radius: 30px; 
+            border: 1px solid var(--secondary); 
+            backdrop-filter: blur(10px); 
+            z-index: 999; /* Ensure on top */
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+        }
         .ctrl-btn { background: transparent; color: #fff; border: none; font-size: 1.5rem; padding: 0 20px; cursor: pointer; }
         .ctrl-btn:disabled { color: #444; }
 
@@ -111,6 +141,8 @@
         <div class="intro-heart">❤️</div>
         <div class="intro-text">Welcome to<br>Yeasin's World</div>
     </div>
+
+    <div id="music-toast"><i class="fas fa-music"></i> Tap anywhere to play music</div>
 
     <audio id="bg-music" loop> <source src="music.mp3" type="audio/mpeg"> </audio>
     <audio id="vault-audio" loop> <source src="her_song.mp3" type="audio/mpeg"> </audio>
@@ -228,13 +260,18 @@
             setTimeout(() => document.getElementById('preloader').style.display = 'none', 3000);
             AOS.init({ duration: 800, once: true });
             
-            // 1. Visitor Counter
+            // Auto-play Music Toast
+            const toast = document.getElementById('music-toast');
+            toast.style.display = 'block';
+            setTimeout(() => toast.style.display = 'none', 5000);
+
+            // Visitor Counter
             let visitors = localStorage.getItem('tv') || 14200;
             visitors = parseInt(visitors) + Math.floor(Math.random()*3);
             localStorage.setItem('tv', visitors);
             document.getElementById('total-visitors').innerText = visitors.toLocaleString();
 
-            // 2. Poems Stats
+            // Init Poems
             allPoems.forEach((poem, index) => {
                 let stats = localStorage.getItem(`p_${index}`);
                 if (stats) { Object.assign(poem, JSON.parse(stats)); } 
@@ -247,9 +284,14 @@
             });
             renderNovelLibrary();
             
-            // Auto-play music on interaction
+            // Music Auto-play on Touch
             const music = document.getElementById('bg-music');
-            const startMusic = () => { music.play().catch(()=>{}); document.removeEventListener('click', startMusic); document.removeEventListener('touchstart', startMusic); };
+            const startMusic = () => { 
+                music.play().catch(()=>{}); 
+                toast.style.display = 'none';
+                document.removeEventListener('click', startMusic); 
+                document.removeEventListener('touchstart', startMusic); 
+            };
             document.addEventListener('click', startMusic);
             document.addEventListener('touchstart', startMusic);
         };
