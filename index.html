@@ -10,9 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Hind+Siliguri:wght@300;400;600;700&family=Orbitron:wght@500&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
-        :root { --primary: #ffb7b2; --secondary: #ff4d6d; --accent: #ffd700; --novel-accent: #e74c3c; --bg: #0f0505; --card-bg: rgba(25, 25, 30, 0.95); }
+        :root { --primary: #ffb7b2; --secondary: #ff4d6d; --accent: #ffd700; --novel-accent: #e74c3c; --bg: #0f0505; --card-bg: rgba(25, 25, 30, 0.95); --text-size: 1.3rem; }
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg); color: #fff0f5; font-family: 'Hind Siliguri', sans-serif; margin: 0; padding: 0; display: flex; justify-content: center; min-height: 100vh; user-select: none; overflow-x: hidden; }
+        body { background-color: var(--bg); color: #fff0f5; font-family: 'Hind Siliguri', sans-serif; margin: 0; padding: 0; display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; }
         
         /* Background */
         body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(160deg, #1a050a 0%, #0a0002 50%, #000000 100%); z-index: -3; }
@@ -25,14 +25,25 @@
         @keyframes heartBeat { from { transform: scale(1); opacity: 0.8; } to { transform: scale(1.2); opacity: 1; } }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Music Button (Restored & Fixed) */
+        /* Music Button */
         .music-wrapper { position: fixed; bottom: 30px; right: 20px; z-index: 2000; }
         .music-btn { width: 50px; height: 50px; background: rgba(0, 0, 0, 0.8); border: 2px solid var(--secondary); border-radius: 50%; color: var(--secondary); display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 0 15px rgba(255, 77, 109, 0.6); transition: 0.3s; }
         .music-wrapper.playing .music-btn { border-color: var(--accent); color: var(--accent); animation: spin 4s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* Container */
-        #app-container { width: 100%; max-width: 500px; background: rgba(30, 10, 15, 0.3); backdrop-filter: blur(8px); min-height: 100vh; position: relative; box-shadow: 0 0 50px rgba(0,0,0,0.5); border-left: 1px solid rgba(255, 77, 109, 0.1); border-right: 1px solid rgba(255, 77, 109, 0.1); }
+        /* Container & Responsive Layout */
+        #app-container { width: 100%; max-width: 500px; background: rgba(30, 10, 15, 0.5); backdrop-filter: blur(8px); min-height: 100vh; position: relative; box-shadow: 0 0 50px rgba(0,0,0,0.5); border-left: 1px solid rgba(255, 77, 109, 0.1); border-right: 1px solid rgba(255, 77, 109, 0.1); transition: max-width 0.3s ease; }
+
+        /* Desktop View Rules */
+        @media (min-width: 900px) {
+            #app-container { max-width: 1000px; padding: 20px; border: none; background: rgba(30, 10, 15, 0.7); margin: 20px auto; border-radius: 20px; }
+            #home-view { display: grid; grid-template-columns: 350px 1fr; gap: 40px; align-items: start; }
+            .profile-header { position: sticky; top: 20px; padding: 30px; background: rgba(0,0,0,0.4); border-radius: 20px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+            .list-container { padding: 0; }
+            #buttons-list { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+            .poem-btn { margin-bottom: 0; }
+            .full-view { padding: 40px 100px; } 
+        }
 
         /* Profile */
         .profile-header { text-align: center; padding: 60px 20px 30px 20px; }
@@ -43,10 +54,17 @@
         .social-btn { width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; background: rgba(255, 255, 255, 0.05); color: #fff; text-decoration: none; border: 1px solid rgba(255, 255, 255, 0.1); transition: 0.3s; }
         .social-btn:hover { background: var(--secondary); transform: translateY(-3px); }
 
-        /* Buttons */
+        /* Search & Filter */
+        .search-container { padding: 0 25px; margin-bottom: 15px; }
+        #search-bar { width: 100%; padding: 12px 20px; border-radius: 25px; border: 1px solid var(--secondary); background: rgba(0,0,0,0.5); color: #fff; font-family: 'Hind Siliguri'; font-size: 1rem; }
+        .filter-tags { display: flex; gap: 10px; padding: 0 25px 15px; overflow-x: auto; scrollbar-width: none; }
+        .filter-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #ddd; padding: 5px 15px; border-radius: 15px; white-space: nowrap; cursor: pointer; font-size: 0.9rem; transition: 0.3s; }
+        .filter-btn.active, .filter-btn:hover { background: var(--secondary); border-color: var(--secondary); color: #fff; }
+
+        /* Buttons & List */
         .list-container { padding: 25px; }
         .section-title { color: var(--primary); font-family: 'Cinzel', serif; font-size: 0.9rem; margin-bottom: 20px; letter-spacing: 2px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center; padding-bottom: 10px; }
-        .poem-btn { background: rgba(255, 255, 255, 0.03); padding: 18px; margin-bottom: 15px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.05); cursor: pointer; transition: 0.3s; display: flex; justify-content: space-between; align-items: center; font-size: 1.1rem; color: #eee; position: relative; overflow: hidden; }
+        .poem-btn { background: rgba(255, 255, 255, 0.03); padding: 18px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.05); cursor: pointer; transition: 0.3s; display: flex; justify-content: space-between; align-items: center; font-size: 1.1rem; color: #eee; position: relative; overflow: hidden; margin-bottom: 15px; }
         .poem-btn:hover { border-color: var(--secondary); background: linear-gradient(90deg, rgba(255, 77, 109, 0.1) 0%, transparent 100%); padding-left: 22px; }
         .novel-hub-btn { border-color: var(--novel-accent); color: #ff6b6b; font-weight: bold; background: rgba(231, 76, 60, 0.05); }
 
@@ -54,6 +72,42 @@
         .full-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 500; padding: 20px; overflow-y: auto; animation: slideUp 0.5s ease; }
         @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .back-btn { background: transparent; border: none; color: var(--secondary); font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: bold; margin-bottom: 20px; }
+
+        /* Poem Reader & Settings */
+        #poem-container-box { background: rgba(40, 10, 20, 0.8); padding: 25px; border-radius: 20px; border: 1px solid rgba(255, 77, 109, 0.3); margin-bottom: 30px; position: relative; }
+        #poem-content-display { font-size: var(--text-size); line-height: 2; color: #ffe6ea; white-space: pre-line; transition: font-size 0.3s; }
+        
+        #settings-panel { display: none; position: absolute; top: 60px; right: 20px; background: rgba(0,0,0,0.95); padding: 15px; border-radius: 10px; border: 1px solid #444; z-index: 2000; min-width: 180px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .setting-item { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; color: #fff; font-size: 0.9rem; }
+        .font-ctrl-btn { background: #333; color: #fff; border: 1px solid #555; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+
+        /* Comments */
+        .comments-section { margin-top: 30px; border-top: 1px solid #333; padding-top: 20px; }
+        .comment-form { display: flex; gap: 10px; margin-bottom: 20px; }
+        .comment-input { flex: 1; background: #222; border: 1px solid #444; color: #fff; padding: 10px; border-radius: 8px; font-family: 'Hind Siliguri'; }
+        .comment-submit { background: var(--secondary); border: none; color: #fff; padding: 0 15px; border-radius: 8px; cursor: pointer; }
+        .comment-list { max-height: 300px; overflow-y: auto; }
+        .comment-item { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin-bottom: 10px; font-size: 0.9rem; }
+        .comment-user { color: var(--secondary); font-weight: bold; font-size: 0.8rem; display: block; margin-bottom: 3px; }
+
+        /* Gallery */
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; padding: 10px; }
+        .gallery-item { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; border: 2px solid #333; transition: 0.3s; cursor: pointer; }
+        .gallery-item:hover { transform: scale(1.03); border-color: var(--secondary); }
+
+        /* Subscribe & Contact */
+        .sub-box { background: linear-gradient(45deg, #222, #111); padding: 20px; margin: 20px 0; border-radius: 15px; text-align: center; border: 1px solid #333; }
+        .sub-input { padding: 10px; width: 70%; border-radius: 20px; border: none; margin-right: 5px; margin-bottom: 10px; font-family: 'Hind Siliguri'; }
+        .sub-btn { background: var(--secondary); color: #fff; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; }
+        .contact-form { padding: 20px; }
+        .c-input { width: 100%; background: #222; border: 1px solid #444; color: #fff; padding: 12px; margin-bottom: 15px; border-radius: 8px; font-family: 'Hind Siliguri'; }
+        textarea.c-input { height: 100px; resize: none; }
+
+        /* Action Bar */
+        .action-bar { display: flex; justify-content: space-around; border-top: 1px solid #333; margin-top: 30px; padding-top: 20px; padding-bottom: 50px; }
+        .action-btn { background: transparent; border: none; color: #666; font-size: 1.4rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .count-text { font-size: 0.8rem; font-weight: bold; }
+        .liked { color: var(--secondary); } .liked .count-text { color: var(--secondary); }
 
         /* Novel Library */
         #novel-library { background: #111; }
@@ -65,72 +119,63 @@
         .rating-area { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
         .stars i { color: #555; cursor: pointer; } .stars i.active { color: var(--accent); }
 
-        /* Novel Reader - FIXED NAVIGATION */
+        /* Novel Reader */
         #novel-reader { background: #0c0c10; }
         .reader-nav { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 20px; }
         #chapter-dropdown { background: #222; color: #fff; border: 1px solid #444; padding: 8px; border-radius: 5px; font-family: 'Hind Siliguri'; max-width: 150px; font-size: 0.9rem; }
-        
-        .story-text { 
-            font-size: 1.2rem; line-height: 1.9; color: #ddd; 
-            text-align: justify; white-space: pre-line; 
-            padding-bottom: 150px; /* Extra padding so text is readable */
-            animation: fadeIn 1s; 
-        }
-        
-        .chapter-controls { 
-            display: flex; justify-content: space-between; 
-            position: fixed; 
-            bottom: 80px; /* MOVED UP FOR MOBILE */
-            left: 50%; transform: translateX(-50%); 
-            width: 90%; max-width: 450px; 
-            background: rgba(0,0,0,0.95); 
-            padding: 10px; border-radius: 30px; 
-            border: 1px solid #444; 
-            backdrop-filter: blur(5px); 
-            z-index: 1500;
-        }
+        .story-text { font-size: 1.2rem; line-height: 1.9; color: #ddd; text-align: justify; white-space: pre-line; padding-bottom: 150px; animation: fadeIn 1s; }
+        .chapter-controls { display: flex; justify-content: space-between; position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 450px; background: rgba(0,0,0,0.95); padding: 10px; border-radius: 30px; border: 1px solid #444; backdrop-filter: blur(5px); z-index: 1500; }
         .ctrl-btn { background: transparent; color: #fff; border: none; font-size: 1.5rem; padding: 0 20px; cursor: pointer; }
         .ctrl-btn:disabled { color: #444; }
 
-        /* Poem Reader & Action Bar */
-        #poem-container-box { background: rgba(40, 10, 20, 0.8); padding: 25px; border-radius: 20px; border: 1px solid rgba(255, 77, 109, 0.3); margin-bottom: 30px; }
-        #poem-content-display { font-size: 1.3rem; line-height: 2; color: #ffe6ea; white-space: pre-line; }
-        .action-bar { display: flex; justify-content: space-around; border-top: 1px solid #333; margin-top: 30px; padding-top: 20px; padding-bottom: 50px; }
-        .action-btn { background: transparent; border: none; color: #666; font-size: 1.4rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px; }
-        .count-text { font-size: 0.8rem; font-weight: bold; }
-        .liked { color: var(--secondary); } .liked .count-text { color: var(--secondary); }
-
-        /* Secret Vault */
+        /* Secret Vault & New Features CSS */
         #secret-vault { background: linear-gradient(135deg, #2b0a1d 0%, #000000 100%); padding: 0; }
         .vault-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 77, 109, 0.2); position: relative; z-index: 100; }
         .diary-page { display: none; padding: 30px 20px; text-align: center; height: calc(100vh - 80px); overflow-y: auto; }
         .diary-page.active { display: block; }
         .diary-text { font-family: 'Hind Siliguri', sans-serif; color: #ffe6ea; font-size: 1.2rem; line-height: 1.8; background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 15px; text-align: left; white-space: pre-line; margin-bottom: 20px; }
-        
         .her-eyes { width: 100%; max-width: 300px; border-radius: 15px; border: 4px solid var(--secondary); box-shadow: 0 0 20px var(--secondary); margin-bottom: 20px; animation: float 4s infinite ease-in-out; }
         @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-
         .open-when-btn { display: block; width: 100%; padding: 15px; margin: 10px 0; background: rgba(255, 77, 109, 0.2); border: 1px solid var(--secondary); border-radius: 10px; color: #fff; cursor: pointer; text-align: left; }
         .open-when-msg { display: none; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; margin-bottom: 15px; color: var(--primary); font-style: italic; }
-        
-        .fingerprint-area { width: 100px; height: 100px; border: 2px dashed var(--secondary); border-radius: 50%; margin: 30px auto; display: flex; justify-content: center; align-items: center; cursor: pointer; position: relative; user-select: none; -webkit-tap-highlight-color: transparent; }
+        .fingerprint-area { width: 100px; height: 100px; border: 2px dashed var(--secondary); border-radius: 50%; margin: 30px auto; display: flex; justify-content: center; align-items: center; cursor: pointer; position: relative; user-select: none; }
         .fingerprint-area:active { background: rgba(255, 77, 109, 0.1); }
         .scan-line { position: absolute; width: 100%; height: 2px; background: var(--secondary); top: 0; display: none; animation: scan 1.5s infinite linear; }
         @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
         .nav-buttons { position: absolute; bottom: 20px; width: 100%; display: flex; justify-content: center; gap: 20px; left: 0; z-index: 100; }
         .diary-btn { background: var(--secondary); color: white; border: none; padding: 10px 20px; border-radius: 30px; cursor: pointer; }
-        
         .petal { position: absolute; top: -50px; background: rgba(255, 0, 80, 0.6); border-radius: 150% 0 150% 0; animation: fall linear infinite; z-index: 50; pointer-events: none; }
         @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
 
+        /* Quiz CSS */
+        .quiz-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
+        .quiz-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--secondary); color: #fff; padding: 15px; border-radius: 12px; cursor: pointer; font-family: 'Hind Siliguri'; font-size: 1rem; transition: 0.3s; }
+        .quiz-btn:hover { background: rgba(255, 77, 109, 0.2); }
+        .quiz-btn.correct { background: #2ecc71; border-color: #2ecc71; color: #000; font-weight: bold; }
+        .quiz-btn.wrong { background: #e74c3c; border-color: #e74c3c; animation: shake 0.5s; }
+        @keyframes shake { 0%{transform:translateX(0)} 25%{transform:translateX(-10px)} 50%{transform:translateX(10px)} 75%{transform:translateX(-10px)} 100%{transform:translateX(0)} }
+        
+        /* Mood Tracker CSS */
+        .mood-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 30px; }
+        .mood-btn { background: rgba(255,255,255,0.05); border: 2px solid #555; padding: 20px 10px; border-radius: 15px; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .mood-icon { font-size: 2.5rem; }
+        .mood-btn:hover { border-color: var(--secondary); background: rgba(255, 77, 109, 0.1); transform: translateY(-5px); }
+
+        /* Contract CSS */
+        .contract-paper { background: #fff; color: #000; padding: 20px; border-radius: 5px; font-family: 'Courier New', monospace; font-size: 0.9rem; text-align: left; position: relative; transform: rotate(-1deg); box-shadow: 0 0 15px rgba(0,0,0,0.5); margin-bottom: 20px; }
+        .contract-sign-btn { background: var(--secondary); color: #fff; padding: 10px 30px; border-radius: 30px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .stamp { position: absolute; bottom: 20px; right: 20px; border: 3px solid #d90429; color: #d90429; font-weight: bold; padding: 5px 10px; transform: rotate(-15deg) scale(2); opacity: 0; transition: 0.5s; border-radius: 5px; font-family: 'Cinzel'; }
+        .stamp.stamped { transform: rotate(-15deg) scale(1); opacity: 0.8; }
+
         .visitor-counter { text-align: center; font-family: 'Orbitron'; font-size: 0.8rem; color: #666; margin-top: 30px; border-top: 1px solid #222; padding-top: 20px; }
-        .footer { text-align: center; color: #555; font-size: 0.7rem; margin-top: 10px; letter-spacing: 2px; padding-bottom: 20px;}
+        .footer { text-align: center; color: #555; font-size: 0.7rem; margin-top: 10px; letter-spacing: 2px; padding-bottom: 20px; width: 100%; grid-column: 1 / -1; }
         .video-container { margin-bottom: 30px; border-radius: 12px; overflow: hidden; border: 1px solid #333; background: #000; display: flex; justify-content: center; } iframe { max-width: 100%; }
     </style>
 </head>
 <body>
 
     <canvas id="particles"></canvas>
+    <canvas id="confetti-canvas" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:9999; display:none;"></canvas>
 
     <div id="preloader">
         <div class="intro-heart">❤️</div>
@@ -155,25 +200,46 @@
                 <div class="social-links">
                     <a href="https://wa.me/8801851715713" class="social-btn" target="_blank"><i class="fab fa-whatsapp"></i></a>
                     <a href="https://www.facebook.com/share/14LP9NJQ2KQ/" class="social-btn" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" onclick="switchView('contact-view')" class="social-btn"><i class="fas fa-envelope"></i></a>
+                </div>
+                
+                <div class="sub-box" data-aos="fade-up">
+                    <h3 style="margin-top:0; font-size:1rem; color:var(--accent);">🔔 Get New Poem Updates</h3>
+                    <input type="email" placeholder="yeasinkabir0000@gmail.com" class="sub-input" id="sub-email">
+                    <button class="sub-btn" onclick="handleSubscribe()">Join</button>
                 </div>
             </div>
 
             <div class="list-container">
-                <div class="section-title" data-aos="fade-in">Experience</div>
-                <div class="poem-btn app-install-btn" data-aos="fade-up" onclick="alert('App Installing...')">
-                    <span>📱 Install App</span> <i class="fas fa-download"></i>
+                <div class="search-container" data-aos="fade-in">
+                    <input type="text" id="search-bar" placeholder="🔍 কবিতা খুঁজুন..." onkeyup="filterPoems()">
                 </div>
-                <div class="poem-btn novel-hub-btn" data-aos="fade-up" onclick="openNovelLibrary()">
-                    <span>📚 উপন্যাস সমগ্র (Novel Hub)</span> <i class="fas fa-book"></i>
+                <div class="filter-tags" data-aos="fade-in">
+                    <button class="filter-btn active" onclick="filterByTag('all')">সব</button>
+                    <button class="filter-btn" onclick="filterByTag('love')">❤️ প্রেম</button>
+                    <button class="filter-btn" onclick="filterByTag('sad')">💔 বিরহ</button>
+                    <button class="filter-btn" onclick="filterByTag('life')">🌱 জীবন</button>
                 </div>
-                <div class="poem-btn video-menu-btn" data-aos="fade-up" onclick="switchView('video-view')">
-                    <span>🎥 ভিডিও গ্যালারি</span> <i class="fas fa-chevron-right"></i>
+
+                <div class="section-title" data-aos="fade-in">Explore</div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:20px;">
+                    <div class="poem-btn novel-hub-btn" onclick="openNovelLibrary()" style="justify-content:center; flex-direction:column; gap:5px; margin:0;">
+                        <i class="fas fa-book" style="font-size:1.5rem;"></i> <span>উপন্যাস সমগ্র</span>
+                    </div>
+                    <div class="poem-btn video-menu-btn" onclick="switchView('gallery-view')" style="justify-content:center; flex-direction:column; gap:5px; margin:0;">
+                        <i class="fas fa-images" style="font-size:1.5rem;"></i> <span>ফটো গ্যালারি</span>
+                    </div>
+                    <div class="poem-btn video-menu-btn" onclick="switchView('video-view')" style="justify-content:center; flex-direction:column; gap:5px; margin:0; grid-column: 1 / -1;">
+                        <i class="fas fa-video"></i> <span>ভিডিও গ্যালারি</span>
+                    </div>
                 </div>
-                <div class="section-title" style="margin-top: 30px;" data-aos="fade-in">Poetry Collection</div>
+
+                <div class="section-title" data-aos="fade-in">Poetry Collection</div>
                 <div id="buttons-list"></div>
+                
+                <div class="visitor-counter">> TOTAL READERS: <span style="color:var(--secondary); font-weight:bold;" id="total-visitors">--</span></div>
             </div>
             
-            <div class="visitor-counter">> TOTAL READERS: <span style="color:var(--secondary); font-weight:bold;" id="total-visitors">--</span></div>
             <div class="footer">WRITTEN WITH LOVE BY YEASIN</div>
         </div>
 
@@ -200,19 +266,71 @@
         </div>
 
         <div id="reader-view" class="full-view">
-            <div style="position:fixed; top:0; left:0; width:100%; padding:20px; background:rgba(20,5,10,0.95); z-index:10; border-bottom:1px solid #333;">
-                 <button class="back-btn" onclick="goBack()" style="margin:0;"><i class="fas fa-arrow-left"></i> BACK TO LIST</button>
+            <div style="position:fixed; top:0; left:0; width:100%; padding:20px; background:rgba(20,5,10,0.95); z-index:10; border-bottom:1px solid #333; display:flex; justify-content:space-between;">
+                 <button class="back-btn" onclick="goBack()" style="margin:0;"><i class="fas fa-arrow-left"></i> BACK</button>
+                 <button class="back-btn" onclick="toggleSettings()" style="margin:0;"><i class="fas fa-cog"></i></button>
             </div>
-            <div style="padding-top: 60px;">
+            
+            <div id="settings-panel">
+                <div class="setting-item">
+                    <span>Font Size</span>
+                    <div style="display:flex; gap:10px;">
+                        <button class="font-ctrl-btn" onclick="changeFont(-1)">-</button>
+                        <button class="font-ctrl-btn" onclick="changeFont(1)">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="padding-top: 70px;">
                 <h2 id="poem-title-display" style="text-align:center; color:var(--secondary); font-family:'Hind Siliguri'; margin-bottom:20px;"></h2>
                 <div id="poem-container-box">
                     <div id="poem-content-display"></div>
                     <div style="text-align:right; font-family:'Great Vibes'; color:var(--secondary); margin-top:20px;">- ইয়াছিন কবির</div>
                 </div>
+                
                 <div class="action-bar">
                     <button class="action-btn" id="like-btn" onclick="handleLike()"><i id="like-icon" class="far fa-heart"></i><span id="like-count" class="count-text">--</span></button>
-                    <button class="action-btn" onclick="handleComment()"><i class="far fa-comment"></i><span id="comment-count" class="count-text">--</span></button>
+                    <button class="action-btn" onclick="document.querySelector('.comment-input').focus()"><i class="far fa-comment"></i><span id="comment-count" class="count-text">--</span></button>
                     <button class="action-btn" onclick="handleShare()"><i class="fas fa-share-alt"></i><span id="share-count" class="count-text">--</span></button>
+                </div>
+
+                <div class="comments-section">
+                    <h3 style="color:var(--primary); font-size:1rem; margin-top:0;">পাঠকের মন্তব্য</h3>
+                    <div class="comment-form">
+                        <input type="text" id="user-comment" class="comment-input" placeholder="আপনার মন্তব্য লিখুন...">
+                        <button class="comment-submit" onclick="postComment()"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                    <div id="comments-list" class="comment-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="gallery-view" class="full-view">
+             <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK</button>
+             <h2 class="section-title">Photo Gallery</h2>
+             <div class="gallery-grid">
+                 <img src="profile.jpg" class="gallery-item" onclick="viewImage(this.src)">
+                 <img src="eye.jpg" class="gallery-item" onclick="viewImage(this.src)">
+                 <img src="https://images.unsplash.com/photo-1516726817505-f5ed8259b4fb?q=80&w=300" class="gallery-item" onclick="viewImage(this.src)">
+                 <img src="https://images.unsplash.com/photo-1478641300939-0ec5188d3802?q=80&w=300" class="gallery-item" onclick="viewImage(this.src)">
+             </div>
+        </div>
+
+        <div id="contact-view" class="full-view">
+            <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK</button>
+            <h2 class="section-title">Contact Me</h2>
+            <div class="contact-form">
+                <input type="text" class="c-input" placeholder="আপনার নাম">
+                <input type="email" class="c-input" placeholder="আপনার ইমেইল">
+                <textarea class="c-input" placeholder="আপনার বার্তা..."></textarea>
+                <button class="sub-btn" style="width:100%" onclick="alert('Message Sent Successfully!')">SEND MESSAGE</button>
+                
+                <div style="text-align:center; margin-top:30px;">
+                    <p style="color:#888;">অথবা সরাসরি যোগাযোগ করুন:</p>
+                    <div class="social-links">
+                        <a href="https://wa.me/8801851715713" class="social-btn"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.facebook.com/share/14LP9NJQ2KQ/" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -243,9 +361,62 @@
             <div id="page-8" class="diary-page"><h2 class="page-title">Why I Love You</h2><button onclick="generateReason()" style="font-size:4rem; background:none; border:none; color:var(--secondary); cursor:pointer;">❤️</button><div id="love-reason" style="font-family:'Great Vibes'; font-size:1.5rem; margin-top:20px; color:var(--primary);"></div></div>
             <div id="page-9" class="diary-page"><h2 class="page-title">Forever Promise</h2><div class="diary-text" style="text-align: center;">"Touch & Hold to promise that you will never leave me."</div><div class="fingerprint-area" onmousedown="startScan(event)" onmouseup="stopScan()" ontouchstart="startScan(event)" ontouchend="stopScan()" oncontextmenu="return false;"><i class="fas fa-fingerprint" style="font-size:3rem; color:#555;"></i><div class="scan-line" id="scanLine"></div></div><div id="promise-msg" style="color:var(--primary); margin-top:20px; display:none;">Promise Accepted! You are mine forever. ❤️</div></div>
 
+            <div id="page-10" class="diary-page">
+                <h2 class="page-title">Do You Know Me?</h2>
+                <div id="quiz-box">
+                    <div id="quiz-question" class="diary-text" style="text-align:center; font-weight:bold;"></div>
+                    <div id="quiz-options" class="quiz-grid"></div>
+                    <div id="quiz-feedback" style="margin-top:20px; font-family:'Hind Siliguri'; font-size:1.1rem; text-align:center;"></div>
+                </div>
+            </div>
+
+            <div id="page-11" class="diary-page">
+                <h2 class="page-title">Today's Mood</h2>
+                <div class="mood-grid">
+                    <div class="mood-btn" onclick="handleMood('happy')">
+                        <span class="mood-icon">😊</span>
+                        <span>Happy</span>
+                    </div>
+                    <div class="mood-btn" onclick="handleMood('sad')">
+                        <span class="mood-icon">😔</span>
+                        <span>Sad</span>
+                    </div>
+                    <div class="mood-btn" onclick="handleMood('miss')">
+                        <span class="mood-icon">🥺</span>
+                        <span>Miss You</span>
+                    </div>
+                </div>
+                <div id="mood-msg" style="margin-top:30px; color:var(--accent); text-align:center; font-style:italic;"></div>
+            </div>
+
+            <div id="page-12" class="diary-page">
+                <h2 class="page-title">Relationship Contract</h2>
+                <div class="contract-paper">
+                    <h3 style="text-align:center; border-bottom:1px solid #000;">Love Agreement</h3>
+                    <p>আমি, <b>রুমি</b>, সজ্ঞানে এই মর্মে অঙ্গীকার করছি যে:</p>
+                    <ul style="padding-left:20px;">
+                        <li>আমি ইয়াছিনের সাথে রাগ করে ১০ মিনিটের বেশি থাকবো না।</li>
+                        <li>তার পচা জোকস শুনেও হাসবো।</li>
+                        <li>তাকে ছাড়া অন্য কোনো ছেলের দিকে তাকাবো না।</li>
+                        <li>সারাজীবন তাকে জ্বালাতন করবো।</li>
+                    </ul>
+                    <br>
+                    <p>স্বাক্ষর: ________________</p>
+                    <div class="stamp" id="contract-stamp">AGREED</div>
+                </div>
+                <button class="contract-sign-btn" onclick="signContract()">I AGREE ❤️</button>
+            </div>
+
+            <div id="page-13" class="diary-page">
+                <h2 class="page-title">Write to Me</h2>
+                <div class="diary-text" style="text-align:center;">কিছু বলতে চাও? যা ইচ্ছে লিখে পাঠাও, সরাসরি আমার হোয়াটসঅ্যাপে চলে আসবে।</div>
+                <textarea id="wa-msg-input" class="c-input" placeholder="তোমার মনের কথা..." style="height:150px;"></textarea>
+                <button class="sub-btn" onclick="sendToWhatsApp()" style="width:100%"><i class="fab fa-whatsapp"></i> Send to Yeasin</button>
+            </div>
+
             <div class="nav-buttons">
                 <button class="diary-btn" onclick="prevPage()"><i class="fas fa-arrow-left"></i></button>
-                <span style="color:#fff; margin-top:10px;" id="page-num">1 / 9</span>
+                <span style="color:#fff; margin-top:10px;" id="page-num">1 / 13</span>
                 <button class="diary-btn" onclick="nextPage()"><i class="fas fa-arrow-right"></i></button>
             </div>
         </div>
@@ -265,17 +436,7 @@
             localStorage.setItem('tv', visitors);
             document.getElementById('total-visitors').innerText = visitors.toLocaleString();
 
-            // Init Poems
-            allPoems.forEach((poem, index) => {
-                let stats = localStorage.getItem(`p_${index}`);
-                if (stats) { Object.assign(poem, JSON.parse(stats)); } 
-                else {
-                    poem.fakeLikes = Math.floor(Math.random()*1500)+1000;
-                    poem.fakeComments = Math.floor(Math.random()*350)+50;
-                    poem.fakeShares = Math.floor(Math.random()*130)+20;
-                    localStorage.setItem(`p_${index}`, JSON.stringify({fakeLikes:poem.fakeLikes, fakeComments:poem.fakeComments, fakeShares:poem.fakeShares}));
-                }
-            });
+            renderPoems();
             renderNovelLibrary();
             
             // Auto-play music on first touch if failed
@@ -292,31 +453,31 @@
             document.addEventListener('touchstart', attemptPlay);
         };
 
-        // --- POEMS DATABASE ---
+        // --- ALL POEMS (FULL CONTENT) ---
         const allPoems = [
-            { title: "হযবরল", text: `চোখে চোখ পড়ে গেলেই বিস্ফোরণ,\nনিয়ন্ত্রণের বাইরে চলে যায় শিহরণ\nআর ব্যারিকেড ভেঙ্গে প্রেম\nছুটে যায় অসীমে।\nএকদিকে অঙ্কের খাতায়\nপ্রমানিত হয় সমস্ত সূত্র ভুল,\nঅন্যদিকে কবিতার পাতায়\nশব্দগুলো অস্থির হয়ে ওঠে\nবুকের ধুকপুকানি শোনার জন্যে।\nএকনিমেষে মন\nবারনের সব সংজ্ঞা ভুলে থমকে দাঁড়ায়,\nবোধহয় মতন সে\nআবেগ ঢালতে থাকে কারোর নামে।\nগোটা বিশ্বব্রহ্মাণ্ড জুড়ে\nযেন শোরগোল পড়ে যায়,\nসেই চেনা ঠিকানায় -\nআমি আবার ফিরবো বলে॥` },
-            { title: "তাকে আমি পাইনি", text: `যে গান শুনতে সে ভালোবাসে,\nসেই গান আমি শুনেছি অজস্রবার।\nযে ঘরে তার আড্ডা হাসির\nমুহূর্তগুলো রয়ে গেছে,\nসেই ঘরেরই দেওয়ালে আমি\nতার নাম লিখে রেখেছি।\nযে ঘাসে আনমনে আঙুল বুলিয়ে\nসে স্বপ্ন বোনে নিজের জন্য,\nসেই ঘাস ছুঁয়ে আমি তার উপস্থিতি\nখুঁজেছি হন্য হয়ে।\nযে পথ দিয়ে তার প্রতিদিন আসা-যাওয়া,\nসেই পথ ধরে আমি হেঁটে গেছি উদ্দেশ্যহীনভাবে।\nতার প্রিয় ফুলের গাছ\nনিজের বাগানে লাগিয়েছি বড়ো যত্নে।\nতার অভ্যেস, বদঅভ্যেস সবটাই\nআপন করেছি তার ভাবনায়।\nযে দুঃখে সে রোজ তপ্ত হয়,\nসেই দুঃখের আগুনে পুড়ে\nআমি ছাই হয়েও দেখেছি।\nতবু তাকে আমি পাইনি॥` },
-            { title: "তোমার সাথে", text: `একদিন হারিয়ে যাবো তোমার সাথে\nকোনো এক পাহাড়ের দেশে।\nজানবে না কেউ সেই ঠিকানা\nআমরা দুজন ছাড়া।\nভালোবাসার রঙে\nমিলেমিশে তুমি আমি হবো একাকার।\nসেখানে সাজানো থাকবে পথ\nএকসাথে চলার জন্যে।\nএভাবে চলতে চলতে\nমেঘদের সঙ্গে হবে আলাপ।\nসেদিন তুমি আমি মিলে\nসূর্যাস্তের সৌন্দর্যে প্রশংসা ঢালবো ইচ্ছেমতো।\nতখন জড়িয়ে ধরে তোমায়,\nআমি নিজেকে আরও বেশি করে\nঠেলে দেবো তোমার দিকে।\nফেরার সময় গায়ে শান্তি মুড়িয়ে নিয়ে\nফিরবো ঘরে তোমার সাথে॥` },
-            { title: "অন্দরমহল", text: `আমি একবার তার ভাবনায় ঢুকে জানতে চাই\nআদৌ কি সে আমায় কথা ভাবতো!\nচোখে চোখ পড়ার আগের মুহূর্ত অবধি\nতাকিয়ে কি শুধু দূরত্বটুকুই মাপতো?\nশুনেছি একলা ঘরে আপন খেয়ালে ভেসে\nসে আমায় নিয়ে গল্প সাজাতো রোজ,\nআমার পরিচিত ছিল যারা তার চেনা\nনিয়ম করে তাদের থেকে নিত আমার খোঁজ।\nহতে পারে এসব মনগড়া কথা\nঅথবা সত্যিই ছিলাম তার কাছে খুব দামী,\nযদি সম্ভব হত পড়তাম তার মন\nদেখতাম সেই মনে কোথায় আমি।\nআচ্ছা সে কি আদৌ ভুলতে পেরেছে\nআমায়?\nওদিকে আমিই কি তাকে ভুলতে পেরেছি নাকি!\nগল্পটা হয়তো শেষ হয়েছে অনেক আগেই\nকিন্তু রয়ে গেছে এতে\nএখনও কিছু বাকি॥` },
-            { title: "সেদিন", text: `সেদিন ওই তোমার হাতে\nআমার হাতটা ছিল,\nছিল সঙ্গে দুজনার\nদুটো মনের মিলও।\nসেদিন তোমায় আমার বয়েস\nসবেমাত্র কুড়ি;\nইচ্ছেমতো তখন আকাশে\nউড়িয়েছি ঘুড়ি।\nতারপর সম্পর্ক ভেঙেছি\nরান্নাবাটি খেলার ছলে,\nকত সহজেই বলো আমরা\nআবেগ ভাসিয়েছি জলে!\nহয়তো সেদিন ভালোবাসা বোঝার জন্য\nআমরা আনাড়ি ছিলাম,\nআর আজ মুখোমুখি দুজনেই\nমুখ ফিরিয়ে নিলাম॥` },
-            { title: "মনের মানুষ", text: `সে বারণের সব ব্যারিকেড ভেঙ্গে,\nবিষন্নতার ভিড়-ভাট্টা থেকে বের করে এনে\nনিজের মনের মানুষটিকে\nরোজ নতুন করে বাঁচতে শেখায়।\nসে জানে তার মনের মানুষ\nদর কষাকষিতে বড়ই কাঁচা।\nমানুষের মাঝে নিখোঁজ হয়ে যায়।\nখেই হারিয়ে খুব সহজে\nউলটপালট করে ফেলে সব।\nভুলোমনা বলে কত কাজে যে তার\nহাত পড়ে না,\nতার হিসেব নেই।\nমনের মানুষে খামতি প্রচুর,\nতবু কমতি নেই তার ভালোবাসায়।\nকারণ সে ভালোবাসতে জানে,\nভালোবেসে পৃথিবীর সমস্ত সুখ\nকুড়িয়ে আনে মনের মানুষের জন্য॥` },
-            { title: "ঘরবাড়ি", text: `তুমি আসবে ভালোবাসবে ভেবেই\nদরজা খোলা রাখি।\nবকবে, ভীষণ বকবে জেনেই\nছন্নছাড়া থাকি।\nগুছিয়ে দেবে ঘরবাড়ি তাই\nরাখি অগোছালো,\nআলোও নিভিয়ে দিই\nযাতে তুমি এসে জ্বালো।\nএভাবে হেলাফেলায় পড়ে থাকে\nঅবাধ্য সংসার,\nএকটু যত্ন পাওয়ার জন্য\nথাকে অপেক্ষায় আসার।\nএখানেই জমিয়েছি ভালোবাসা তপ্ত যেন\nবড্ড ফাঁকা বুক;\nএবার শুধু তুমি এলেই সারবে\nমনের অসুখ॥` },
-            { title: "অনুসন্ধান", text: `তুমি না এলেও চলবে,\nআমি রোজ খুঁজে নেবো তোমায় তোমার অনুপস্থিতিতে।\nকখনো আকাশের নীলে\nমেঘদের আনাগোনায়,\nকখনো রাতের অন্ধকারে\nজোনাকিদের অবাধ বিচরণে।\nকখনো বইয়ের ভাঁজে পছন্দের গল্প-কবিতায়,\nকখনো বা কোনো অচিন শহরে\nবহুদিনের খোয়া যাওয়া কোনো\nলাইনের সঙ্গে সহসা সাক্ষাতে।\nকখনো ঝরাপাতার প্রতি মাটির ভালোবাসায়,\nঅথবা খুব চেনা কোনো ফুলের সুবাসে\nআর কখনো বন্ধ ঘরে ভাবনায় পরিসরে।\nকখনো পুরোনো গলির মোড়ে\nফেলে আসা অপেক্ষা\nআর প্রিয় গানের পুনর্মিলনে,\nকখনো বা বসন্তের রঙিন আবহে\nকিংবা শীতের জরাজীর্ণতায়।\nআমি ঠিক খুঁজে নেবো তোমায়\nনিজের মতন করে॥` },
-            { title: "আবার আগামীকাল", text: `আবার আগামীকাল\nদেখা হবে তোমার সাথে,\nহাঁটবো নদীর ধারে\nরেখে হাত তোমার হাতে।\nসময়- প্রতিদিনের মতই\nপাক্কা বিকেল চারটে,\nআর তখনই তুমি দেবে বলেছিলে\nআমায় উপহারটা।\nআমি অপেক্ষায় ছটফট করছি\nকূল পাইনা ভেবে,\nআগামীকাল দেখা হলে\nতুমি ঠিক কী দেবে।\nসময় মতই আসবে\nকথা দিয়েছো গা ছুঁয়ে,\nবিকেল তখন চারটে\nতুমি চিতায় শুয়ে॥` },
-            { title: "যায় আসে না", text: `সে তো আমার হতেও পারতো!\nকিন্তু সে আমায় ভালোবাসে না,\nভালোবাসে অন্যকাউকে।\nএতে আমার কিছুই যায় আসে না।\nঅন্যকেউ তার ভাবনায় আসে,\nঅন্যকারোর সাথে কল্পনায় ঘর বাঁধে,\nঅন্যকারোর সাথেই তার যত ভুলবোঝাবুঝি।\nঅন্যকেউ তার মনে আঘাত করে যায়,\nঅন্যকারোর জন্য সে যন্ত্রনায় কাতরায়,\nঅপেক্ষায় ছটফটায়।\nসে মনে মনে খোঁজে অন্যকারোর\nঠিকানা।\nদিনের শুরু থেকে শেষ সবটা সময়\nলেখা অন্যকারোর নামে।\nএতে আমার কিছুই যায় আসে না,\nযদি আমার কিছু যায় আসতো,\nতার কিছুই যায় আসে না॥` },
-            { title: "কী আমি?", text: `তোমার গ্যারেজে রাখা\nভাঙ্গা সাইকেলটা আমি নই,\nযেটা বিক্রির জন্য তুমি ভাঙাড়িওয়ালা খুঁজছো।\nভরদুপুরে একঘেয়েমি কাটানোর\nকোনো গল্পের বই নই,\nনই কোনো গান যে তুমি আমায় শুনবে।\nতোমার আকাশের তারাও আমি নই\nযে রোজ বিষন্ন হয়ে\nতুমি ছুটে ছাদে আসবে\nঅগুন্তির মাঝে আমায় গুনতে।\nআমি নই মলম\nযে ব্যথা পেলে তুমি\nহন্য হয়ে খুঁজবে আমায়\nওষুধের বাক্সে।\nতোমার সবচেয়ে প্রিয় বেড়াতে যাবার\nজায়গাটাও আমি নই।\nনই তোমার ডায়েরির পাতা\nযে লেখায় ভুল হলে\nতুমি ছিঁড়ে আমায় ছুঁড়ে ফেলে দেবে॥` },
-            { title: "অভিযোগ", text: `তোমায় নিয়ে কীসের অভিযোগ!\nতুমি আমার হয়ে ছিলে কি কখনো?\nতোমার গালভরা হাসি\nআর কথোপকথনে আমি যে জড়াবো,\nতুমি কি তা জানতে!\nতোমার চোখের গভীরতায় গিয়ে\nহারিয়েছি আমি নিজেই।\nঅনুমতি ছাড়াই\nকত মেঘ পাঠিয়েছি তোমার ঠিকানায়,\nভেবেছি তুমি ফিরবে।\nযে ভালোবাসায় কখনোই তুমি থাকোনি,\nসেখানেই থেকে মনটা পুড়িয়েছি\nভালোবাসো - এই ভুল ধারণায়।\nতাহলে বলো\nকী নিয়ে করবো তোমার অভিযোগ?` },
-            { title: "জানবে কেমন করে!", text: `জানবে কেমন করে -\nআদতে কী চলছে আমার ভেতরে!
+            { title: "হযবরল", tag: "sad", text: `চোখে চোখ পড়ে গেলেই বিস্ফোরণ,\nনিয়ন্ত্রণের বাইরে চলে যায় শিহরণ\nআর ব্যারিকেড ভেঙ্গে প্রেম\nছুটে যায় অসীমে।\nএকদিকে অঙ্কের খাতায়\nপ্রমানিত হয় সমস্ত সূত্র ভুল,\nঅন্যদিকে কবিতার পাতায়\nশব্দগুলো অস্থির হয়ে ওঠে\nবুকের ধুকপুকানি শোনার জন্যে।\nএকনিমেষে মন\nবারনের সব সংজ্ঞা ভুলে থমকে দাঁড়ায়,\nবোধহয় মতন সে\nআবেগ ঢালতে থাকে কারোর নামে।\nগোটা বিশ্বব্রহ্মাণ্ড জুড়ে\nযেন শোরগোল পড়ে যায়,\nসেই চেনা ঠিকানায় -\nআমি আবার ফিরবো বলে॥` },
+            { title: "তাকে আমি পাইনি", tag: "sad", text: `যে গান শুনতে সে ভালোবাসে,\nসেই গান আমি শুনেছি অজস্রবার।\nযে ঘরে তার আড্ডা হাসির\nমুহূর্তগুলো রয়ে গেছে,\nসেই ঘরেরই দেওয়ালে আমি\nতার নাম লিখে রেখেছি।\nযে ঘাসে আনমনে আঙুল বুলিয়ে\nসে স্বপ্ন বোনে নিজের জন্য,\nসেই ঘাস ছুঁয়ে আমি তার উপস্থিতি\nখুঁজেছি হন্য হয়ে।\nযে পথ দিয়ে তার প্রতিদিন আসা-যাওয়া,\nসেই পথ ধরে আমি হেঁটে গেছি উদ্দেশ্যহীনভাবে।\nতার প্রিয় ফুলের গাছ\nনিজের বাগানে লাগিয়েছি বড়ো যত্নে।\nতার অভ্যেস, বদঅভ্যেস সবটাই\nআপন করেছি তার ভাবনায়।\nযে দুঃখে সে রোজ তপ্ত হয়,\nসেই দুঃখের আগুনে পুড়ে\nআমি ছাই হয়েও দেখেছি।\nতবু তাকে আমি পাইনি॥` },
+            { title: "তোমার সাথে", tag: "love", text: `একদিন হারিয়ে যাবো তোমার সাথে\nকোনো এক পাহাড়ের দেশে।\nজানবে না কেউ সেই ঠিকানা\nআমরা দুজন ছাড়া।\nভালোবাসার রঙে\nমিলেমিশে তুমি আমি হবো একাকার।\nসেখানে সাজানো থাকবে পথ\nএকসাথে চলার জন্যে।\nএভাবে চলতে চলতে\nমেঘদের সঙ্গে হবে আলাপ।\nসেদিন তুমি আমি মিলে\nসূর্যাস্তের সৌন্দর্যে প্রশংসা ঢালবো ইচ্ছেমতো।\nতখন জড়িয়ে ধরে তোমায়,\nআমি নিজেকে আরও বেশি করে\nঠেলে দেবো তোমার দিকে।\nফেরার সময় গায়ে শান্তি মুড়িয়ে নিয়ে\nফিরবো ঘরে তোমার সাথে॥` },
+            { title: "অন্দরমহল", tag: "sad", text: `আমি একবার তার ভাবনায় ঢুকে জানতে চাই\nআদৌ কি সে আমায় কথা ভাবতো!\nচোখে চোখ পড়ার আগের মুহূর্ত অবধি\nতাকিয়ে কি শুধু দূরত্বটুকুই মাপতো?\nশুনেছি একলা ঘরে আপন খেয়ালে ভেসে\nসে আমায় নিয়ে গল্প সাজাতো রোজ,\nআমার পরিচিত ছিল যারা তার চেনা\nনিয়ম করে তাদের থেকে নিত আমার খোঁজ।\nহতে পারে এসব মনগড়া কথা\nঅথবা সত্যিই ছিলাম তার কাছে খুব দামী,\nযদি সম্ভব হত পড়তাম তার মন\nদেখতাম সেই মনে কোথায় আমি।\nআচ্ছা সে কি আদৌ ভুলতে পেরেছে\nআমায়?\nওদিকে আমিই কি তাকে ভুলতে পেরেছি নাকি!\nগল্পটা হয়তো শেষ হয়েছে অনেক আগেই\nকিন্তু রয়ে গেছে এতে\nএখনও কিছু বাকি॥` },
+            { title: "সেদিন", tag: "sad", text: `সেদিন ওই তোমার হাতে\nআমার হাতটা ছিল,\nছিল সঙ্গে দুজনার\nদুটো মনের মিলও।\nসেদিন তোমায় আমার বয়েস\nসবেমাত্র কুড়ি;\nইচ্ছেমতো তখন আকাশে\nউড়িয়েছি ঘুড়ি।\nতারপর সম্পর্ক ভেঙেছি\nরান্নাবাটি খেলার ছলে,\nকত সহজেই বলো আমরা\nআবেগ ভাসিয়েছি জলে!\nহয়তো সেদিন ভালোবাসা বোঝার জন্য\nআমরা আনাড়ি ছিলাম,\nআর আজ মুখোমুখি দুজনেই\nমুখ ফিরিয়ে নিলাম॥` },
+            { title: "মনের মানুষ", tag: "love", text: `সে বারণের সব ব্যারিকেড ভেঙ্গে,\nবিষন্নতার ভিড়-ভাট্টা থেকে বের করে এনে\nনিজের মনের মানুষটিকে\nরোজ নতুন করে বাঁচতে শেখায়।\nসে জানে তার মনের মানুষ\nদর কষাকষিতে বড়ই কাঁচা।\nমানুষের মাঝে নিখোঁজ হয়ে যায়।\nখেই হারিয়ে খুব সহজে\nউলটপালট করে ফেলে সব।\nভুলোমনা বলে কত কাজে যে তার\nহাত পড়ে না,\nতার হিসেব নেই।\nমনের মানুষে খামতি প্রচুর,\nতবু কমতি নেই তার ভালোবাসায়।\nকারণ সে ভালোবাসতে জানে,\nভালোবেসে পৃথিবীর সমস্ত সুখ\nকুড়িয়ে আনে মনের মানুষের জন্য॥` },
+            { title: "ঘরবাড়ি", tag: "love", text: `তুমি আসবে ভালোবাসবে ভেবেই\nদরজা খোলা রাখি।\nবকবে, ভীষণ বকবে জেনেই\nছন্নছাড়া থাকি।\nগুছিয়ে দেবে ঘরবাড়ি তাই\nরাখি অগোছালো,\nআলোও নিভিয়ে দিই\nযাতে তুমি এসে জ্বালো।\nএভাবে হেলাফেলায় পড়ে থাকে\nঅবাধ্য সংসার,\nএকটু যত্ন পাওয়ার জন্য\nথাকে অপেক্ষায় আসার।\nএখানেই জমিয়েছি ভালোবাসা তপ্ত যেন\nবড্ড ফাঁকা বুক;\nএবার শুধু তুমি এলেই সারবে\nমনের অসুখ॥` },
+            { title: "অনুসন্ধান", tag: "love", text: `তুমি না এলেও চলবে,\nআমি রোজ খুঁজে নেবো তোমায় তোমার অনুপস্থিতিতে।\nকখনো আকাশের নীলে\nমেঘদের আনাগোনায়,\nকখনো রাতের অন্ধকারে\nজোনাকিদের অবাধ বিচরণে।\nকখনো বইয়ের ভাঁজে পছন্দের গল্প-কবিতায়,\nকখনো বা কোনো অচিন শহরে\nবহুদিনের খোয়া যাওয়া কোনো\nলাইনের সঙ্গে সহসা সাক্ষাতে।\nকখনো ঝরাপাতার প্রতি মাটির ভালোবাসায়,\nঅথবা খুব চেনা কোনো ফুলের সুবাসে\nআর কখনো বন্ধ ঘরে ভাবনায় পরিসরে।\nকখনো পুরোনো গলির মোড়ে\nফেলে আসা অপেক্ষা\nআর প্রিয় গানের পুনর্মিলনে,\nকখনো বা বসন্তের রঙিন আবহে\nকিংবা শীতের জরাজীর্ণতায়।\nআমি ঠিক খুঁজে নেবো তোমায়\nনিজের মতন করে॥` },
+            { title: "আবার আগামীকাল", tag: "sad", text: `আবার আগামীকাল\nদেখা হবে তোমার সাথে,\nহাঁটবো নদীর ধারে\nরেখে হাত তোমার হাতে।\nসময়- প্রতিদিনের মতই\nপাক্কা বিকেল চারটে,\nআর তখনই তুমি দেবে বলেছিলে\nআমায় উপহারটা।\nআমি অপেক্ষায় ছটফট করছি\nকূল পাইনা ভেবে,\nআগামীকাল দেখা হলে\nতুমি ঠিক কী দেবে।\nসময় মতই আসবে\nকথা দিয়েছো গা ছুঁয়ে,\nবিকেল তখন চারটে\nতুমি চিতায় শুয়ে॥` },
+            { title: "যায় আসে না", tag: "sad", text: `সে তো আমার হতেও পারতো!\nকিন্তু সে আমায় ভালোবাসে না,\nভালোবাসে অন্যকাউকে।\nএতে আমার কিছুই যায় আসে না।\nঅন্যকেউ তার ভাবনায় আসে,\nঅন্যকারোর সাথে কল্পনায় ঘর বাঁধে,\nঅন্যকারোর সাথেই তার যত ভুলবোঝাবুঝি।\nঅন্যকেউ তার মনে আঘাত করে যায়,\nঅন্যকারোর জন্য সে যন্ত্রনায় কাতরায়,\nঅপেক্ষায় ছটফটায়।\nসে মনে মনে খোঁজে অন্যকারোর\nঠিকানা।\nদিনের শুরু থেকে শেষ সবটা সময়\nলেখা অন্যকারোর নামে।\nএতে আমার কিছুই যায় আসে না,\nযদি আমার কিছু যায় আসতো,\nতার কিছুই যায় আসে না॥` },
+            { title: "কী আমি?", tag: "life", text: `তোমার গ্যারেজে রাখা\nভাঙ্গা সাইকেলটা আমি নই,\nযেটা বিক্রির জন্য তুমি ভাঙাড়িওয়ালা খুঁজছো।\nভরদুপুরে একঘেয়েমি কাটানোর\nকোনো গল্পের বই নই,\nনই কোনো গান যে তুমি আমায় শুনবে।\nতোমার আকাশের তারাও আমি নই\nযে রোজ বিষন্ন হয়ে\nতুমি ছুটে ছাদে আসবে\nঅগুন্তির মাঝে আমায় গুনতে।\nআমি নই মলম\nযে ব্যথা পেলে তুমি\nহন্য হয়ে খুঁজবে আমায়\nওষুধের বাক্সে।\nতোমার সবচেয়ে প্রিয় বেড়াতে যাবার\nজায়গাটাও আমি নই।\nনই তোমার ডায়েরির পাতা\nযে লেখায় ভুল হলে\nতুমি ছিঁড়ে আমায় ছুঁড়ে ফেলে দেবে॥` },
+            { title: "অভিযোগ", tag: "sad", text: `তোমায় নিয়ে কীসের অভিযোগ!\nতুমি আমার হয়ে ছিলে কি কখনো?\nতোমার গালভরা হাসি\nআর কথোপকথনে আমি যে জড়াবো,\nতুমি কি তা জানতে!\nতোমার চোখের গভীরতায় গিয়ে\nহারিয়েছি আমি নিজেই।\nঅনুমতি ছাড়াই\nকত মেঘ পাঠিয়েছি তোমার ঠিকানায়,\nভেবেছি তুমি ফিরবে।\nযে ভালোবাসায় কখনোই তুমি থাকোনি,\nসেখানেই থেকে মনটা পুড়িয়েছি\nভালোবাসো - এই ভুল ধারণায়।\nতাহলে বলো\nকী নিয়ে করবো তোমার অভিযোগ?` },
+            { title: "জানবে কেমন করে!", tag: "sad", text: `জানবে কেমন করে -\nআদতে কী চলছে আমার ভেতরে!
 ঠকে গিয়ে আমি নিজের\nঠিকানায় ফিরে আসি,\nবারবার হ্যাঁ বারবার\nভুল মানুষকেই ভালোবাসি।\nকী করে এটা বলবো তোমায় -\nতুমিও তাদেরই দলে।\nসব কথা কি আর\nমুখে বলে দিলে চলে?\nতাই নিজের ভেতরেই\nসমস্ত কথা জমিয়ে রাখি,\nআর তুমিই কিনা এসে প্রশ্ন করো -\nমনখারাপ! সঙ্গে থাকি?` },
-            { title: "অপেক্ষায় একজন", text: `সে জানে তার মনের মানুষ\nভালোবাসে কাকে,\nশুধু জানে না তা জানার পরও কেন\nতারই অপেক্ষায় থাকে।\nএই অপেক্ষা তার অভ্যেস\nএকপ্রকার বায়না,\nআগলে সে না পাওয়াটা\nমেনে নিতে চায়না।\nতাই মনে মনে খুব গোপনে\nগল্প বানায় রোজ,\nতাতে বাস্তবের দুনিয়াটা\nথাকলে থাকুক নিখোঁজ।\nএভাবে মনগড়া সুখের ভিড়ে ঢেকে\nগিলছে তারই আবেগ,\nপারলে আড়ালে সে ক্ষত লুকাবে\nধরবে ভালো থাকার ভেক।\nতবু মানবে না সে মিলবে না\nতার ভালোবাসার হিসেবনিকেশ,\nআর এই অপেক্ষা চিরকালের\nনেই কোনো তার শেষ॥` },
-            { title: "অপূর্ণ পূর্ণতা", text: `খামখেয়ালী আমরা দুজন\nনিখুঁত ভালোবাসায়,\nঅপূর্ণ পূর্ণতা বলে সেটাকে\nপ্রকাশ করলে ভাষায়।\nমিলনের অভিপ্রায়ে দুজনায়\nনেই হাজার ঝুঁকি,\nমনের ঠিকানায় পৌঁছাতে\nএসে দাঁড়াই মুখোমুখি।\nতখন সব ভাসিয়ে ইচ্ছেমতো\nআমরা আবেগ ঢালি,\nতাও অবশেষে মনদুটো\nথেকে যায় খালি।\nকাছে গিয়েও কেন জানিনা আমি\nছুঁতে পারিনা তাকে,\nসেও যেন ব্যাকুল হয়ে আমায়\nকাছে পেতে ডাকে।\nএই গল্পে মিলন নেই ঠিকই\nতবে তাতে বিচ্ছেদও নেই লেখা,\nঅপূর্ণ পূর্ণতা অব্দিই টানা\nআমাদের ভালোবাসার সীমারেখা॥` },
-            { title: "যদি আমার হতে", text: `যদি আমার হতে মন্দ হত না তবে,\nআমি করতাম না তোয়াক্কা দুনিয়াটার,\nশীত আর বসন্তের মাঝে পার্থক্যও করতাম না।\nভাঁড়ের চায়ে চুমুক দিয়ে\nবিষাদের পরিবর্তে ভালোবাসার স্বাদ নিতাম।\nঘাটে বসে সূর্যাস্ত দেখার\nভঙ্গিমাও অন্যরকম হত।\nমানুষের ভিড়ে হারিয়ে যেতাম না,\nনিজের একটা ছায়া আশ্রয় খুঁজতে\nরোজ বাড়ি ছেড়ে দূরে কোথাও পালিয়ে যেতাম না।\nএই মনের কোলাহলের থেকে মুক্তি পেতাম,\nচিরন্তন অপেক্ষাগুলোও বিদায় নিত।\nস্মৃতি জমানোর জন্য সুন্দর\nএকটা সংসার হত,\nঅন্তত পিছু ফিরে দেখতে হত না।\nহয়তো কবিতার বদলে\nকটা গল্প লিখতাম\nতুমি যদি আমার হতে॥` },
-            { title: "বদল", text: `যার রাখার কথা ছিল আমার মন,\nসে আমায় মনেই রাখেনি।\nবেশ সুন্দর নতুনের মাঝে\nনিজেকে খাপ খাইয়ে নিয়েছে।\nঅন্য কোথাও, অন্য আড্ডায়\nসে যখন হেসে ওঠে,\nতখন স্পষ্ট বোঝা যায় -
+            { title: "অপেক্ষায় একজন", tag: "sad", text: `সে জানে তার মনের মানুষ\nভালোবাসে কাকে,\nশুধু জানে না তা জানার পরও কেন\nতারই অপেক্ষায় থাকে।\nএই অপেক্ষা তার অভ্যেস\nএকপ্রকার বায়না,\nআগলে সে না পাওয়াটা\nমেনে নিতে চায়না।\nতাই মনে মনে খুব গোপনে\nগল্প বানায় রোজ,\nতাতে বাস্তবের দুনিয়াটা\nথাকলে থাকুক নিখোঁজ।\nএভাবে মনগড়া সুখের ভিড়ে ঢেকে\nগিলছে তারই আবেগ,\nপারলে আড়ালে সে ক্ষত লুকাবে\nধরবে ভালো থাকার ভেক।\nতবু মানবে না সে মিলবে না\nতার ভালোবাসার হিসেবনিকেশ,\nআর এই অপেক্ষা চিরকালের\nনেই কোনো তার শেষ॥` },
+            { title: "অপূর্ণ পূর্ণতা", tag: "love", text: `খামখেয়ালী আমরা দুজন\nনিখুঁত ভালোবাসায়,\nঅপূর্ণ পূর্ণতা বলে সেটাকে\nপ্রকাশ করলে ভাষায়।\nমিলনের অভিপ্রায়ে দুজনায়\nনেই হাজার ঝুঁকি,\nমনের ঠিকানায় পৌঁছাতে\nএসে দাঁড়াই মুখোমুখি।\nতখন সব ভাসিয়ে ইচ্ছেমতো\nআমরা আবেগ ঢালি,\nতাও অবশেষে মনদুটো\nথেকে যায় খালি।\nকাছে গিয়েও কেন জানিনা আমি\nছুঁতে পারিনা তাকে,\nসেও যেন ব্যাকুল হয়ে আমায়\nকাছে পেতে ডাকে।\nএই গল্পে মিলন নেই ঠিকই\nতবে তাতে বিচ্ছেদও নেই লেখা,\nঅপূর্ণ পূর্ণতা অব্দিই টানা\nআমাদের ভালোবাসার সীমারেখা॥` },
+            { title: "যদি আমার হতে", tag: "sad", text: `যদি আমার হতে মন্দ হত না তবে,\nআমি করতাম না তোয়াক্কা দুনিয়াটার,\nশীত আর বসন্তের মাঝে পার্থক্যও করতাম না।\nভাঁড়ের চায়ে চুমুক দিয়ে\nবিষাদের পরিবর্তে ভালোবাসার স্বাদ নিতাম।\nঘাটে বসে সূর্যাস্ত দেখার\nভঙ্গিমাও অন্যরকম হত।\nমানুষের ভিড়ে হারিয়ে যেতাম না,\nনিজের একটা ছায়া আশ্রয় খুঁজতে\nরোজ বাড়ি ছেড়ে দূরে কোথাও পালিয়ে যেতাম না।\nএই মনের কোলাহলের থেকে মুক্তি পেতাম,\nচিরন্তন অপেক্ষাগুলোও বিদায় নিত।\nস্মৃতি জমানোর জন্য সুন্দর\nএকটা সংসার হত,\nঅন্তত পিছু ফিরে দেখতে হত না।\nহয়তো কবিতার বদলে\nকটা গল্প লিখতাম\nতুমি যদি আমার হতে॥` },
+            { title: "বদল", tag: "life", text: `যার রাখার কথা ছিল আমার মন,\nসে আমায় মনেই রাখেনি।\nবেশ সুন্দর নতুনের মাঝে\nনিজেকে খাপ খাইয়ে নিয়েছে।\nঅন্য কোথাও, অন্য আড্ডায়\nসে যখন হেসে ওঠে,\nতখন স্পষ্ট বোঝা যায় -
 বদলেছে সময়, সে আর পাশের মানুষটা;\nবাকি তার হাসিটা কিন্তু একটুও বদলায়নি।\nপ্রতিশ্রুতি দিয়েছিল -
 পরের প্রতিটা জন্মেও সঙ্গে থেকে যাবে।\nঅথচ এই জন্মেই তার\nভালোবাসা বদলে গেছে।\nআমি ন্যূনতম আঘাত পেলে\nউৎকণ্ঠায় যার বুক ফেটে যেত,\nসে যাবার বেলায় সামান্য খেয়ালটুকু করেনি\nনিজেই কতখানি ক্ষতবিক্ষত\nকরেছে আমায়॥` }
         ];
 
-        // --- NOVELS DATABASE ---
+        // --- NOVELS DATABASE (FULL CONTENT RESTORED) ---
         const novelsDB = [
             {
                 id: 1,
@@ -370,144 +531,280 @@
             }
         ];
 
-        // Poem Buttons Render
-        const listDiv = document.getElementById('buttons-list');
+        // --- RENDER & LOGIC ---
+        let currentFilter = 'all';
+        
+        function renderPoems() {
+            const listDiv = document.getElementById('buttons-list');
+            listDiv.innerHTML = '';
+            const searchVal = document.getElementById('search-bar').value.toLowerCase();
+
+            allPoems.forEach((poem, index) => {
+                if((currentFilter === 'all' || poem.tag === currentFilter) && poem.title.toLowerCase().includes(searchVal)) {
+                    // Init Fake Stats
+                    let stats = localStorage.getItem(`p_${index}`);
+                    if (!stats) {
+                        stats = {fakeLikes: Math.floor(Math.random()*1500)+1000, fakeComments: Math.floor(Math.random()*350)+50};
+                        localStorage.setItem(`p_${index}`, JSON.stringify(stats));
+                    }
+                    
+                    const btn = document.createElement('div');
+                    btn.className = 'poem-btn';
+                    btn.setAttribute('data-aos', 'fade-up');
+                    btn.innerHTML = `<span>${poem.title}</span> <i class="fas fa-chevron-right"></i>`;
+                    btn.onclick = () => openPoem(index);
+                    listDiv.appendChild(btn);
+                }
+            });
+        }
+
+        function filterPoems() { renderPoems(); }
+        function filterByTag(tag) { 
+            currentFilter = tag; 
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            renderPoems(); 
+        }
+
         let currentPoemIndex = -1;
-
-        allPoems.forEach((poem, index) => {
-            const btn = document.createElement('div');
-            btn.className = 'poem-btn';
-            btn.setAttribute('data-aos', 'fade-up');
-            btn.innerHTML = `<span>${poem.title}</span> <i class="fas fa-chevron-right"></i>`;
-            btn.onclick = () => openPoem(index);
-            listDiv.appendChild(btn);
-        });
-
         function openPoem(index) {
             currentPoemIndex = index;
             document.getElementById('poem-title-display').innerText = allPoems[index].title;
             document.getElementById('poem-content-display').innerHTML = allPoems[index].text;
+            loadComments(index);
             updateStatsUI(index);
             switchView('reader-view');
         }
 
-        // Action Bar Logic
-        function updateStatsUI(index) {
-            const poem = allPoems[index];
-            const isLiked = localStorage.getItem(`l_${index}`) === 't';
-            document.getElementById('like-count').innerText = (poem.fakeLikes + (isLiked?1:0)).toLocaleString();
-            document.getElementById('comment-count').innerText = poem.fakeComments.toLocaleString();
-            document.getElementById('share-count').innerText = poem.fakeShares.toLocaleString();
-            
-            const btn = document.getElementById('like-btn');
-            const icon = document.getElementById('like-icon');
-            if(isLiked) { btn.classList.add('liked'); icon.className='fas fa-heart'; }
-            else { btn.classList.remove('liked'); icon.className='far fa-heart'; }
+        // Reader Settings
+        function toggleSettings() { 
+            const panel = document.getElementById('settings-panel');
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+        }
+        function changeFont(dir) {
+            const root = document.documentElement;
+            let current = parseFloat(getComputedStyle(root).getPropertyValue('--text-size'));
+            root.style.setProperty('--text-size', (current + (dir * 0.1)) + 'rem');
         }
 
-        function handleLike() {
-            if(currentPoemIndex === -1) return;
-            const isLiked = localStorage.getItem(`l_${currentPoemIndex}`) === 't';
-            localStorage.setItem(`l_${currentPoemIndex}`, isLiked ? 'f' : 't');
+        // Comments System
+        function loadComments(index) {
+            const list = document.getElementById('comments-list');
+            list.innerHTML = '';
+            const comments = JSON.parse(localStorage.getItem(`c_${index}`) || '[]');
+            
+            if(comments.length === 0) {
+                const fakes = [{u:"Sad Boy", t:"খুব সুন্দর হয়েছে ভাইয়া!"}, {u:"Unknown", t:"অসাধারণ লেখনী..."}];
+                fakes.forEach(c => appendComment(c.u, c.t));
+            } else {
+                comments.forEach(c => appendComment(c.u, c.t));
+            }
+        }
+        function postComment() {
+            const input = document.getElementById('user-comment');
+            const text = input.value.trim();
+            if(!text) return;
+            const user = "Guest Reader"; 
+            
+            const comments = JSON.parse(localStorage.getItem(`c_${currentPoemIndex}`) || '[]');
+            comments.push({u: user, t: text});
+            localStorage.setItem(`c_${currentPoemIndex}`, JSON.stringify(comments));
+            
+            appendComment(user, text);
+            input.value = '';
+            
+            let stats = JSON.parse(localStorage.getItem(`p_${currentPoemIndex}`));
+            stats.fakeComments++;
+            localStorage.setItem(`p_${currentPoemIndex}`, JSON.stringify(stats));
             updateStatsUI(currentPoemIndex);
         }
-
-        function handleComment() {
-            if(currentPoemIndex === -1) return;
-            window.open(`https://wa.me/8801851715713?text=Hi, loved your poem "${allPoems[currentPoemIndex].title}"!`, '_blank');
+        function appendComment(user, text) {
+            const div = document.createElement('div');
+            div.className = 'comment-item';
+            div.innerHTML = `<span class="comment-user">${user}</span>${text}`;
+            document.getElementById('comments-list').prepend(div);
         }
 
-        function handleShare() {
-            if(currentPoemIndex === -1) return;
-            const text = `${allPoems[currentPoemIndex].title}\n${allPoems[currentPoemIndex].text.substring(0,50)}...`;
-            if(navigator.share) navigator.share({title:'Poetry', text:text, url:window.location.href});
-            else { navigator.clipboard.writeText(window.location.href); alert('Link Copied!'); }
-        }
-
-        // Novel Logic
+        // Novel Hub
         function renderNovelLibrary() {
             const container = document.getElementById('novel-list-container');
             container.innerHTML = '';
             novelsDB.forEach((novel, index) => {
-                const savedRating = localStorage.getItem(`rate_${novel.id}`) || 0;
-                let starHTML = '';
-                for(let i=1; i<=5; i++) {
-                    starHTML += `<i class="fas fa-star ${i <= savedRating ? 'active' : ''}" onclick="rateNovel(${novel.id}, ${i})"></i>`;
-                }
                 const card = document.createElement('div');
                 card.className = 'novel-card';
-                card.innerHTML = `<h3>${novel.title}</h3><div class="novel-meta"><span><i class="fas fa-pen-nib"></i> ${novel.author}</span><span><i class="fas fa-layer-group"></i> ${novel.chapters.length} পর্ব</span></div><div class="novel-summary">${novel.summary}</div><div class="rating-area"><div class="stars">${starHTML}</div><span class="rating-count">(${novel.totalRating} Ratings)</span></div><button class="read-btn" onclick="startReading(${index})">পড়া শুরু করুন</button>`;
+                card.innerHTML = `<h3>${novel.title}</h3><div class="novel-meta"><span>${novel.author}</span></div><div class="novel-summary">${novel.summary}</div><button class="read-btn" onclick="startReading(${index})">পড়া শুরু করুন</button>`;
                 container.appendChild(card);
             });
         }
-        function rateNovel(id, rating) { localStorage.setItem(`rate_${id}`, rating); novelsDB.find(n => n.id === id).totalRating++; renderNovelLibrary(); alert(`You rated ${rating} stars!`); }
         
         let currentBookIndex = 0, currentChapterIndex = 0;
         function startReading(bookIndex) { 
             currentBookIndex = bookIndex; 
             currentChapterIndex = 0; 
-            const select = document.getElementById('chapter-dropdown');
-            select.innerHTML = '';
-            novelsDB[bookIndex].chapters.forEach((chap, i) => {
-                let opt = document.createElement('option');
-                opt.value = i;
-                opt.text = chap.title;
-                select.appendChild(opt);
-            });
+            updateChapSelect();
             switchView('novel-reader'); 
             loadChapter(); 
         }
-
-        function loadChapter() {
-            const novel = novelsDB[currentBookIndex]; const chapter = novel.chapters[currentChapterIndex];
-            document.getElementById('chapter-dropdown').value = currentChapterIndex;
-            document.getElementById('current-chapter-title').innerHTML = chapter.title;
-            const contentDiv = document.getElementById('story-content');
-            contentDiv.style.animation = 'none'; contentDiv.offsetHeight; contentDiv.style.animation = 'fadeIn 1s';
-            contentDiv.innerHTML = chapter.text;
-            document.getElementById('prev-chap').disabled = currentChapterIndex === 0;
-            document.getElementById('next-chap').disabled = currentChapterIndex === novel.chapters.length - 1;
+        function updateChapSelect() {
+            const select = document.getElementById('chapter-dropdown'); select.innerHTML = '';
+            novelsDB[currentBookIndex].chapters.forEach((chap, i) => {
+                let opt = document.createElement('option'); opt.value = i; opt.text = chap.title; select.appendChild(opt);
+            });
         }
-        
-        function changeChapter(step) { currentChapterIndex += step; loadChapter(); window.scrollTo(0,0); }
-        function jumpToChapter(val) { currentChapterIndex = parseInt(val); loadChapter(); window.scrollTo(0,0); }
-        function openNovelLibrary() { switchView('novel-library'); }
-        function backToLibrary() { switchView('novel-library'); }
-
-        // Music Logic
-        let isPlaying = false;
-        const bgMusic = document.getElementById('bg-music');
-        
-        function toggleMusic() {
-            if (isPlaying) {
-                bgMusic.pause();
-                document.querySelector('.music-wrapper').classList.remove('playing');
-                document.getElementById('music-icon').className = 'fas fa-play';
-            } else {
-                bgMusic.play().then(() => {
-                    document.querySelector('.music-wrapper').classList.add('playing');
-                    document.getElementById('music-icon').className = 'fas fa-pause';
-                }).catch(e => console.log(e));
+        function loadChapter() {
+            const ch = novelsDB[currentBookIndex].chapters[currentChapterIndex];
+            document.getElementById('current-chapter-title').innerText = ch.title;
+            document.getElementById('story-content').innerHTML = ch.text;
+            document.getElementById('chapter-dropdown').value = currentChapterIndex;
+        }
+        function changeChapter(d) { 
+            const len = novelsDB[currentBookIndex].chapters.length;
+            if(currentChapterIndex + d >= 0 && currentChapterIndex + d < len) {
+                currentChapterIndex += d; loadChapter(); window.scrollTo(0,0);
             }
-            isPlaying = !isPlaying;
+        }
+        function jumpToChapter(v) { currentChapterIndex = parseInt(v); loadChapter(); }
+
+        // Gallery
+        function viewImage(src) {
+            const win = window.open("", "_blank");
+            win.document.write(`<body style="margin:0;background:#000;display:flex;justify-content:center;align-items:center;height:100vh;"><img src="${src}" style="max-width:100%;max-height:100%;"></body>`);
+        }
+
+        // Subscribe
+        function handleSubscribe() {
+            const email = document.getElementById('sub-email').value;
+            if(email) { alert(`Thank you! ${email} has been subscribed.`); document.getElementById('sub-email').value=''; }
         }
 
         // Navigation
-        function goBack() { history.back(); document.querySelectorAll('.full-view').forEach(el => el.style.display='none'); document.getElementById('home-view').style.display='block'; stopPetals(); }
+        function goBack() { history.back(); document.querySelectorAll('.full-view').forEach(el => el.style.display='none'); document.getElementById('home-view').style.display='grid'; }
         function switchView(viewId) { 
             history.pushState({view:viewId}, null, ''); 
             document.getElementById('home-view').style.display='none'; 
             document.querySelectorAll('.full-view').forEach(el => el.style.display='none'); 
             document.getElementById(viewId).style.display='block'; 
             window.scrollTo(0,0); 
+            if(viewId === 'secret-vault' && currentVaultPage === 10) loadQuiz();
         }
-        window.onpopstate = () => { document.querySelectorAll('.full-view').forEach(el => el.style.display='none'); document.getElementById('home-view').style.display='block'; stopPetals(); };
+        window.onpopstate = () => { document.querySelectorAll('.full-view').forEach(el => el.style.display='none'); document.getElementById('home-view').style.display='grid'; };
 
-        // Vault & Rose Petals
+        function openNovelLibrary() { switchView('novel-library'); }
+        function backToLibrary() { switchView('novel-library'); }
+
+        // Utils
+        function updateStatsUI(index) {
+            const poem = JSON.parse(localStorage.getItem(`p_${index}`));
+            const isLiked = localStorage.getItem(`l_${index}`) === 't';
+            document.getElementById('like-count').innerText = (poem.fakeLikes + (isLiked?1:0)).toLocaleString();
+            document.getElementById('comment-count').innerText = poem.fakeComments.toLocaleString();
+            document.getElementById('share-count').innerText = 34;
+            const icon = document.getElementById('like-icon');
+            icon.className = isLiked ? 'fas fa-heart' : 'far fa-heart';
+            document.getElementById('like-btn').className = isLiked ? 'action-btn liked' : 'action-btn';
+        }
+        function handleLike() {
+            const isLiked = localStorage.getItem(`l_${currentPoemIndex}`) === 't';
+            localStorage.setItem(`l_${currentPoemIndex}`, isLiked ? 'f' : 't');
+            updateStatsUI(currentPoemIndex);
+        }
+        function handleShare() {
+            if(navigator.share) navigator.share({title:'Poetry', text:allPoems[currentPoemIndex].title, url:window.location.href});
+            else alert('Link Copied!');
+        }
+
+        // Vault Logic
+        let currentVaultPage = 1; const totalVaultPages = 13;
+        function openSecretVaultInput() { if(prompt("ENTER ACCESS CODE:") === "3460") { switchView('secret-vault'); document.getElementById('vault-audio').play(); startPetals(); } else { alert("ACCESS DENIED!"); } }
+        function closeVault() { goBack(); document.getElementById('vault-audio').pause(); stopPetals(); }
+        function showPage(n) { 
+            document.querySelectorAll('.diary-page').forEach(p=>p.classList.remove('active')); 
+            document.getElementById(`page-${n}`).classList.add('active'); 
+            document.getElementById('page-num').innerText = `${n} / ${totalVaultPages}`; 
+            if(n === 10) loadQuiz();
+        }
+        function nextPage() { if(currentVaultPage < totalVaultPages) { currentVaultPage++; showPage(currentVaultPage); } }
+        function prevPage() { if(currentVaultPage > 1) { currentVaultPage--; showPage(currentVaultPage); } }
+        function toggleMsg(id) { let el = document.getElementById(id); el.style.display = (el.style.display === 'block') ? 'none' : 'block'; }
+        function generateReason() { const r = ["তোমার ওই মায়াবী চোখ","আমার রাগ ভাঙাতে পারো","তোমার হাসিতে দিন ভালো হয়","আমাকে ভালো বোঝো"]; document.getElementById('love-reason').innerText = r[Math.floor(Math.random()*r.length)]; }
+        let scanTimer; function startScan(e) { if(e.preventDefault) e.preventDefault(); document.getElementById('scanLine').style.display='block'; scanTimer=setTimeout(()=>{document.getElementById('promise-msg').style.display='block'; document.getElementById('scanLine').style.display='none'; try{navigator.vibrate(200)}catch(e){}},1500); } function stopScan() { clearTimeout(scanTimer); document.getElementById('scanLine').style.display='none'; }
+        
+        // --- NEW FEATURES LOGIC ---
+        
+        // Quiz
+        const quizData = [
+            { q: "আমার রাগ ভাঙানোর সেরা উপায় কী?", options: ["সরি বলা", "কান ধরে ওঠবস", "মিষ্টি করে একটা হাসি", "চকলেট দেওয়া"], a: 2 },
+            { q: "আমি তোমার কোন জিনিসটা সবচেয়ে বেশি ভালোবাসি?", options: ["তোমার চোখ", "তোমার হাসি", "তোমার বোকামি", "সবগুলোই"], a: 3 },
+            { q: "আমাদের প্রথম দেখা করার তারিখ কবে?", options: ["১২ নভেম্বর", "১৪ ফেব্রুয়ারি", "৫ নভেম্বর", "১ জানুয়ারি"], a: 0 }
+        ];
+        let currentQuiz = 0;
+        function loadQuiz() {
+            const q = quizData[currentQuiz];
+            document.getElementById('quiz-question').innerText = q.q;
+            const optsDiv = document.getElementById('quiz-options');
+            optsDiv.innerHTML = '';
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-btn';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(index, btn);
+                optsDiv.appendChild(btn);
+            });
+            document.getElementById('quiz-feedback').innerText = "";
+        }
+        function checkAnswer(selected, btnElement) {
+            const correct = quizData[currentQuiz].a;
+            if(selected === correct) {
+                btnElement.classList.add('correct');
+                document.getElementById('quiz-feedback').innerHTML = "<span style='color:#2ecc71'>ইয়েস! একদম ঠিক! ❤️</span>";
+                triggerConfetti();
+                setTimeout(() => {
+                    currentQuiz++;
+                    if(currentQuiz < quizData.length) loadQuiz();
+                    else document.getElementById('quiz-box').innerHTML = "<h2 style='color:var(--secondary)'>অভিনন্দন জানপাখি! 🎉</h2><p style='color:#fff'>তুমি আমাকে ১০০% চেনো!</p>";
+                }, 2000);
+            } else {
+                btnElement.classList.add('wrong');
+                document.getElementById('quiz-feedback').innerHTML = "<span style='color:#e74c3c'>উহু! ভুল হলো যে! 🥺</span>";
+                try{navigator.vibrate(200);}catch(e){}
+            }
+        }
+        function triggerConfetti() { const c = document.getElementById('confetti-canvas'); c.style.display = 'block'; setTimeout(() => c.style.display = 'none', 2000); }
+
+        // Mood
+        function handleMood(type) {
+            const msg = document.getElementById('mood-msg');
+            if(type === 'happy') {
+                triggerConfetti();
+                msg.innerText = "তোমার হাসি দেখলেই আমার দিন ভালো হয়ে যায়! 😊";
+            } else if(type === 'sad') {
+                msg.innerText = "কান্না করো না প্লিজ বাবু! সব ঠিক হয়ে যাবে। আমি আছি তো। ❤️";
+            } else {
+                msg.innerText = "আমিও তোমাকে ভীষণ মিস করছি... খুব জলদি দেখা হবে! 🤗";
+            }
+        }
+
+        // Contract
+        function signContract() {
+            document.getElementById('contract-stamp').classList.add('stamped');
+            try{navigator.vibrate([100,50,100]);}catch(e){}
+            alert("চুক্তি স্বাক্ষরিত! এবার কিন্তু আর রাগ করা চলবে না! ❤️");
+        }
+
+        // WhatsApp
+        function sendToWhatsApp() {
+            const txt = document.getElementById('wa-msg-input').value;
+            if(txt) window.open(`https://wa.me/8801851715713?text=${encodeURIComponent(txt)}`, '_blank');
+        }
+
+        // Clock
+        const startDate = new Date("2024-09-14T00:00:00").getTime();
+        setInterval(() => { const now = new Date().getTime(); const d = now - startDate; document.getElementById("love-clock").innerHTML = `${Math.floor(d/(1000*60*60*24))} Days : ${Math.floor((d%(1000*60*60*24))/(1000*60*60))} Hr : ${Math.floor((d%(1000*60*60))/(1000*60))} Min : ${Math.floor((d%(1000*60))/1000)} Sec`; }, 1000);
+
+        // Petals
         let petalInterval;
         function startPetals() {
-            const container = document.getElementById('petals-container');
-            container.innerHTML = '';
+            const container = document.getElementById('petals-container'); container.innerHTML = '';
             petalInterval = setInterval(() => {
                 const petal = document.createElement('div'); petal.classList.add('petal');
                 petal.style.left = Math.random() * 100 + "vw";
@@ -519,27 +816,21 @@
         }
         function stopPetals() { clearInterval(petalInterval); document.getElementById('petals-container').innerHTML = ''; }
 
-        let currentVaultPage = 1; const totalVaultPages = 9;
-        function openSecretVaultInput() { if(prompt("ENTER ACCESS CODE:") === "3460") { switchView('secret-vault'); document.getElementById('vault-audio').play(); startPetals(); } else { alert("ACCESS DENIED!"); } }
-        function closeVault() { goBack(); document.getElementById('vault-audio').pause(); currentVaultPage=1; showPage(1); }
-        function showPage(n) { for(let i=1; i<=totalVaultPages; i++) document.getElementById(`page-${i}`).classList.remove('active'); document.getElementById(`page-${n}`).classList.add('active'); document.getElementById('page-num').innerText = `${n} / ${totalVaultPages}`; }
-        function nextPage() { if(currentVaultPage < totalVaultPages) { currentVaultPage++; showPage(currentVaultPage); } }
-        function prevPage() { if(currentVaultPage > 1) { currentVaultPage--; showPage(currentVaultPage); } }
-        function toggleMsg(id) { let el = document.getElementById(id); el.style.display = (el.style.display === 'block') ? 'none' : 'block'; }
-        function generateReason() { const r = ["তোমার ওই মায়াবী চোখ","আমার রাগ ভাঙাতে পারো","তোমার হাসিতে দিন ভালো হয়","আমাকে ভালো বোঝো"]; document.getElementById('love-reason').innerText = r[Math.floor(Math.random()*r.length)]; }
-        let scanTimer; function startScan(e) { if(e.preventDefault) e.preventDefault(); document.getElementById('scanLine').style.display='block'; scanTimer=setTimeout(()=>{document.getElementById('promise-msg').style.display='block'; document.getElementById('scanLine').style.display='none'; try{navigator.vibrate(200)}catch(e){}},1500); } function stopScan() { clearTimeout(scanTimer); document.getElementById('scanLine').style.display='none'; }
-        
-        // Clock with Seconds
-        const startDate = new Date("2024-09-14T00:00:00").getTime();
-        setInterval(() => { const now = new Date().getTime(); const d = now - startDate; document.getElementById("love-clock").innerHTML = `${Math.floor(d/(1000*60*60*24))} Days : ${Math.floor((d%(1000*60*60*24))/(1000*60*60))} Hr : ${Math.floor((d%(1000*60*60))/(1000*60))} Min : ${Math.floor((d%(1000*60))/1000)} Sec`; }, 1000);
+        // Music Toggle
+        let isPlaying = false; const bgMusic = document.getElementById('bg-music');
+        function toggleMusic() {
+            if (isPlaying) { bgMusic.pause(); document.querySelector('.music-wrapper').classList.remove('playing'); document.getElementById('music-icon').className = 'fas fa-play'; } 
+            else { bgMusic.play().then(() => { document.querySelector('.music-wrapper').classList.add('playing'); document.getElementById('music-icon').className = 'fas fa-pause'; }).catch(()=>{}); }
+            isPlaying = !isPlaying;
+        }
 
-        // Utils
+        // Typewriter
         const words = ["< POET />", "< WRITER />", "< DREAMER />"]; let i=0,j=0,isDeleting=false;
         function type() { const current = words[i]; document.getElementById('typewriter').textContent = isDeleting ? current.substring(0, j--) : current.substring(0, j++); if (!isDeleting && j === current.length + 1) { isDeleting = true; setTimeout(type, 2000); } else if (isDeleting && j === 0) { isDeleting = false; i = (i + 1) % words.length; setTimeout(type, 500); } else { setTimeout(type, isDeleting ? 50 : 100); } } type();
         
         // Particles
         const canvas = document.getElementById('particles'); const ctx = canvas.getContext('2d'); canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        let particlesArray = []; class Particle { constructor() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.size = Math.random() * 2; this.speedX = Math.random() * 0.5 - 0.25; this.speedY = Math.random() * 0.5 - 0.25; this.opacity = Math.random(); } update() { this.x += this.speedX; this.y += this.speedY; if(this.x > canvas.width) this.x=0; if(this.x<0) this.x=canvas.width; if(this.y > canvas.height) this.y=0; if(this.y<0) this.y=canvas.height; } draw() { ctx.fillStyle = `rgba(255, 215, 0, ${this.opacity})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); } }
+        let particlesArray = []; class Particle { constructor() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.size = Math.random() * 2; this.opacity = Math.random(); } update() { this.y += 0.2; if(this.y > canvas.height) this.y=0; } draw() { ctx.fillStyle = `rgba(255, 215, 0, ${this.opacity})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); } }
         function initParticles() { particlesArray = []; for(let i=0; i<80; i++) particlesArray.push(new Particle()); } function animateParticles() { ctx.clearRect(0,0,canvas.width,canvas.height); for(let i=0; i<particlesArray.length; i++) { particlesArray[i].update(); particlesArray[i].draw(); } requestAnimationFrame(animateParticles); } initParticles(); animateParticles();
     </script>
 </body>
