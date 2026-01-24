@@ -254,7 +254,7 @@
 
     <audio id="bg-music" loop> <source src="music.mp3" type="audio/mpeg"> </audio>
     <audio id="rain-audio" loop> <source src="https://assets.mixkit.co/active_storage/sfx/2405/2405-preview.mp3" type="audio/mpeg"> </audio>
-    <audio id="vault-audio" loop> <source src="her_song.mp3" type="audio/mpeg"> </audio>
+    <audio id="vault-audio" loop> <source src="music.mp3" type="audio/mpeg"> </audio>
 
     <div class="controls-wrapper">
         <div class="ctrl-float-btn music-btn" onclick="toggleMusic()">
@@ -549,19 +549,62 @@
             renderNovelLibrary();
             createFireflies(); // জোনাকি শুরু
             
-            // Music Play
-            const music = document.getElementById('bg-music');
-            const attemptPlay = () => {
-                music.play().then(() => {
-                    document.querySelector('.music-btn').classList.add('playing');
-                    document.getElementById('music-icon').className = 'fas fa-pause';
-                }).catch(()=>{});
+ // --- FIXED MUSIC PLAYER LOGIC (UPDATED) ---
+    // ভেরিয়েবলগুলো গ্লোবাল (window) অবজেক্টে রাখা হচ্ছে
+    window.music = document.getElementById('bg-music');
+    window.musicBtn = document.querySelector('.music-btn');
+    window.musicIcon = document.getElementById('music-icon');
+
+    // ১. অটোমেটিক প্লে করার চেষ্টা
+    const attemptPlay = (e) => {
+        // বাটন ক্লিক করলে অটো-প্লে দরকার নেই
+        if (e.target.closest('.music-btn')) return;
+
+        if (window.music && window.music.paused) {
+            window.music.play().then(() => {
+                console.log("Auto-play started!");
+                updateMusicIcon(true);
+                // একবার চালু হলে লিসেনার সরিয়ে ফেলা হবে
                 document.removeEventListener('click', attemptPlay);
                 document.removeEventListener('touchstart', attemptPlay);
-            };
-            document.addEventListener('click', attemptPlay);
-            document.addEventListener('touchstart', attemptPlay);
-        };
+            }).catch(err => console.log("Autoplay waiting..."));
+        }
+    };
+
+    document.addEventListener('click', attemptPlay);
+    document.addEventListener('touchstart', attemptPlay);
+
+}; // এখানে window.onload শেষ হলো (লাইন ৬০৫ এর ব্র্যাকেটটা এখানে দিলাম)
+
+// --- ফাংশনগুলো এখন window.onload এর বাইরে ---
+
+// ২. বাটনের মাধ্যমে কন্ট্রোল (Play/Pause)
+function toggleMusic() {
+    if (!window.music) window.music = document.getElementById('bg-music');
+    
+    if (window.music.paused) {
+        window.music.play().then(() => {
+            updateMusicIcon(true);
+        }).catch(e => alert("Music file problem! Check console."));
+    } else {
+        window.music.pause();
+        updateMusicIcon(false);
+    }
+}
+
+// ৩. আইকন আপডেট করার ফাংশন
+function updateMusicIcon(isPlaying) {
+    if (!window.musicBtn) window.musicBtn = document.querySelector('.music-btn');
+    if (!window.musicIcon) window.musicIcon = document.getElementById('music-icon');
+
+    if (isPlaying) {
+        window.musicBtn.classList.add('playing');
+        window.musicIcon.className = 'fas fa-pause';
+    } else {
+        window.musicBtn.classList.remove('playing');
+        window.musicIcon.className = 'fas fa-play';
+    }
+}
 
         // --- FIREFLY GENERATOR ---
         function createFireflies() {
