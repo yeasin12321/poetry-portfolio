@@ -105,7 +105,7 @@
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
         /* Layout */
-        #app-container { width: 100%; max-width: 500px; background: rgba(30, 10, 15, 0.5); backdrop-filter: blur(8px); min-height: 100vh; position: relative; box-shadow: 0 0 50px rgba(0,0,0,0.5); border-left: 1px solid rgba(255, 77, 109, 0.1); border-right: 1px solid rgba(255, 77, 109, 0.1); transition: max-width 0.3s ease; }
+        #app-container { width: 100%; max-width: 500px; background: rgba(30, 10, 15, 0.5); backdrop-filter: blur(3px); min-height: 100vh; position: relative; box-shadow: 0 0 50px rgba(0,0,0,0.5); border-left: 1px solid rgba(255, 77, 109, 0.1); border-right: 1px solid rgba(255, 77, 109, 0.1); transition: max-width 0.3s ease; }
         @media (min-width: 900px) {
             #app-container { max-width: 1000px; padding: 20px; border: none; background: rgba(30, 10, 15, 0.7); margin: 20px auto; border-radius: 20px; }
             #home-view { display: grid; grid-template-columns: 350px 1fr; gap: 40px; align-items: start; }
@@ -609,7 +609,7 @@ function updateMusicIcon(isPlaying) {
         // --- FIREFLY GENERATOR ---
         function createFireflies() {
             const container = document.getElementById('firefly-container');
-            const fireflyCount = 25; // জোনাকির সংখ্যা
+            const fireflyCount = 10; // জোনাকির সংখ্যা
 
             for (let i = 0; i < fireflyCount; i++) {
                 const fly = document.createElement('div');
@@ -961,7 +961,7 @@ function updateMusicIcon(isPlaying) {
         function type() { const current = words[i]; document.getElementById('typewriter').textContent = isDeleting ? current.substring(0, j--) : current.substring(0, j++); if (!isDeleting && j === current.length + 1) { isDeleting = true; setTimeout(type, 2000); } else if (isDeleting && j === 0) { isDeleting = false; i = (i + 1) % words.length; setTimeout(type, 500); } else { setTimeout(type, isDeleting ? 50 : 100); } } type();
         const canvas = document.getElementById('particles'); const ctx = canvas.getContext('2d'); canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         let particlesArray = []; class Particle { constructor() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.size = Math.random() * 2; this.opacity = Math.random(); } update() { this.y += 0.2; if(this.y > canvas.height) this.y=0; } draw() { ctx.fillStyle = `rgba(255, 215, 0, ${this.opacity})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); } }
-        function initParticles() { particlesArray = []; for(let i=0; i<80; i++) particlesArray.push(new Particle()); } function animateParticles() { ctx.clearRect(0,0,canvas.width,canvas.height); for(let i=0; i<particlesArray.length; i++) { particlesArray[i].update(); particlesArray[i].draw(); } requestAnimationFrame(animateParticles); } initParticles(); animateParticles();
+        function initParticles() { particlesArray = []; for(let i=0; i<40; i++) particlesArray.push(new Particle()); } function animateParticles() { ctx.clearRect(0,0,canvas.width,canvas.height); for(let i=0; i<particlesArray.length; i++) { particlesArray[i].update(); particlesArray[i].draw(); } requestAnimationFrame(animateParticles); } initParticles(); animateParticles();
     </script>
 </body>
 </html>
