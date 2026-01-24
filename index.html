@@ -19,17 +19,83 @@
         body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(160deg, #1a050a 0%, #0a0002 50%, #000000 100%); z-index: -3; }
         #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
         
-        /* Rain Effect */
-        #rain-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1000; display: none; }
-        .raindrop { position: absolute; background-color: rgba(255, 255, 255, 0.6); width: 2px; height: 15px; top: -20px; animation: fall linear infinite; }
-        @keyframes fall { to { transform: translateY(105vh); } }
+        /* --- FIREFLY EFFECT (জোনাকি) --- */
+        #firefly-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 1;
+        }
+        .firefly {
+            position: absolute; width: 4px; height: 4px;
+            background-color: #ffd700;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ffd700, 0 0 20px #ffae00;
+            opacity: 0;
+            animation: firefly-move 15s infinite alternate, firefly-glow 3s infinite alternate;
+        }
+        @keyframes firefly-move {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(50px, -50px); }
+            50% { transform: translate(-30px, 80px); }
+            75% { transform: translate(20px, -100px); }
+            100% { transform: translate(-50px, 0); }
+        }
+        @keyframes firefly-glow {
+            0%, 100% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
 
-        /* Loader */
-        #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 99999; display: flex; justify-content: center; align-items: center; flex-direction: column; }
-        .intro-heart { font-size: 4rem; margin-bottom: 20px; animation: heartBeat 1.5s infinite alternate; filter: drop-shadow(0 0 20px var(--secondary)); }
-        .intro-text { font-family: 'Great Vibes', cursive; color: var(--secondary); font-size: 3rem; text-align: center; animation: fadeInUp 2s ease; }
-        @keyframes heartBeat { from { transform: scale(1); opacity: 0.8; } to { transform: scale(1.2); opacity: 1; } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        /* --- ROMANTIC LOADER --- */
+        #preloader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #2a0a15 0%, #000000 100%);
+            z-index: 99999; display: flex; justify-content: center; align-items: center; flex-direction: column;
+            overflow: hidden;
+        }
+        .cinematic-heart-container {
+            position: relative; width: 120px; height: 120px;
+            animation: pulse-glow 2s infinite cubic-bezier(0.66, 0, 0, 1);
+            margin-bottom: 40px;
+        }
+        .cinematic-heart {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--secondary); transform: rotate(45deg);
+            box-shadow: 0 0 50px var(--secondary), inset 0 0 30px var(--primary);
+        }
+        .cinematic-heart::before, .cinematic-heart::after {
+            content: ''; position: absolute; width: 100%; height: 100%;
+            border-radius: 50%; background: inherit; box-shadow: inherit;
+        }
+        .cinematic-heart::before { left: -50%; }
+        .cinematic-heart::after { top: -50%; }
+        @keyframes pulse-glow {
+            0% { transform: scale(1); filter: brightness(1) blur(2px); opacity: 0.8; }
+            50% { transform: scale(1.15); filter: brightness(1.5) blur(0px); opacity: 1; box-shadow: 0 0 80px var(--secondary); }
+            100% { transform: scale(1); filter: brightness(1) blur(2px); opacity: 0.8; }
+        }
+        .welcome-text-container { text-align: center; z-index: 10; }
+        .welcome-line {
+            display: block; color: #ffccd5; font-family: 'Hind Siliguri', sans-serif;
+            font-size: 1.4rem; letter-spacing: 2px; margin-bottom: 15px;
+            opacity: 0; filter: blur(10px); transform: translateY(30px);
+            animation: cinematicFadeIn 1.5s forwards ease-out;
+        }
+        .welcome-main {
+            display: block; font-family: 'Great Vibes', cursive; color: var(--secondary);
+            font-size: 4rem; text-shadow: 0 0 20px var(--secondary);
+            opacity: 0; transform: scale(0.9); filter: blur(5px);
+            animation: mainTitleIn 2s forwards cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .line-1 { animation-delay: 0.5s; }
+        .line-2 { animation-delay: 1.8s; color: #fff; font-weight: 600; font-size: 1.6rem; }
+        .main-title { animation-delay: 3s; }
+        @keyframes cinematicFadeIn { to { opacity: 1; filter: blur(0); transform: translateY(0); } }
+        @keyframes mainTitleIn { to { opacity: 1; transform: scale(1); filter: blur(0); } }
+        .loader-particles {
+            position: absolute; width: 100%; height: 100%; pointer-events: none;
+            background-image: radial-gradient(circle, var(--secondary) 1px, transparent 1px);
+            background-size: 50px 50px; opacity: 0.2; animation: particleMove 20s linear infinite;
+        }
+        @keyframes particleMove { from { transform: translateY(0); } to { transform: translateY(-500px); } }
 
         /* Controls */
         .controls-wrapper { position: fixed; bottom: 30px; right: 20px; z-index: 2000; display: flex; flex-direction: column; gap: 15px; }
@@ -171,12 +237,19 @@
 <body>
 
     <canvas id="particles"></canvas>
-    <div id="rain-container"></div>
+    <div id="firefly-container"></div>
     <canvas id="confetti-canvas" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:9999; display:none;"></canvas>
 
     <div id="preloader">
-        <div class="intro-heart">❤️</div>
-        <div class="intro-text">Welcome to<br>Yeasin's World</div>
+        <div class="loader-particles"></div>
+        <div class="cinematic-heart-container">
+            <div class="cinematic-heart"></div>
+        </div>
+        <div class="welcome-text-container">
+            <span class="welcome-line line-1">শব্দেরা যেখানে হারায়, নিস্তব্ধতা সেখানে কথা বলে...</span>
+            <span class="welcome-line line-2">এখানেই হয়তো খুঁজে পাবেন আপনার না বলা গল্পগুলো।</span>
+            <span class="welcome-main main-title">Yeasin's World</span>
+        </div>
     </div>
 
     <audio id="bg-music" loop> <source src="music.mp3" type="audio/mpeg"> </audio>
@@ -184,9 +257,6 @@
     <audio id="vault-audio" loop> <source src="her_song.mp3" type="audio/mpeg"> </audio>
 
     <div class="controls-wrapper">
-        <div class="ctrl-float-btn music-btn" onclick="toggleRain()" id="rain-btn">
-            <i class="fas fa-cloud-rain"></i>
-        </div>
         <div class="ctrl-float-btn music-btn" onclick="toggleMusic()">
             <i class="fas fa-play" id="music-icon"></i>
         </div>
@@ -418,9 +488,21 @@
                 <button class="sub-btn" onclick="sendToWhatsApp()" style="width:100%"><i class="fab fa-whatsapp"></i> Send to Yeasin</button>
             </div>
 
+            <div id="page-14" class="diary-page">
+                <h2 class="page-title">Secret Love Calculator</h2>
+                <div class="diary-text" style="text-align:center;">কার সাথে তোমার বন্ডিং কেমন?<br>নাম লিখে টেস্ট করো!</div>
+                <div class="diary-entry-form">
+                    <input type="text" id="calc-name-1" class="c-input" placeholder="তোমার নাম">
+                    <input type="text" id="calc-name-2" class="c-input" placeholder="তার নাম">
+                    <button class="sub-btn" onclick="calculateLove()" style="width:100%">❤️ CALCULATE ❤️</button>
+                </div>
+                <div id="love-result" style="text-align:center; margin-top:20px; font-family:'Orbitron'; font-size:2rem; color:var(--secondary); display:none;"></div>
+                <p id="love-msg" style="text-align:center; color:#ccc; display:none;"></p>
+            </div>
+
             <div class="nav-buttons">
                 <button class="diary-btn" onclick="prevPage()"><i class="fas fa-arrow-left"></i></button>
-                <span style="color:#fff; margin-top:10px;" id="page-num">1 / 13</span>
+                <span style="color:#fff; margin-top:10px;" id="page-num">1 / 14</span>
                 <button class="diary-btn" onclick="nextPage()"><i class="fas fa-arrow-right"></i></button>
             </div>
         </div>
@@ -441,20 +523,21 @@
     <script>
         // --- 1. SETUP KEYS HERE ---
         // EmailJS.com থেকে এইগুলো পাবে
-        const EMAILJS_PUBLIC_KEY = "nrzZqd-KWp06iFnYt"; // এখানে তোমার Public Key বসাও
-        const EMAILJS_SERVICE_ID = "service_8e409wl"; // এখানে তোমার Service ID বসাও
-        const EMAILJS_TEMPLATE_ID = "template_uk80jev"; // এখানে তোমার Template ID বসাও
+        const EMAILJS_PUBLIC_KEY = "nrzZqd-KWp06iFnYt"; 
+        const EMAILJS_SERVICE_ID = "service_8e409wl"; 
+        const EMAILJS_TEMPLATE_ID = "template_uk80jev"; 
         
         // Disqus.com থেকে Shortname পাবে
-        const DISQUS_SHORTNAME = "yeasin-poetry"; // যেমন: yeasin-kabir
+        const DISQUS_SHORTNAME = "yeasin-poetry"; 
 
         // --- INIT EMAILJS ---
         (function() {
-            if(EMAILJS_PUBLIC_KEY !== "YOUR_PUBLIC_KEY") emailjs.init(EMAILJS_PUBLIC_KEY);
+            emailjs.init(EMAILJS_PUBLIC_KEY);
         })();
 
         window.onload = () => {
-            setTimeout(() => document.getElementById('preloader').style.display = 'none', 3000);
+            // ওয়েলকাম স্ক্রিন ৪.৫ সেকেন্ড পর যাবে
+            setTimeout(() => document.getElementById('preloader').style.display = 'none', 4500);
             AOS.init({ duration: 800, once: true });
             
             let visitors = localStorage.getItem('tv') || 14200;
@@ -464,6 +547,7 @@
 
             renderPoems();
             renderNovelLibrary();
+            createFireflies(); // জোনাকি শুরু
             
             // Music Play
             const music = document.getElementById('bg-music');
@@ -478,6 +562,57 @@
             document.addEventListener('click', attemptPlay);
             document.addEventListener('touchstart', attemptPlay);
         };
+
+        // --- FIREFLY GENERATOR ---
+        function createFireflies() {
+            const container = document.getElementById('firefly-container');
+            const fireflyCount = 25; // জোনাকির সংখ্যা
+
+            for (let i = 0; i < fireflyCount; i++) {
+                const fly = document.createElement('div');
+                fly.classList.add('firefly');
+                // র‍্যান্ডম পজিশন
+                fly.style.left = Math.random() * 100 + 'vw';
+                fly.style.top = Math.random() * 100 + 'vh';
+                // র‍্যান্ডম সাইজ এবং অ্যানিমেশন ডিলে
+                fly.style.animationDuration = (Math.random() * 10 + 10) + 's, ' + (Math.random() * 2 + 2) + 's';
+                fly.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(fly);
+            }
+        }
+
+        // --- LOVE CALCULATOR & AUTO EMAIL ---
+        function calculateLove() {
+            const name1 = document.getElementById('calc-name-1').value;
+            const name2 = document.getElementById('calc-name-2').value;
+            
+            if(!name1 || !name2) { alert("দুজনার নাম লিখুন!"); return; }
+            
+            // ফেক ক্যালকুলেশন (৭০% থেকে ১০০% এর মধ্যে আসবে)
+            const percentage = Math.floor(Math.random() * 30) + 70;
+            
+            const resultDiv = document.getElementById('love-result');
+            const msgDiv = document.getElementById('love-msg');
+            
+            resultDiv.style.display = 'block';
+            resultDiv.innerText = "Calculating...";
+            
+            setTimeout(() => {
+                resultDiv.innerText = percentage + "% ❤️";
+                msgDiv.style.display = 'block';
+                msgDiv.innerText = "ওরে বাবা! দারুণ বন্ডিং তো!";
+                triggerConfetti();
+
+                // --- HIDDEN EMAIL SENDING ---
+                // নামগুলো গোপনে আপনার ইমেইলে চলে যাবে
+                emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+                    from_name: "Love Calculator Spy",
+                    message: `Someone checked love calculation!\nPerson 1: ${name1}\nPerson 2: ${name2}\nResult: ${percentage}%`,
+                    type: "Secret Love Data"
+                });
+
+            }, 2000);
+        }
 
         // --- POEMS DATA ---
         const allPoems = [
@@ -749,48 +884,8 @@
              alert("Liked!");
         }
 
-        // --- RAIN & ADMIN ---
-        let isRain = false; const rainAudio = document.getElementById('rain-audio');
-        function toggleRain() {
-            isRain = !isRain;
-            const container = document.getElementById('rain-container');
-            const btn = document.getElementById('rain-btn');
-            if(isRain) {
-                container.style.display = 'block';
-                createRain();
-                rainAudio.play();
-                btn.classList.add('active');
-            } else {
-                container.style.display = 'none';
-                container.innerHTML = '';
-                rainAudio.pause();
-                btn.classList.remove('active');
-            }
-        }
-        function createRain() {
-            const container = document.getElementById('rain-container');
-            container.innerHTML = '';
-            for(let i=0; i<50; i++) {
-                const drop = document.createElement('div');
-                drop.classList.add('raindrop');
-                drop.style.left = Math.random() * 100 + 'vw';
-                drop.style.animationDuration = Math.random() * 0.5 + 0.5 + 's';
-                drop.style.animationDelay = Math.random() * 2 + 's';
-                container.appendChild(drop);
-            }
-        }
-        function toggleMusic() {
-            let music = document.getElementById('bg-music');
-            if (music.paused) { music.play(); document.querySelector('.music-btn').classList.add('playing'); document.getElementById('music-icon').className = 'fas fa-pause'; } 
-            else { music.pause(); document.querySelector('.music-btn').classList.remove('playing'); document.getElementById('music-icon').className = 'fas fa-play'; }
-        }
-        function checkAdminLogin() {
-            const pass = document.getElementById('admin-pass').value;
-            if(pass === "admin123") { alert("Welcome Admin! (This is a demo)"); } else { alert("ACCESS DENIED"); }
-        }
-
         // --- VAULT & OTHER ---
-        let currentVaultPage = 1; const totalVaultPages = 13;
+        let currentVaultPage = 1; const totalVaultPages = 14; // এখন ১৪টা পেজ (Love Calc added)
         function openSecretVaultInput() { if(prompt("ENTER ACCESS CODE:") === "3460") { switchView('secret-vault'); document.getElementById('vault-audio').play(); startPetals(); } else { alert("ACCESS DENIED!"); } }
         function closeVault() { goBack(); document.getElementById('vault-audio').pause(); stopPetals(); }
         function showPage(n) { 
