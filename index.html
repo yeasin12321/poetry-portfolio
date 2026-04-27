@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-VHTTLK7XL4"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-VHTTLK7XL4');
-</script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VHTTLK7XL4"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-VHTTLK7XL4');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Yeasin Kabir - Poems & Novels | ইয়াছিন এর কবিতা</title>
-    <meta name="description" content="Welcome to Yeasin Kabir's official portfolio. Explore a beautiful collection of Bengali romantic & sad poems, novels, and readers' diaries by Yeasin. ইয়াছিন কবির এর বাংলা কবিতা ও উপন্যাস সমগ্র।">
+    <meta name="description" content="Welcome to Yeasin Kabir's official portfolio. Explore a beautiful collection of Bengali romantic & sad poems, novels, and readers' diaries by Yeasin.">
     <meta name="keywords" content="yeasin kabir, yeasin poem, yeasin kabir poem, ইয়াছিন এর কবিতা, bengali poem, yeasin novel, romantic poem">
     <meta name="author" content="Yeasin Kabir">
     <link rel="icon" type="image/png" href="favicon.png">
@@ -25,16 +23,10 @@
       "name": "Yeasin Kabir",
       "alternateName": "ইয়াছিন",
       "jobTitle": ["Web Developer", "Poet", "Novelist"],
-      "homeLocation": {
-        "@type": "Place",
-        "name": "Satkhira, Bangladesh"
-      },
+      "homeLocation": { "@type": "Place", "name": "Satkhira, Bangladesh" },
       "url": "https://yeasinkabir.pro.bd",
       "image": "https://yeasinkabir.pro.bd/profile.jpg",
-      "sameAs": [
-        "https://www.facebook.com/share/14LP9NJQ2KQ/",
-        "https://wa.me/8801851715713"
-      ]
+      "sameAs": ["https://www.facebook.com/share/14LP9NJQ2KQ/", "https://wa.me/8801851715713"]
     }
     </script>
      
@@ -44,115 +36,7 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Hind+Siliguri:wght@300;400;600;700&family=Orbitron:wght@500&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
 
-    <style>
-        :root { --primary: #ffb7b2; --secondary: #ff4d6d; --accent: #ffd700; --novel-accent: #e74c3c; --bg: #0f0505; --card-bg: rgba(25, 25, 30, 0.95); --text-size: 1.3rem; }
-        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg); color: #fff0f5; font-family: 'Hind Siliguri', sans-serif; margin: 0; padding: 0; display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; }
-        body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(160deg, #1a050a 0%, #0a0002 50%, #000000 100%); z-index: -3; }
-        #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
-        
-        /* Firefly & Loader */
-        #firefly-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
-        .firefly { position: absolute; width: 4px; height: 4px; background-color: #ffd700; border-radius: 50%; box-shadow: 0 0 10px #ffd700, 0 0 20px #ffae00; opacity: 0; animation: firefly-move 15s infinite alternate, firefly-glow 3s infinite alternate; }
-        @keyframes firefly-move { 0% { transform: translate(0, 0); } 100% { transform: translate(-50px, 0); } }
-        @keyframes firefly-glow { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2); } }
-
-        #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, #2a0a15 0%, #000000 100%); z-index: 99999; display: flex; justify-content: center; align-items: center; flex-direction: column; overflow: hidden; }
-        .cinematic-heart-container { position: relative; width: 120px; height: 120px; animation: pulse-glow 2s infinite cubic-bezier(0.66, 0, 0, 1); margin-bottom: 40px; }
-        .cinematic-heart { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--secondary); transform: rotate(45deg); box-shadow: 0 0 50px var(--secondary), inset 0 0 30px var(--primary); }
-        .cinematic-heart::before, .cinematic-heart::after { content: ''; position: absolute; width: 100%; height: 100%; border-radius: 50%; background: inherit; box-shadow: inherit; }
-        .cinematic-heart::before { left: -50%; } .cinematic-heart::after { top: -50%; }
-        @keyframes pulse-glow { 0% { transform: scale(1); filter: brightness(1); opacity: 0.8; } 50% { transform: scale(1.15); filter: brightness(1.5); opacity: 1; } 100% { transform: scale(1); filter: brightness(1); opacity: 0.8; } }
-        
-        .welcome-text-container { text-align: center; z-index: 10; }
-        .welcome-line { display: block; color: #ffccd5; font-family: 'Hind Siliguri', sans-serif; font-size: 1.4rem; margin-bottom: 15px; opacity: 0; animation: cinematicFadeIn 1.5s forwards ease-out; }
-        .welcome-main { display: block; font-family: 'Great Vibes', cursive; color: var(--secondary); font-size: 4rem; opacity: 0; animation: mainTitleIn 2s forwards; }
-        .line-1 { animation-delay: 0.5s; } .line-2 { animation-delay: 1.8s; font-size: 1.2rem; } .main-title { animation-delay: 3s; }
-        @keyframes cinematicFadeIn { to { opacity: 1; transform: translateY(0); } } @keyframes mainTitleIn { to { opacity: 1; transform: scale(1); } }
-
-        /* General UI */
-        .controls-wrapper { position: fixed; bottom: 30px; right: 20px; z-index: 2000; }
-        .ctrl-float-btn { width: 50px; height: 50px; background: rgba(0, 0, 0, 0.8); border: 2px solid var(--secondary); border-radius: 50%; color: var(--secondary); display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.3s; }
-        .music-btn.playing { animation: spin 4s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-
-        #app-container { width: 100%; max-width: 500px; background: rgba(30, 10, 15, 0.5); backdrop-filter: blur(3px); min-height: 100vh; position: relative; border-left: 1px solid rgba(255, 77, 109, 0.1); border-right: 1px solid rgba(255, 77, 109, 0.1); }
-        @media (min-width: 900px) { #app-container { max-width: 1000px; padding: 20px; border-radius: 20px; margin: 20px auto; background: rgba(30, 10, 15, 0.7); } #home-view { display: grid; grid-template-columns: 350px 1fr; gap: 40px; align-items: start; } .profile-header { position: sticky; top: 20px; } #buttons-list { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; } }
-
-        .profile-header { text-align: center; padding: 60px 20px 30px 20px; }
-        .avatar { width: 130px; height: 130px; border-radius: 50%; border: 3px solid var(--secondary); object-fit: cover; cursor: pointer; }
-        h1 { font-family: 'Great Vibes', cursive; font-size: 3rem; background: linear-gradient(to right, #ff9a9e, #fecfef); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 10px 0; }
-        .typing-text { color: var(--primary); font-family: 'Cinzel', serif; font-size: 0.9rem; }
-        .social-links { display: flex; justify-content: center; gap: 15px; margin-top: 25px; }
-        .social-btn { width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; background: rgba(255,255,255,0.05); color: #fff; text-decoration: none; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
-        .social-btn:hover { background: var(--secondary); }
-
-        .search-container { padding: 0 25px; margin-bottom: 15px; }
-        #search-bar { width: 100%; padding: 12px 20px; border-radius: 25px; border: 1px solid var(--secondary); background: rgba(0,0,0,0.5); color: #fff; }
-        .filter-tags { display: flex; gap: 10px; padding: 0 25px 15px; overflow-x: auto; scrollbar-width: none; }
-        .filter-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #ddd; padding: 5px 15px; border-radius: 15px; cursor: pointer; white-space: nowrap; }
-        .filter-btn.active { background: var(--secondary); color: #fff; }
-
-        .list-container { padding: 25px; }
-        .section-title { color: var(--primary); font-family: 'Cinzel', serif; text-align: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
-        .poem-btn { background: rgba(255, 255, 255, 0.03); padding: 18px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.05); cursor: pointer; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; color: #eee; transition: 0.3s; }
-        .poem-btn:hover { border-color: var(--secondary); background: linear-gradient(90deg, rgba(255, 77, 109, 0.1) 0%, transparent 100%); }
-        .novel-hub-btn { border-color: var(--novel-accent); color: #ff6b6b; font-weight: bold; background: rgba(231, 76, 60, 0.05); }
-
-        .full-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 500; padding: 20px; overflow-y: auto; animation: slideUp 0.5s ease; }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .back-btn { background: transparent; border: none; color: var(--secondary); font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: bold; margin-bottom: 20px; }
-        
-        #poem-container-box { background: rgba(40, 10, 20, 0.8); padding: 25px; border-radius: 20px; border: 1px solid rgba(255, 77, 109, 0.3); margin-bottom: 30px; }
-        #poem-content-display { font-size: var(--text-size); line-height: 2; color: #ffe6ea; white-space: pre-line; }
-
-        /* Novel Library Styles */
-        #novel-library { background: #111; }
-        .novel-card { background: var(--card-bg); border: 1px solid #333; border-radius: 12px; padding: 20px; margin-bottom: 25px; }
-        .novel-card h3 { margin: 0 0 10px 0; font-family: 'Hind Siliguri'; color: #fff; font-size: 1.5rem; }
-        .read-btn { background: var(--novel-accent); color: #fff; border: none; padding: 10px 25px; border-radius: 20px; width: 100%; cursor: pointer; }
-        #novel-reader { background: #0c0c10; }
-        .reader-nav { display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 20px; }
-        #chapter-dropdown { background: #222; color: #fff; border: 1px solid #444; padding: 8px; border-radius: 5px; }
-        .story-text { font-size: 1.2rem; line-height: 1.9; color: #ddd; text-align: justify; white-space: pre-line; padding-bottom: 150px; }
-        .chapter-controls { display: flex; justify-content: space-between; position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 450px; background: rgba(0,0,0,0.95); padding: 10px; border-radius: 30px; border: 1px solid #444; }
-        .ctrl-btn { background: transparent; color: #fff; border: none; font-size: 1.5rem; padding: 0 20px; cursor: pointer; }
-
-        /* Vault, Forms, etc. */
-        #secret-vault { background: linear-gradient(135deg, #2b0a1d 0%, #000000 100%); padding: 0; }
-        .vault-header { padding: 20px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255, 77, 109, 0.2); }
-        .diary-page { display: none; padding: 30px 20px; text-align: center; height: calc(100vh - 80px); overflow-y: auto; }
-        .diary-page.active { display: block; }
-        .diary-text { font-family: 'Hind Siliguri'; color: #ffe6ea; font-size: 1.2rem; line-height: 1.8; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; margin-bottom: 20px; white-space: pre-line; }
-        .nav-buttons { position: absolute; bottom: 20px; width: 100%; display: flex; justify-content: center; gap: 20px; }
-        .diary-btn { background: var(--secondary); color: white; border: none; padding: 10px 20px; border-radius: 30px; }
-        .her-eyes { width: 100%; max-width: 300px; border-radius: 15px; border: 4px solid var(--secondary); box-shadow: 0 0 20px var(--secondary); margin-bottom: 20px; animation: float 4s infinite ease-in-out; }
-        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        
-        /* Vault Special Items */
-        .open-when-btn { display: block; width: 100%; padding: 15px; margin: 10px 0; background: rgba(255, 77, 109, 0.2); border: 1px solid var(--secondary); border-radius: 10px; color: #fff; cursor: pointer; text-align: left; }
-        .open-when-msg { display: none; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; margin-bottom: 15px; color: var(--primary); font-style: italic; }
-        .bucket-item { text-align: left; margin: 10px 0; color: #ddd; }
-        .quiz-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
-        .quiz-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--secondary); color: #fff; padding: 15px; border-radius: 12px; cursor: pointer; transition: 0.3s; }
-        .mood-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 30px; }
-        .mood-btn { background: rgba(255,255,255,0.05); border: 2px solid #555; padding: 20px 10px; border-radius: 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-        .fingerprint-area { width: 100px; height: 100px; border: 2px dashed var(--secondary); border-radius: 50%; margin: 30px auto; display: flex; justify-content: center; align-items: center; cursor: pointer; position: relative; user-select: none; }
-        .scan-line { position: absolute; width: 100%; height: 2px; background: var(--secondary); top: 0; display: none; animation: scan 1.5s infinite linear; }
-        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
-        .petal { position: absolute; top: -50px; background: rgba(255, 0, 80, 0.6); border-radius: 150% 0 150% 0; animation: fall linear infinite; z-index: 50; pointer-events: none; }
-        @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
-
-        /* Gallery & Video */
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; padding: 10px; }
-        .video-container { display: flex; justify-content: center; border-radius: 12px; overflow: hidden; border: 1px solid #333; background: #000; }
-
-        /* Additional inputs */
-        .c-input { width: 100%; background: #222; border: 1px solid #444; color: #fff; padding: 12px; margin-bottom: 15px; border-radius: 8px; font-family: 'Hind Siliguri'; }
-        .sub-btn { background: var(--secondary); color: #fff; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; }
-        .sub-box { background: #222; padding: 20px; border-radius: 15px; margin-top: 20px; text-align: center; }
-        .sub-input { padding: 10px; border-radius: 20px; width: 70%; border: none; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -343,219 +227,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-
-    <script>
-        // ============================================
-        // SETUP: আপনার CSV লিংকগুলো এখানে বসান
-        // ============================================
-        const POEMS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8H2Fr0k4C4L1T6aBDTFp6Qm-OBdA61wCexL5jiEIt2XXeXwcUn-rIzMlPNtRhntUcONR93HwZmraR/pub?gid=0&single=true&output=csv"; // কবিতার CSV লিংক
-        const NOVELS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQTdMtQUXDld48piMW2uGrGev030agZacHpEVcpIIO7C-fyIMSWF1oh_0PQiRGRZ1S6pQVqMK7rGP9L/pub?gid=0&single=true&output=csv"; // উপন্যাসের CSV লিংক
-        
-        const EMAILJS_PUBLIC_KEY = "nrzZqd-KWp06iFnYt"; 
-        const EMAILJS_SERVICE_ID = "service_8e409wl"; 
-        const EMAILJS_TEMPLATE_ID = "template_uk80jev"; 
-        const DISQUS_SHORTNAME = "yeasin-poetry"; 
-
-        (function() { emailjs.init(EMAILJS_PUBLIC_KEY); })();
-
-        // Global Variables
-        let allPoems = [];
-        let novelsDB = [];
-        let currentFilter = 'all';
-
-        window.onload = () => {
-            loadAllData();
-            setTimeout(() => {
-                document.getElementById('preloader').style.display = 'none';
-                checkUrlHash();
-            }, 4500);
-            AOS.init({ duration: 800, once: true });
-            let visitors = localStorage.getItem('tv') || 14200;
-            document.getElementById('total-visitors').innerText = parseInt(visitors).toLocaleString();
-            createFireflies();
-            setupMusic();
-        };
-
-        // --- DATA LOADING ---
-        function loadAllData() {
-            Papa.parse(POEMS_SHEET_URL, {
-                download: true, header: true,
-                complete: function(results) {
-                    allPoems = results.data.filter(item => item.title && item.text);
-                    document.getElementById('loading-poems').style.display = 'none';
-                    renderPoems();
-                }
-            });
-            Papa.parse(NOVELS_SHEET_URL, {
-                download: true, header: true,
-                complete: function(results) {
-                    processNovelsData(results.data);
-                    document.getElementById('loading-novels').style.display = 'none';
-                    renderNovelLibrary();
-                }
-            });
-        }
-
-        function processNovelsData(flatData) {
-            let novelMap = {};
-            flatData.forEach(row => {
-                if(!row.id || !row.novel_title) return;
-                if (!novelMap[row.id]) {
-                    novelMap[row.id] = { id: row.id, title: row.novel_title, author: row.author, summary: row.summary, chapters: [] };
-                }
-                novelMap[row.id].chapters.push({ title: row.chapter_title, text: row.chapter_text });
-            });
-            novelsDB = Object.values(novelMap);
-        }
-
-        // --- UI RENDERERS ---
-        function renderPoems() {
-            const listDiv = document.getElementById('buttons-list');
-            listDiv.innerHTML = '';
-            const searchVal = document.getElementById('search-bar').value.toLowerCase();
-            if(allPoems.length === 0) { listDiv.innerHTML = "<div style='text-align:center;color:#666;'>No poems found or error loading sheet.</div>"; return; }
-            allPoems.forEach((poem, index) => {
-                if((currentFilter === 'all' || poem.tag === currentFilter) && poem.title.toLowerCase().includes(searchVal)) {
-                    const btn = document.createElement('div');
-                    btn.className = 'poem-btn'; btn.setAttribute('data-aos', 'fade-up');
-                    btn.innerHTML = `<span>${poem.title}</span> <i class="fas fa-chevron-right"></i>`;
-                    btn.onclick = () => openPoem(index);
-                    listDiv.appendChild(btn);
-                }
-            });
-        }
-        function openPoem(index) {
-            window.location.hash = "poem=" + index;
-            document.getElementById('poem-title-display').innerText = allPoems[index].title;
-            document.getElementById('poem-content-display').innerHTML = allPoems[index].text;
-            switchView('reader-view');
-            loadDisqus(index, allPoems[index].title);
-        }
-
-        function renderNovelLibrary() {
-            const container = document.getElementById('novel-list-container'); container.innerHTML = '';
-            if(novelsDB.length === 0) { container.innerHTML = "<div style='text-align:center;color:#666;'>No novels found.</div>"; return; }
-            novelsDB.forEach((novel, index) => {
-                const card = document.createElement('div'); card.className = 'novel-card';
-                card.innerHTML = `<h3>${novel.title}</h3><div class="novel-meta"><span>${novel.author}</span></div><div class="novel-summary">${novel.summary}</div><button class="read-btn" onclick="startReading(${index})">পড়া শুরু করুন</button>`;
-                container.appendChild(card);
-            });
-        }
-
-        let currentBookIndex = 0, currentChapterIndex = 0;
-        function startReading(bookIndex) { 
-            currentBookIndex = bookIndex; currentChapterIndex = 0; 
-            window.location.hash = "novel=" + bookIndex;
-            updateChapSelect(); switchView('novel-reader'); loadChapter(); 
-        }
-        function updateChapSelect() {
-            const select = document.getElementById('chapter-dropdown'); select.innerHTML = '';
-            novelsDB[currentBookIndex].chapters.forEach((chap, i) => {
-                let opt = document.createElement('option'); opt.value = i; opt.text = chap.title; select.appendChild(opt);
-            });
-        }
-        function loadChapter() {
-            const ch = novelsDB[currentBookIndex].chapters[currentChapterIndex];
-            document.getElementById('current-chapter-title').innerText = ch.title;
-            document.getElementById('story-content').innerHTML = ch.text;
-            document.getElementById('chapter-dropdown').value = currentChapterIndex;
-            window.scrollTo(0,0);
-        }
-        function changeChapter(d) { 
-            const len = novelsDB[currentBookIndex].chapters.length;
-            if(currentChapterIndex + d >= 0 && currentChapterIndex + d < len) { currentChapterIndex += d; loadChapter(); }
-        }
-        function jumpToChapter(v) { currentChapterIndex = parseInt(v); loadChapter(); }
-
-        // --- VAULT LOGIC (RESTORED) ---
-        function openSecretVaultInput() { if(prompt("ENTER ACCESS CODE:") === "3460") { switchView('secret-vault'); document.getElementById('vault-audio').play(); createFireflies(); if(currentVaultPage === 10) loadQuiz(); } else { alert("ACCESS DENIED!"); } }
-        function closeVault() { goBack(); document.getElementById('vault-audio').pause(); }
-        let currentVaultPage = 1; const totalVaultPages = 14; 
-        function showPage(n) { 
-            document.querySelectorAll('.diary-page').forEach(p=>p.classList.remove('active')); 
-            document.getElementById(`page-${n}`).classList.add('active'); 
-            document.getElementById('page-num').innerText = `${n} / ${totalVaultPages}`; 
-            if(n === 10) loadQuiz();
-        }
-        function nextPage() { if(currentVaultPage < totalVaultPages) { currentVaultPage++; showPage(currentVaultPage); } }
-        function prevPage() { if(currentVaultPage > 1) { currentVaultPage--; showPage(currentVaultPage); } }
-        
-        function toggleMsg(id) { let el = document.getElementById(id); el.style.display = (el.style.display === 'block') ? 'none' : 'block'; }
-        function generateReason() { const r = ["তোমার ওই মায়াবী চোখ","আমার রাগ ভাঙাতে পারো","তোমার হাসিতে দিন ভালো হয়","আমাকে ভালো বোঝো"]; document.getElementById('love-reason').innerText = r[Math.floor(Math.random()*r.length)]; }
-        let scanTimer; 
-        function startScan(e) { if(e.preventDefault) e.preventDefault(); document.getElementById('scanLine').style.display='block'; scanTimer=setTimeout(()=>{document.getElementById('promise-msg').style.display='block'; document.getElementById('scanLine').style.display='none'; try{navigator.vibrate(200)}catch(e){}},1500); } 
-        function stopScan() { clearTimeout(scanTimer); document.getElementById('scanLine').style.display='none'; }
-        
-        // Quiz
-        const quizData = [ { q: "আমার রাগ ভাঙানোর সেরা উপায় কী?", options: ["সরি বলা", "কান ধরে ওঠবস", "মিষ্টি করে একটা হাসি", "চকলেট দেওয়া"], a: 2 }, { q: "আমি তোমার কোন জিনিসটা সবচেয়ে বেশি ভালোবাসি?", options: ["তোমার চোখ", "তোমার হাসি", "তোমার বোকামি", "সবগুলোই"], a: 3 }, { q: "আমাদের প্রথম দেখা করার তারিখ কবে?", options: ["১২ নভেম্বর", "১৪ ফেব্রুয়ারি", "৫ নভেম্বর", "১ জানুয়ারি"], a: 0 } ];
-        let currentQuiz = 0;
-        function loadQuiz() { 
-            if(currentQuiz >= quizData.length) { document.getElementById('quiz-box').innerHTML = "<h2 style='color:var(--secondary)'>অভিনন্দন জানপাখি! 🎉</h2><p style='color:#fff'>তুমি আমাকে ১০০% চেনো!</p>"; return; }
-            const q = quizData[currentQuiz]; document.getElementById('quiz-question').innerText = q.q; 
-            const optsDiv = document.getElementById('quiz-options'); optsDiv.innerHTML = ''; 
-            q.options.forEach((opt, index) => { 
-                const btn = document.createElement('button'); btn.className = 'quiz-btn'; btn.innerText = opt; 
-                btn.onclick = () => checkAnswer(index, btn); optsDiv.appendChild(btn); 
-            }); 
-            document.getElementById('quiz-feedback').innerText = ""; 
-        }
-        function checkAnswer(selected, btnElement) { 
-            const correct = quizData[currentQuiz].a; 
-            if(selected === correct) { btnElement.style.background = "#2ecc71"; btnElement.style.color="#000"; document.getElementById('quiz-feedback').innerHTML = "<span style='color:#2ecc71'>ইয়েস! একদম ঠিক! ❤️</span>"; triggerConfetti(); setTimeout(() => { currentQuiz++; loadQuiz(); }, 2000); } 
-            else { btnElement.style.background = "#e74c3c"; document.getElementById('quiz-feedback').innerHTML = "<span style='color:#e74c3c'>উহু! ভুল হলো যে! 🥺</span>"; try{navigator.vibrate(200);}catch(e){} } 
-        }
-        function triggerConfetti() { const c = document.getElementById('confetti-canvas'); c.style.display = 'block'; setTimeout(() => c.style.display = 'none', 2000); }
-        function handleMood(type) { const msg = document.getElementById('mood-msg'); if(type === 'happy') { triggerConfetti(); msg.innerText = "তোমার হাসি দেখলেই আমার দিন ভালো হয়ে যায়! 😊"; } else if(type === 'sad') { msg.innerText = "কান্না করো না প্লিজ বাবু! সব ঠিক হয়ে যাবে। আমি আছি তো। ❤️"; } else { msg.innerText = "আমিও তোমাকে ভীষণ মিস করছি... খুব জলদি দেখা হবে! 🤗"; } }
-        function signContract() { document.getElementById('contract-stamp').style.opacity = '0.8'; document.getElementById('contract-stamp').style.transform = 'rotate(-15deg) scale(1)'; try{navigator.vibrate([100,50,100]);}catch(e){} alert("চুক্তি স্বাক্ষরিত! এবার কিন্তু আর রাগ করা চলবে না! ❤️"); }
-        function sendToWhatsApp() { const txt = document.getElementById('wa-msg-input').value; if(txt) window.open(`https://wa.me/8801851715713?text=${encodeURIComponent(txt)}`, '_blank'); }
-        function calculateLove() {
-            const name1 = document.getElementById('calc-name-1').value; const name2 = document.getElementById('calc-name-2').value;
-            if(!name1 || !name2) { alert("দুজনার নাম লিখুন!"); return; }
-            const percentage = Math.floor(Math.random() * 30) + 70;
-            const resultDiv = document.getElementById('love-result'); const msgDiv = document.getElementById('love-msg');
-            resultDiv.style.display = 'block'; resultDiv.innerText = "Calculating...";
-            setTimeout(() => { resultDiv.innerText = percentage + "% ❤️"; msgDiv.style.display = 'block'; msgDiv.innerText = "ওরে বাবা! দারুণ বন্ডিং তো!"; triggerConfetti(); }, 2000);
-        }
-
-        // Clock
-        const startDate = new Date("2024-09-14T00:00:00").getTime();
-        setInterval(() => { const now = new Date().getTime(); const d = now - startDate; document.getElementById("love-clock").innerHTML = `${Math.floor(d/(1000*60*60*24))} Days : ${Math.floor((d%(1000*60*60*24))/(1000*60*60))} Hr : ${Math.floor((d%(1000*60*60))/(1000*60))} Min : ${Math.floor((d%(1000*60))/1000)} Sec`; }, 1000);
-        let petalInterval; function startPetals() { const container = document.getElementById('petals-container'); container.innerHTML = ''; petalInterval = setInterval(() => { const petal = document.createElement('div'); petal.classList.add('petal'); petal.style.left = Math.random() * 100 + "vw"; petal.style.width = Math.random() * 15 + 10 + "px"; petal.style.height = petal.style.width; petal.style.animationDuration = Math.random() * 3 + 3 + "s"; container.appendChild(petal); setTimeout(() => { petal.remove(); }, 6000); }, 300); } function stopPetals() { clearInterval(petalInterval); document.getElementById('petals-container').innerHTML = ''; }
-
-        // --- UTILS ---
-        function filterPoems() { renderPoems(); }
-        function filterByTag(tag) { currentFilter = tag; document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); renderPoems(); }
-        function goBack() { history.pushState("", document.title, window.location.pathname + window.location.search); document.querySelectorAll('.full-view').forEach(el => el.style.display='none'); document.getElementById('home-view').style.display='grid'; }
-        function switchView(viewId) { history.pushState({view:viewId}, null, ''); document.getElementById('home-view').style.display='none'; document.querySelectorAll('.full-view').forEach(el => el.style.display='none'); document.getElementById(viewId).style.display='block'; window.scrollTo(0,0); }
-        function checkUrlHash() { const hash = window.location.hash; if (hash.includes('poem=') && allPoems.length > 0) { const index = parseInt(hash.split('=')[1]); if (allPoems[index]) openPoem(index); } else if (hash.includes('novel=') && novelsDB.length > 0) { const index = parseInt(hash.split('=')[1]); if (novelsDB[index]) startReading(index); } }
-        
-        // Music
-        function setupMusic() { window.music = document.getElementById('bg-music'); const attemptPlay = () => { if (window.music && window.music.paused) { window.music.play().catch(err => console.log("Autoplay waiting...")); } document.removeEventListener('click', attemptPlay); }; document.addEventListener('click', attemptPlay); }
-        function toggleMusic() { const icon = document.getElementById('music-icon'); if (window.music.paused) { window.music.play(); document.querySelector('.music-btn').classList.add('playing'); icon.className = 'fas fa-pause'; } else { window.music.pause(); document.querySelector('.music-btn').classList.remove('playing'); icon.className = 'fas fa-play'; } }
-
-        // Disqus
-        function loadDisqus(id, title) {
-            if(typeof DISQUS !== 'undefined') { DISQUS.reset({ reload: true, config: function () { this.page.identifier = 'poem-' + id; this.page.title = title; }}); } 
-            else { var d = document, s = d.createElement('script'); s.src = 'https://' + DISQUS_SHORTNAME + '.disqus.com/embed.js'; s.setAttribute('data-timestamp', +new Date()); (d.head || d.body).appendChild(s); }
-        }
-
-        // EmailJS
-        function sendRealEmail() { const name = document.getElementById('contact-name').value; const email = document.getElementById('contact-email').value; const msg = document.getElementById('contact-msg').value; if(name && msg) { emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, { from_name: name, from_email: email, message: msg, type: "Contact Message" }).then(() => alert("Message Sent!"), () => alert("Failed!")); } else alert("Please fill name and message."); }
-        function sendDiaryToEmail() { const name = document.getElementById('story-author-name').value; const content = document.getElementById('story-content-input').value; if(name && content) { emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, { from_name: name, message: content, type: "Reader's Diary" }).then(() => alert("Sent!"), () => alert("Failed!")); } }
-        function handleRealSubscribe() { const email = document.getElementById('sub-email').value; if(email) { emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, { from_email: email, message: "Subscribe", type: "Subscription" }).then(() => alert("Subscribed!")); } }
-        function toggleSettings() { const panel = document.getElementById('settings-panel'); panel.style.display = panel.style.display === 'block' ? 'none' : 'block'; }
-        function changeFont(dir) { const root = document.documentElement; let current = parseFloat(getComputedStyle(root).getPropertyValue('--text-size')); root.style.setProperty('--text-size', (current + (dir * 0.1)) + 'rem'); }
-        function backToLibrary() { switchView('novel-library'); }
-        function openNovelLibrary() { switchView('novel-library'); }
-
-        function createFireflies() { const container = document.getElementById('firefly-container'); container.innerHTML = ''; for (let i = 0; i < 10; i++) { const fly = document.createElement('div'); fly.classList.add('firefly'); fly.style.left = Math.random() * 100 + 'vw'; fly.style.top = Math.random() * 100 + 'vh'; fly.style.animationDuration = (Math.random() * 10 + 10) + 's, ' + (Math.random() * 2 + 2) + 's'; fly.style.animationDelay = Math.random() * 5 + 's'; container.appendChild(fly); } }
-        
-        // Effects
-        const words = ["< POET />", "< WRITER />", "< DREAMER />"]; let i=0,j=0,isDeleting=false;
-        function type() { const current = words[i]; document.getElementById('typewriter').textContent = isDeleting ? current.substring(0, j--) : current.substring(0, j++); if (!isDeleting && j === current.length + 1) { isDeleting = true; setTimeout(type, 2000); } else if (isDeleting && j === 0) { isDeleting = false; i = (i + 1) % words.length; setTimeout(type, 500); } else { setTimeout(type, isDeleting ? 50 : 100); } } type();
-        const canvas = document.getElementById('particles'); const ctx = canvas.getContext('2d'); canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        let particlesArray = []; class Particle { constructor() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.size = Math.random() * 2; this.opacity = Math.random(); } update() { this.y += 0.2; if(this.y > canvas.height) this.y=0; } draw() { ctx.fillStyle = `rgba(255, 215, 0, ${this.opacity})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); } }
-        function initParticles() { particlesArray = []; for(let i=0; i<40; i++) particlesArray.push(new Particle()); } function animateParticles() { ctx.clearRect(0,0,canvas.width,canvas.height); particlesArray.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animateParticles); } initParticles(); animateParticles();
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>

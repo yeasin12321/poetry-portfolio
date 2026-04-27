@@ -1,0 +1,133 @@
+:root { 
+    --primary: #ffb7b2; 
+    --secondary: #ff4d6d; 
+    --accent: #ffd700; 
+    --novel-accent: #e74c3c; 
+    --bg: #0f0505; 
+    --card-bg: rgba(25, 25, 30, 0.95); 
+    --text-size: 1.3rem; 
+}
+
+* { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+
+body { background-color: var(--bg); color: #fff0f5; font-family: 'Hind Siliguri', sans-serif; margin: 0; padding: 0; display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; }
+
+body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(160deg, #1a050a 0%, #0a0002 50%, #000000 100%); z-index: -3; }
+
+#particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+
+/* Firefly & Loader */
+#firefly-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+.firefly { position: absolute; width: 4px; height: 4px; background-color: #ffd700; border-radius: 50%; box-shadow: 0 0 10px #ffd700, 0 0 20px #ffae00; opacity: 0; animation: firefly-move 15s infinite alternate, firefly-glow 3s infinite alternate; }
+
+@keyframes firefly-move { 0% { transform: translate(0, 0); } 100% { transform: translate(-50px, 0); } }
+@keyframes firefly-glow { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2); } }
+
+#preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, #2a0a15 0%, #000000 100%); z-index: 99999; display: flex; justify-content: center; align-items: center; flex-direction: column; overflow: hidden; }
+
+.cinematic-heart-container { position: relative; width: 120px; height: 120px; animation: pulse-glow 2s infinite cubic-bezier(0.66, 0, 0, 1); margin-bottom: 40px; }
+.cinematic-heart { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--secondary); transform: rotate(45deg); box-shadow: 0 0 50px var(--secondary), inset 0 0 30px var(--primary); }
+.cinematic-heart::before, .cinematic-heart::after { content: ''; position: absolute; width: 100%; height: 100%; border-radius: 50%; background: inherit; box-shadow: inherit; }
+.cinematic-heart::before { left: -50%; } .cinematic-heart::after { top: -50%; }
+
+@keyframes pulse-glow { 0% { transform: scale(1); filter: brightness(1); opacity: 0.8; } 50% { transform: scale(1.15); filter: brightness(1.5); opacity: 1; } 100% { transform: scale(1); filter: brightness(1); opacity: 0.8; } }
+
+.welcome-text-container { text-align: center; z-index: 10; }
+.welcome-line { display: block; color: #ffccd5; font-family: 'Hind Siliguri', sans-serif; font-size: 1.4rem; margin-bottom: 15px; opacity: 0; animation: cinematicFadeIn 1.5s forwards ease-out; }
+.welcome-main { display: block; font-family: 'Great Vibes', cursive; color: var(--secondary); font-size: 4rem; opacity: 0; animation: mainTitleIn 2s forwards; }
+.line-1 { animation-delay: 0.5s; } .line-2 { animation-delay: 1.8s; font-size: 1.2rem; } .main-title { animation-delay: 3s; }
+
+@keyframes cinematicFadeIn { to { opacity: 1; transform: translateY(0); } } 
+@keyframes mainTitleIn { to { opacity: 1; transform: scale(1); } }
+
+/* General UI */
+.controls-wrapper { position: fixed; bottom: 30px; right: 20px; z-index: 2000; }
+.ctrl-float-btn { width: 50px; height: 50px; background: rgba(0, 0, 0, 0.8); border: 2px solid var(--secondary); border-radius: 50%; color: var(--secondary); display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.3s; }
+.music-btn.playing { animation: spin 4s linear infinite; }
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+#app-container { width: 100%; max-width: 500px; background: rgba(30, 10, 15, 0.5); backdrop-filter: blur(3px); min-height: 100vh; position: relative; border-left: 1px solid rgba(255, 77, 109, 0.1); border-right: 1px solid rgba(255, 77, 109, 0.1); }
+
+@media (min-width: 900px) { 
+    #app-container { max-width: 1000px; padding: 20px; border-radius: 20px; margin: 20px auto; background: rgba(30, 10, 15, 0.7); } 
+    #home-view { display: grid; grid-template-columns: 350px 1fr; gap: 40px; align-items: start; } 
+    .profile-header { position: sticky; top: 20px; } 
+    #buttons-list { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; } 
+}
+
+.profile-header { text-align: center; padding: 60px 20px 30px 20px; }
+.avatar { width: 130px; height: 130px; border-radius: 50%; border: 3px solid var(--secondary); object-fit: cover; cursor: pointer; }
+h1 { font-family: 'Great Vibes', cursive; font-size: 3rem; background: linear-gradient(to right, #ff9a9e, #fecfef); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 10px 0; }
+.typing-text { color: var(--primary); font-family: 'Cinzel', serif; font-size: 0.9rem; }
+
+.social-links { display: flex; justify-content: center; gap: 15px; margin-top: 25px; }
+.social-btn { width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; background: rgba(255,255,255,0.05); color: #fff; text-decoration: none; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
+.social-btn:hover { background: var(--secondary); }
+
+.search-container { padding: 0 25px; margin-bottom: 15px; }
+#search-bar { width: 100%; padding: 12px 20px; border-radius: 25px; border: 1px solid var(--secondary); background: rgba(0,0,0,0.5); color: #fff; }
+.filter-tags { display: flex; gap: 10px; padding: 0 25px 15px; overflow-x: auto; scrollbar-width: none; }
+.filter-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #ddd; padding: 5px 15px; border-radius: 15px; cursor: pointer; white-space: nowrap; }
+.filter-btn.active { background: var(--secondary); color: #fff; }
+
+.list-container { padding: 25px; }
+.section-title { color: var(--primary); font-family: 'Cinzel', serif; text-align: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+.poem-btn { background: rgba(255, 255, 255, 0.03); padding: 18px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.05); cursor: pointer; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; color: #eee; transition: 0.3s; }
+.poem-btn:hover { border-color: var(--secondary); background: linear-gradient(90deg, rgba(255, 77, 109, 0.1) 0%, transparent 100%); }
+.novel-hub-btn { border-color: var(--novel-accent); color: #ff6b6b; font-weight: bold; background: rgba(231, 76, 60, 0.05); }
+
+.full-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 500; padding: 20px; overflow-y: auto; animation: slideUp 0.5s ease; }
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+.back-btn { background: transparent; border: none; color: var(--secondary); font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: bold; margin-bottom: 20px; }
+#poem-container-box { background: rgba(40, 10, 20, 0.8); padding: 25px; border-radius: 20px; border: 1px solid rgba(255, 77, 109, 0.3); margin-bottom: 30px; }
+#poem-content-display { font-size: var(--text-size); line-height: 2; color: #ffe6ea; white-space: pre-line; }
+
+/* Novel Styles */
+#novel-library { background: #111; }
+.novel-card { background: var(--card-bg); border: 1px solid #333; border-radius: 12px; padding: 20px; margin-bottom: 25px; }
+.novel-card h3 { margin: 0 0 10px 0; font-family: 'Hind Siliguri'; color: #fff; font-size: 1.5rem; }
+.read-btn { background: var(--novel-accent); color: #fff; border: none; padding: 10px 25px; border-radius: 20px; width: 100%; cursor: pointer; }
+#novel-reader { background: #0c0c10; }
+.reader-nav { display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 20px; }
+#chapter-dropdown { background: #222; color: #fff; border: 1px solid #444; padding: 8px; border-radius: 5px; }
+.story-text { font-size: 1.2rem; line-height: 1.9; color: #ddd; text-align: justify; white-space: pre-line; padding-bottom: 150px; }
+.chapter-controls { display: flex; justify-content: space-between; position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 450px; background: rgba(0,0,0,0.95); padding: 10px; border-radius: 30px; border: 1px solid #444; }
+.ctrl-btn { background: transparent; color: #fff; border: none; font-size: 1.5rem; padding: 0 20px; cursor: pointer; }
+
+/* Vault & Special Items */
+#secret-vault { background: linear-gradient(135deg, #2b0a1d 0%, #000000 100%); padding: 0; }
+.vault-header { padding: 20px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255, 77, 109, 0.2); }
+.diary-page { display: none; padding: 30px 20px; text-align: center; height: calc(100vh - 80px); overflow-y: auto; }
+.diary-page.active { display: block; }
+.diary-text { font-family: 'Hind Siliguri'; color: #ffe6ea; font-size: 1.2rem; line-height: 1.8; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; margin-bottom: 20px; white-space: pre-line; }
+.nav-buttons { position: absolute; bottom: 20px; width: 100%; display: flex; justify-content: center; gap: 20px; }
+.diary-btn { background: var(--secondary); color: white; border: none; padding: 10px 20px; border-radius: 30px; }
+.her-eyes { width: 100%; max-width: 300px; border-radius: 15px; border: 4px solid var(--secondary); box-shadow: 0 0 20px var(--secondary); margin-bottom: 20px; animation: float 4s infinite ease-in-out; }
+
+@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+.open-when-btn { display: block; width: 100%; padding: 15px; margin: 10px 0; background: rgba(255, 77, 109, 0.2); border: 1px solid var(--secondary); border-radius: 10px; color: #fff; cursor: pointer; text-align: left; }
+.open-when-msg { display: none; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; margin-bottom: 15px; color: var(--primary); font-style: italic; }
+.bucket-item { text-align: left; margin: 10px 0; color: #ddd; }
+.quiz-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
+.quiz-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--secondary); color: #fff; padding: 15px; border-radius: 12px; cursor: pointer; transition: 0.3s; }
+.mood-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 30px; }
+.mood-btn { background: rgba(255,255,255,0.05); border: 2px solid #555; padding: 20px 10px; border-radius: 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+
+.fingerprint-area { width: 100px; height: 100px; border: 2px dashed var(--secondary); border-radius: 50%; margin: 30px auto; display: flex; justify-content: center; align-items: center; cursor: pointer; position: relative; user-select: none; }
+.scan-line { position: absolute; width: 100%; height: 2px; background: var(--secondary); top: 0; display: none; animation: scan 1.5s infinite linear; }
+@keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+
+.petal { position: absolute; top: -50px; background: rgba(255, 0, 80, 0.6); border-radius: 150% 0 150% 0; animation: fall linear infinite; z-index: 50; pointer-events: none; }
+@keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
+
+/* Gallery & Video */
+.gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; padding: 10px; }
+.video-container { display: flex; justify-content: center; border-radius: 12px; overflow: hidden; border: 1px solid #333; background: #000; }
+
+/* Inputs */
+.c-input { width: 100%; background: #222; border: 1px solid #444; color: #fff; padding: 12px; margin-bottom: 15px; border-radius: 8px; font-family: 'Hind Siliguri'; }
+.sub-btn { background: var(--secondary); color: #fff; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; }
+.sub-box { background: #222; padding: 20px; border-radius: 15px; margin-top: 20px; text-align: center; }
+.sub-input { padding: 10px; border-radius: 20px; width: 70%; border: none; }
