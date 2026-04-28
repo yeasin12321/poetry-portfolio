@@ -168,7 +168,7 @@ function jumpToChapter(v) { currentChapterIndex = parseInt(v); loadChapter(); }
 function openSecretVaultInput() { 
     if(prompt("ENTER ACCESS CODE:") === "3460") { 
         switchView('secret-vault'); 
-        document.getElementById('vault-audio').play(); 
+        // document.getElementById('vault-audio').play(); <-- এই লাইনটি ডিলিট করে দিন
         createFireflies(); 
         startPetals();
     } else { alert("ACCESS DENIED!"); } 
@@ -302,9 +302,7 @@ function checkUrlHash() {
 
 // Music Logic
 function setupMusic() { 
-    window.music = document.getElementById('bg-music'); 
-    const playOnce = () => { if(window.music.paused) window.music.play(); document.removeEventListener('click', playOnce); };
-    document.addEventListener('click', playOnce); 
+    window.music = document.getElementById('bg-music');  
 }
 function toggleMusic() { 
     const icon = document.getElementById('music-icon'); 
