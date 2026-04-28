@@ -3,7 +3,8 @@
 // ============================================
 const POEMS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8H2Fr0k4C4L1T6aBDTFp6Qm-OBdA61wCexL5jiEIt2XXeXwcUn-rIzMlPNtRhntUcONR93HwZmraR/pub?gid=0&single=true&output=csv";
 const NOVELS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQTdMtQUXDld48piMW2uGrGev030agZacHpEVcpIIO7C-fyIMSWF1oh_0PQiRGRZ1S6pQVqMK7rGP9L/pub?gid=0&single=true&output=csv";
-
+// Replace the URL below with your actual Short Stories Sheet CSV URL
+const STORIES_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT2xEwpsYvHyd7gLuSJ8J5cC4WJcjBNv1cPajVumCn-Kt5Eqk_S37g7P7bOJijbl1LJgaCoDC8bl3bw/pub?gid=0&single=true&output=csv"
 const EMAILJS_PUBLIC_KEY = "nrzZqd-KWp06iFnYt"; 
 const EMAILJS_SERVICE_ID = "service_8e409wl"; 
 const EMAILJS_TEMPLATE_ID = "template_uk80jev"; 
@@ -15,6 +16,7 @@ const DISQUS_SHORTNAME = "yeasin-poetry";
 // Global State
 let allPoems = [];
 let novelsDB = [];
+let allStories = []; // Added for Short Stories
 let currentFilter = 'all';
 let currentBookIndex = 0;
 let currentChapterIndex = 0;
@@ -57,6 +59,14 @@ function loadAllData() {
             processNovelsData(results.data);
             document.getElementById('loading-novels').style.display = 'none';
             renderNovelLibrary();
+        }
+    });
+    // Load Short Stories
+    Papa.parse(STORIES_SHEET_URL, {
+        download: true, header: true,
+        complete: function(results) {
+            allStories = results.data.filter(item => item.story_title && item.story_text);
+            renderStoryLibrary();
         }
     });
 }
@@ -105,6 +115,28 @@ function renderNovelLibrary() {
         card.innerHTML = `<h3>${novel.title}</h3><div class="novel-meta"><span>${novel.author}</span></div><div class="novel-summary">${novel.summary}</div><button class="read-btn" onclick="startReading(${index})">পড়া শুরু করুন</button>`;
         container.appendChild(card);
     });
+}
+
+// --- SHORT STORY RENDERING ---
+function renderStoryLibrary() {
+    const container = document.getElementById('story-list-container');
+    if(!container) return;
+    container.innerHTML = '';
+    allStories.forEach((story, index) => {
+        const card = document.createElement('div'); card.className = 'novel-card';
+        card.innerHTML = `<h3>${story.story_title}</h3><div class="novel-meta"><span>${story.author || 'Yeasin Kabir'}</span></div><div class="novel-summary">${story.summary || ''}</div><button class="read-btn" onclick="openStory(${index})">গল্পটি পড়ুন</button>`;
+        container.appendChild(card);
+    });
+}
+
+function openStory(index) {
+    const story = allStories[index];
+    const display = document.getElementById('poem-content-display');
+    document.getElementById('poem-title-display').innerText = story.story_title;
+    // Replace newlines with <br> and style for justification
+    display.innerHTML = `<div style="text-align:justify; font-size:1.1rem; line-height:1.8;">${story.story_text.replace(/\n/g, '<br>')}</div>`;
+    switchView('reader-view');
+    document.getElementById('reader-view').scrollTop = 0;
 }
 
 // --- NOVEL READER LOGIC ---

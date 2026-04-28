@@ -10,9 +10,9 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Yeasin Kabir - Poems & Novels | ইয়াছিন এর কবিতা</title>
+    <title>Yeasin Kabir - Poems & Novels | ইয়াছিন এর কবিতা</title>
     <meta name="description" content="Welcome to Yeasin Kabir's official portfolio. Explore a beautiful collection of Bengali romantic & sad poems, novels, and readers' diaries by Yeasin.">
-    <meta name="keywords" content="yeasin kabir, yeasin poem, yeasin kabir poem, ইয়াছিন এর কবিতা, bengali poem, yeasin novel, romantic poem">
+    <meta name="keywords" content="yeasin kabir, yeasin poem, yeasin kabir poem, ইয়াছিন এর কবিতা, bengali poem, yeasin novel, romantic poem">
     <meta name="author" content="Yeasin Kabir">
     <link rel="icon" type="image/png" href="favicon.png">
     
@@ -100,6 +100,9 @@
                     <div class="poem-btn novel-hub-btn" onclick="openNovelLibrary()" style="justify-content:center; flex-direction:column; gap:5px; margin:0;">
                         <i class="fas fa-book" style="font-size:1.5rem;"></i> <span>উপন্যাস সমগ্র</span>
                     </div>
+                    <div class="poem-btn" onclick="switchView('story-library')" style="justify-content:center; flex-direction:column; gap:5px; margin:0; border-color:var(--primary); background:rgba(255,255,255,0.03);">
+                        <i class="fas fa-feather-alt" style="font-size:1.5rem; color:var(--primary);"></i> <span>ছোটগল্প</span>
+                    </div>
                     <div class="poem-btn" onclick="switchView('readers-diary-view')" style="justify-content:center; flex-direction:column; gap:5px; margin:0; border-color:var(--accent);">
                         <i class="fas fa-pen-nib" style="font-size:1.5rem; color:var(--accent);"></i> <span>পাঠকের ডায়েরি</span>
                     </div>
@@ -128,6 +131,14 @@
             </div>
             <div id="loading-novels" style="text-align:center; color:#888;">উপন্যাস লোড হচ্ছে...</div>
             <div id="novel-list-container" style="padding: 0 10px;"></div>
+        </div>
+
+        <div id="story-library" class="full-view">
+            <div class="library-header">
+                <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK TO HOME</button>
+                <h2 style="font-family:'Cinzel'; color:var(--primary);">ছোটগল্প সমগ্র</h2>
+            </div>
+            <div id="story-list-container" style="padding: 0 10px;"></div>
         </div>
 
         <div id="novel-reader" class="full-view">
@@ -205,7 +216,7 @@
             <div id="page-1" class="diary-page active"><h2 class="page-title">এক সন্ধ্যেবেলায়</h2><div class="diary-text">তোমার সাথে সন্ধ্যেবেলায়<br>ছাদে বসে হাওয়া খাবো।<br>সে কথা থাক বা না থাক,<br>আকাশের দিকে তাকিয়ে<br>তারাদের নিশ্চুপ কোলাহল শুনবো।<br><br>আমি গুনগুন করে গান গাইবো,<br>তুমি আস্তে করে আলতো ছোঁয়ায়<br>মাথাটা আমার কাঁধে রেখে-<br>আমার সাথে সুর মেলাবে।<br><br>তখন তুমি না হয় আলিংগনে<br>আমার বুকের ধুকপুকানি শুনবে,<br>আর আমি তোমার শ্বাস গুনবো।<br>তাও যদি দূরত্ব না দূর হয়,<br>চোখে চোখ রেখে<br>সেটাও মিটিয়ে দেবো।<br><br>ব্যাস, এরকম একটা সন্ধ্যেবেলা চাই,<br>আর আমার পাশে শুধু তোমায়।।</div></div>
             <div id="page-2" class="diary-page"><h2 class="page-title">Happy New Year</h2><div class="diary-text"><span style="color:var(--secondary); font-weight:bold;">My Love,</span><br><br>ক্যালেন্ডারের পাতা উল্টে ২০২৬ আসছে, কিন্তু আমার হৃদয়ের ক্যালেন্ডারে আমাদের প্রথম দিনের তারিখটা আজও জ্বলজ্বল করছে।<br><br>সেদিন কি আমরা জানতাম, আমরা এতটা পথ একসাথে হাঁটবো? তোমার সেই লাজুক হাসি আর মায়াবী চোখ আজও আমাকে প্রেমে ফেলে।<br><br>নতুন বছরে আমার একটাই চাওয়া—তোমার হাতটা এভাবেই ধরে রাখতে চাই, ঠিক যেমনটা সেই প্রথম দিন ধরেছিলাম।<br><br>অনেক ভালোবাসি তোমাকে। ❤️</div></div>
             <div id="page-3" class="diary-page"><h2 class="page-title">তোমার চোখ</h2><img src="eye.jpg" alt="Rumi's Eyes" class="her-eyes"><div class="diary-text" style="text-align:center;">"এই দুটি চোখেই আমি আমার পৃথিবী খুঁজে পেয়েছি। রুমি, তোমার চোখের গভীরতায় হারিয়ে যাওয়াটাই আমার সবচেয়ে প্রিয় নেশা।"</div></div>
-            <div id="page-4" class="diary-page"><h2 class="page-title">প্রথম দেখা...</h2><div class="diary-text">মনে পড়ে? ইন্টার ফার্স্ট ইয়ার ভর্তির সেই দিনটা?<br>কলেজের করিডোরে হাজারো মানুষের ভিড়, কিন্তু আমার চোখ আটকে গিয়েছিল শুধু তোমার দিকে। সেদিনই মনে হয়েছিল, এই মেয়েটাই আমার গল্পের নায়িকা হবে।<br><br><span style="color:var(--secondary);">আমরা একসাথে পার করেছি:</span><div id="love-clock" style="font-family:'Orbitron'; color:var(--primary); border:1px solid var(--secondary); padding:10px; border-radius:10px; margin-top:10px;">Loading...</div><br>আর আমার প্রিয় ডাকনামটা মনে আছে তো?<br><h1 style="color:var(--secondary); text-align:center; margin-top:20px; font-family:'Hind Siliguri'">মোটু (Motu) ❤️</h1></div></div>
+            <div id="page-4" class="diary-page"><h2 class="page-title">প্রথম দেখা...</h2><div class="diary-text">মনে পড়ে? ইন্টার ফার্স্ট ইয়ার ভর্তির সেই দিনটা?<br> colleges করিডোরে হাজারো মানুষের ভিড়, কিন্তু আমার চোখ আটকে গিয়েছিল শুধু তোমার দিকে। সেদিনই মনে হয়েছিল, এই মেয়েটাই আমার গল্পের নায়িকা হবে।<br><br><span style="color:var(--secondary);">আমরা একসাথে পার করেছি:</span><div id="love-clock" style="font-family:'Orbitron'; color:var(--primary); border:1px solid var(--secondary); padding:10px; border-radius:10px; margin-top:10px;">Loading...</div><br>আর আমার প্রিয় ডাকনামটা মনে আছে তো?<br><h1 style="color:var(--secondary); text-align:center; margin-top:20px; font-family:'Hind Siliguri'">মোটু (Motu) ❤️</h1></div></div>
             <div id="page-5" class="diary-page"><h2 class="page-title">Love Letter</h2><div class="diary-text">প্রিয় রুমি,<br><br>জানি না কতটা ভালোবাসলে ভালোবাসা পূর্ণ হয়, তবে আমি তোমাকে আমার সবটুকু দিয়ে ভালোবাসি। আমার প্রতিটা নিশ্বাস, প্রতিটা ভাবনা শুধু তোমাকে ঘিরে।<br><br>তুমি আমার সুখ, আমার শান্তি, আমার সব অভিমান আর ভালোবাসার ঠিকানা। সারাজীবন এভাবেই থেকো আমার হয়ে।<br><br><div style="text-align: center; font-size: 1.5rem; margin-top: 30px; color: var(--secondary); font-family: 'Great Vibes';">I Love You, Rumi ❤️</div></div></div>
             <div id="page-6" class="diary-page"><h2 class="page-title">Open When...</h2><button class="open-when-btn" onclick="toggleMsg('msg1')">💌 When You Miss Me</button><div id="msg1" class="open-when-msg">"চোখ বন্ধ করো আর বুকে হাত রাখো, আমি আছি ঠিক সেখানেই। দূরত্ব শুধু শরীরের, মনের নয়।"</div><button class="open-when-btn" onclick="toggleMsg('msg2')">💌 When You Are Sad</button><div id="msg2" class="open-when-msg">"কান্না করো না প্লিজ! তোমার হাসিতেই আমার পৃথিবী আলো হয়। সব ঠিক হয়ে যাবে, আমি আছি তো।"</div><button class="open-when-btn" onclick="toggleMsg('msg3')">💌 When You Are Angry</button><div id="msg3" class="open-when-msg">"রাগ করলে তোমাকে আরও কিউট লাগে! কিন্তু বেশিক্ষণ রেগে থেকো না, তোমার মোটু কষ্ট পাবে।"</div></div>
             <div id="page-7" class="diary-page"><h2 class="page-title">Our Bucket List</h2><div class="diary-text"><div class="bucket-item"><i class="fas fa-check-circle" style="color:var(--secondary);"></i> প্রথম দেখা করা</div><div class="bucket-item"><i class="far fa-circle"></i> একসাথে বৃষ্টিতে ভেজা</div><div class="bucket-item"><i class="far fa-circle"></i> কালো শাড়ি আর পাঞ্জাবি পরে ছবি তোলা</div><div class="bucket-item"><i class="far fa-circle"></i> তোমার পছন্দের জায়গায় ঘুরতে যাওয়া</div><div class="bucket-item"><i class="far fa-circle"></i> সারাজীবন একসাথে থাকা</div></div></div>
