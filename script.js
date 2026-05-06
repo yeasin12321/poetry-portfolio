@@ -1,12 +1,14 @@
 // ============================================
 // CONFIGURATION
 // ============================================
-// এখানে আপনার গুগল অ্যাপস স্ক্রিপ্ট এর URL টি বসান
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxKwPIBZOxrsrvdI5WCCDxfppV2PHJTMJ_rd-G1C9bU1VV8jJVt1PA4f7dgddlFxAyT/exec";
 
 const POEMS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8H2Fr0k4C4L1T6aBDTFp6Qm-OBdA61wCexL5jiEIt2XXeXwcUn-rIzMlPNtRhntUcONR93HwZmraR/pub?gid=0&single=true&output=csv";
 const NOVELS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQTdMtQUXDld48piMW2uGrGev030agZacHpEVcpIIO7C-fyIMSWF1oh_0PQiRGRZ1S6pQVqMK7rGP9L/pub?gid=0&single=true&output=csv";
 const STORIES_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT2xEwpsYvHyd7gLuSJ8J5cC4WJcjBNv1cPajVumCn-Kt5Eqk_S37g7P7bOJijbl1LJgaCoDC8bl3bw/pub?gid=0&single=true&output=csv";
+// আপনার মোনোলগ শিটের CSV লিঙ্ক এখানে বসান
+const MONOLOGUE_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTh4aqebFj9oWpmlhmQ4kNAK0rcwM4-aMUrRSt2MsbiOtju9Z-6qaclSkQUL1TYSH4ox_hw_UWqKnI-/pub?gid=0&single=true&output=csv";
+
 const EMAILJS_PUBLIC_KEY = "nrzZqd-KWp06iFnYt"; 
 const EMAILJS_SERVICE_ID = "service_8e409wl"; 
 const EMAILJS_TEMPLATE_ID = "template_uk80jev"; 
@@ -18,6 +20,7 @@ const EMAILJS_TEMPLATE_ID = "template_uk80jev";
 let allPoems = [];
 let novelsDB = [];
 let allStories = []; 
+let allMonologues = []; // New
 let currentFilter = 'all';
 let currentBookIndex = 0;
 let currentChapterIndex = 0;
@@ -44,7 +47,7 @@ window.onload = () => {
 
 // --- DATA LOADING ---
 function loadAllData() {
-    // Load Poems
+    // Load Poems[cite: 3]
     Papa.parse(POEMS_SHEET_URL, {
         download: true, header: true,
         complete: function(results) {
@@ -53,7 +56,7 @@ function loadAllData() {
             renderPoems();
         }
     });
-    // Load Novels
+    // Load Novels[cite: 3]
     Papa.parse(NOVELS_SHEET_URL, {
         download: true, header: true,
         complete: function(results) {
@@ -62,12 +65,22 @@ function loadAllData() {
             renderNovelLibrary();
         }
     });
-    // Load Short Stories
+    // Load Short Stories[cite: 3]
     Papa.parse(STORIES_SHEET_URL, {
         download: true, header: true,
         complete: function(results) {
             allStories = results.data.filter(item => item.story_title && item.story_text);
             renderStoryLibrary();
+        }
+    });
+    // Load Monologues (New)
+    Papa.parse(MONOLOGUE_SHEET_URL, {
+        download: true, header: true,
+        complete: function(results) {
+            allMonologues = results.data.filter(item => item.title && item.text);
+            const loader = document.getElementById('loading-monologues');
+            if(loader) loader.style.display = 'none';
+            renderMonologues();
         }
     });
 }
@@ -98,6 +111,24 @@ function renderPoems() {
             btn.onclick = () => openPoem(index);
             listDiv.appendChild(btn);
         }
+    });
+}
+
+function renderMonologues() {
+    const container = document.getElementById('monologue-list-container');
+    if(!container) return;
+    container.innerHTML = '';
+    
+    allMonologues.forEach((mono) => {
+        const card = document.createElement('div');
+        card.className = 'monologue-card';
+        card.setAttribute('data-aos', 'fade-up');
+        card.innerHTML = `
+            <div class="monologue-title">${mono.title}</div>
+            <div class="monologue-text">${mono.text}</div>
+            <div style="text-align:right; margin-top:10px; font-size:0.8rem; color:#666;">- ${mono.author || 'Yeasin Kabir'}</div>
+        `;
+        container.appendChild(card);
     });
 }
 
@@ -173,52 +204,32 @@ async function submitComment() {
 
     if(!name || !comment) return alert("দয়া করে নাম এবং মন্তব্য লিখুন।");
 
-    const payload = {
-        type: "comment",
-        poemId: poemId,
-        name: name,
-        comment: comment
-    };
+    const payload = { type: "comment", poemId: poemId, name: name, comment: comment };
 
     try {
-        await fetch(SCRIPT_URL, {
-            method: "POST",
-            mode: "no-cors",
-            body: JSON.stringify(payload)
-        });
+        await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) });
         alert("আপনার মন্তব্যটি জমা হয়েছে!");
         document.getElementById('user-comment').value = "";
         loadComments();
-    } catch(e) {
-        alert("দুঃখিত, মন্তব্যটি পাঠানো যায়নি।");
-    }
+    } catch(e) { alert("দুঃখিত, মন্তব্যটি পাঠানো যায়নি।"); }
 }
 
 async function loadComments() {
     const display = document.getElementById('display-comments');
     const currentId = window.location.hash;
-    
     try {
         const response = await fetch(SCRIPT_URL);
         const data = await response.json();
         display.innerHTML = "";
-        
         const filtered = data.filter(row => row[0] === currentId);
-        
         if(filtered.length === 0) {
             display.innerHTML = "<p style='color:#666; font-style:italic;'>এখনও কোনো মন্তব্য নেই। প্রথম মন্তব্যটি আপনার হোক!</p>";
         } else {
             filtered.forEach(row => {
-                display.innerHTML += `
-                    <div style="background:rgba(255,255,255,0.05); padding:12px; border-radius:10px; margin-bottom:10px; border-left:3px solid var(--secondary);">
-                        <b style="color:var(--primary); font-size:0.9rem;">${row[1]}</b>
-                        <p style="margin:5px 0 0; font-size:1rem; color:#eee;">${row[2]}</p>
-                    </div>`;
+                display.innerHTML += `<div style="background:rgba(255,255,255,0.05); padding:12px; border-radius:10px; margin-bottom:10px; border-left:3px solid var(--secondary);"><b style="color:var(--primary); font-size:0.9rem;">${row[1]}</b><p style="margin:5px 0 0; font-size:1rem; color:#eee;">${row[2]}</p></div>`;
             });
         }
-    } catch(e) {
-        display.innerHTML = "<p style='color:#e74c3c;'>মন্তব্য লোড করা সম্ভব হয়নি।</p>";
-    }
+    } catch(e) { display.innerHTML = "<p style='color:#e74c3c;'>মন্তব্য লোড করা সম্ভব হয়নি।</p>"; }
 }
 
 // --- SECRET VAULT LOGIC ---
@@ -342,7 +353,7 @@ function filterPoems() { renderPoems(); }
 function filterByTag(tag) { 
     currentFilter = tag; 
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); 
-    event.target.classList.add('active'); 
+    if(event.target) event.target.classList.add('active'); 
     renderPoems(); 
 }
 function checkUrlHash() { 
@@ -357,9 +368,7 @@ function checkUrlHash() {
 }
 
 // Music Logic
-function setupMusic() { 
-    window.music = document.getElementById('bg-music');  
-}
+function setupMusic() { window.music = document.getElementById('bg-music'); }
 function toggleMusic() { 
     const icon = document.getElementById('music-icon'); 
     if (window.music.paused) { 
@@ -376,6 +385,7 @@ function toggleMusic() {
 // Effects (Particles & Fireflies)
 function createFireflies() { 
     const container = document.getElementById('firefly-container'); 
+    if(!container) return;
     container.innerHTML = ''; 
     for (let i = 0; i < 10; i++) { 
         const fly = document.createElement('div'); fly.classList.add('firefly'); 
@@ -385,7 +395,7 @@ function createFireflies() {
 }
 function triggerConfetti() { 
     const c = document.getElementById('confetti-canvas'); 
-    c.style.display = 'block'; setTimeout(() => c.style.display = 'none', 3000); 
+    if(c) { c.style.display = 'block'; setTimeout(() => c.style.display = 'none', 3000); }
 }
 
 // Typewriter
@@ -402,22 +412,25 @@ function type() {
 }
 
 // Background Particles
-const canvas = document.getElementById('particles'); const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-let particlesArray = [];
-class Particle { 
-    constructor() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.size = Math.random() * 2; this.opacity = Math.random(); } 
-    update() { this.y += 0.2; if(this.y > canvas.height) this.y=0; } 
-    draw() { ctx.fillStyle = `rgba(255, 215, 0, ${this.opacity})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); } 
+const canvas = document.getElementById('particles'); 
+if(canvas) {
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    let particlesArray = [];
+    class Particle { 
+        constructor() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.size = Math.random() * 2; this.opacity = Math.random(); } 
+        update() { this.y += 0.2; if(this.y > canvas.height) this.y=0; } 
+        draw() { ctx.fillStyle = `rgba(255, 215, 0, ${this.opacity})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); } 
+    }
+    function initParticles() { for(let i=0; i<40; i++) particlesArray.push(new Particle()); } 
+    function animateParticles() { ctx.clearRect(0,0,canvas.width,canvas.height); particlesArray.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animateParticles); }
 }
-function initParticles() { for(let i=0; i<40; i++) particlesArray.push(new Particle()); } 
-function animateParticles() { ctx.clearRect(0,0,canvas.width,canvas.height); particlesArray.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animateParticles); }
 
 // External Services
 function sendRealEmail() { emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, { from_name: document.getElementById('contact-name').value, message: document.getElementById('contact-msg').value }).then(() => alert("Sent!")); }
 function sendDiaryToEmail() { emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, { from_name: document.getElementById('story-author-name').value, message: document.getElementById('story-content-input').value }).then(() => alert("Sent!")); }
 function handleRealSubscribe() { const email = document.getElementById('sub-email').value; if(email) emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, { from_email: email, type: "Subscription" }).then(() => alert("Subscribed!")); }
-function toggleSettings() { const panel = document.getElementById('settings-panel'); panel.style.display = panel.style.display === 'block' ? 'none' : 'block'; }
+function toggleSettings() { const panel = document.getElementById('settings-panel'); if(panel) panel.style.display = panel.style.display === 'block' ? 'none' : 'block'; }
 function changeFont(dir) { const root = document.documentElement; let current = parseFloat(getComputedStyle(root).getPropertyValue('--text-size')); root.style.setProperty('--text-size', (current + (dir * 0.1)) + 'rem'); }
 function backToLibrary() { switchView('novel-library'); }
 function openNovelLibrary() { switchView('novel-library'); }
@@ -425,6 +438,7 @@ function openNovelLibrary() { switchView('novel-library'); }
 let petalInterval;
 function startPetals() {
     const container = document.getElementById('petals-container');
+    if(!container) return;
     petalInterval = setInterval(() => {
         const petal = document.createElement('div');
         petal.classList.add('petal');
@@ -434,4 +448,4 @@ function startPetals() {
         setTimeout(() => petal.remove(), 5000);
     }, 300);
 }
-function stopPetals() { clearInterval(petalInterval); }
+function stopPetals() { if(petalInterval) clearInterval(petalInterval); }

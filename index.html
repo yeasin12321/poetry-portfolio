@@ -113,7 +113,9 @@
                         <i class="fas fa-video"></i> <span>ভিডিও গ্যালারি</span>
                     </div>
                 </div>
-
+<div class="poem-btn" onclick="switchView('monologue-view')" style="justify-content:center; flex-direction:column; gap:5px; margin:0; border-color:#9b59b6;">
+    <i class="fas fa-microphone-alt" style="font-size:1.5rem; color:#9b59b6;"></i> <span>মোনোলগ</span>
+</div>
                 <div class="section-title" data-aos="fade-in">Poetry Collection</div>
                 <div id="loading-poems" style="text-align:center; color:#888;">কবিতা লোড হচ্ছে...</div>
                 <div id="buttons-list"></div>
@@ -132,7 +134,14 @@
             <div id="loading-novels" style="text-align:center; color:#888;">উপন্যাস লোড হচ্ছে...</div>
             <div id="novel-list-container" style="padding: 0 10px;"></div>
         </div>
-
+<div id="monologue-view" class="full-view">
+    <div class="library-header">
+        <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK TO HOME</button>
+        <h2 style="font-family:'Cinzel'; color:#9b59b6; text-align:center;">মোনোলগ কালেকশন</h2>
+    </div>
+    <div id="loading-monologues" style="text-align:center; color:#888;">মোনোলগ লোড হচ্ছে...</div>
+    <div id="monologue-list-container" style="padding: 0 20px;"></div>
+</div>
         <div id="story-library" class="full-view">
             <div class="library-header">
                 <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK TO HOME</button>
@@ -154,6 +163,7 @@
                 <button class="ctrl-btn" id="next-chap" onclick="changeChapter(1)"><i class="fas fa-chevron-right"></i></button>
             </div>
         </div>
+
 
         <div id="reader-view" class="full-view">
             <div style="position:fixed; top:0; left:0; width:100%; padding:20px; background:rgba(20,5,10,0.95); z-index:10; border-bottom:1px solid #333; display:flex; justify-content:space-between;">
