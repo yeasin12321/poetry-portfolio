@@ -9,6 +9,8 @@ const STORIES_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT2xE
 // আপনার মোনোলগ শিটের CSV লিঙ্ক এখানে বসান
 const MONOLOGUE_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTh4aqebFj9oWpmlhmQ4kNAK0rcwM4-aMUrRSt2MsbiOtju9Z-6qaclSkQUL1TYSH4ox_hw_UWqKnI-/pub?gid=0&single=true&output=csv";
 const SAYERI_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQHoOD1vOrCyaVCuY_WJaVUkLL70iwKTmZ2OGNuyzTTNg2PPxDDY12p08e6Eu75wZcGSUiRouIFVOmZ/pub?gid=0&single=true&output=csv";
+const GALLERY_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSYIZNe_bFTDcs7beh1VPZtWbnxkMgbVtGwhqlyF4BSZA-m9xe3oh_LmbaTWkCpWK9Gom9wzeidrtej/pub?gid=0&single=true&output=csv";
+const VIDEO_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQtCKVcATsEMBVJTO20bNxD7wZ1qCRN_UEwPrOedcBf8k8nIbWTkeZ6GnMFitJzT3VqZFQvpOKO3giR/pub?gid=0&single=true&output=csv";
 
 const EMAILJS_PUBLIC_KEY = "nrzZqd-KWp06iFnYt"; 
 const EMAILJS_SERVICE_ID = "service_8e409wl"; 
@@ -19,6 +21,8 @@ const EMAILJS_TEMPLATE_ID = "template_uk80jev";
 
 // Global State
 let allPoems = [];
+let allGalleryImages = [];
+let allVideos = [];
 let novelsDB = [];
 let allStories = []; 
 let allSayeri = [];
@@ -56,6 +60,22 @@ function loadAllData() {
             allPoems = results.data.filter(item => item.title && item.text);
             document.getElementById('loading-poems').style.display = 'none';
             renderPoems();
+        }
+    });
+    // Load Gallery Images from Google Sheet
+    Papa.parse(GALLERY_SHEET_URL, {
+        download: true, header: true,
+        complete: function(results) {
+            allGalleryImages = results.data.filter(item => item.img_src);
+            renderGallery();
+        }
+    });
+    // Load Video Gallery from Google Sheet
+    Papa.parse(VIDEO_SHEET_URL, {
+        download: true, header: true,
+        complete: function(results) {
+            allVideos = results.data.filter(item => item.video_url);
+            renderVideos();
         }
     });
     // Load Novels[cite: 3]
@@ -477,4 +497,108 @@ function startPetals() {
     }, 300);
 }
 function stopPetals() { if(petalInterval) clearInterval(petalInterval); }
+function renderGallery() {
+    const container = document.querySelector('.gallery-grid');
+    if (!container) return;
+    
+    container.innerHTML = ''; 
+    
+    if (allGalleryImages.length === 0) {
+        container.innerHTML = "<p style='color:#888; text-align:center; grid-column: 1/-1;'>কোনো ছবি পাওয়া যায়নি।</p>";
+        return;
+    }
+    
+    allGalleryImages.forEach(img => {
+        const item = document.createElement('div');
+        item.className = 'gallery-item';
+        
+        // ছবি ও ক্যাপশন ইভেন্ট হ্যান্ডেল করার জন্য সুরক্ষিতভাবে ভ্যারিয়েবল সেট করা
+        const imgSrc = img.img_src;
+        const imgCaption = img.caption ? img.caption.replace(/"/g, '&quot;') : '';
+        
+        // এখানে onclick ইভেন্ট যোগ করা হয়েছে যাতে ক্লিক করলে ছবি বড় হয়
+        item.onclick = () => openImageModal(imgSrc, imgCaption);
+        
+        const captionText = img.caption ? `<div class="gallery-caption">${img.caption}</div>` : '';
+        
+        item.innerHTML = `
+            <img src="${imgSrc}" class="gallery-img" alt="Gallery Image" style="cursor: pointer;">
+            ${captionText}
+        `;
+        container.appendChild(item);
+    });
+}
 
+// ছবি বড় করে দেখানোর ফাংশন
+function openImageModal(src, caption) {
+    const modal = document.getElementById('image-modal');
+    const modalImg = document.getElementById('modal-img');
+    const modalCaption = document.getElementById('modal-caption');
+    
+    modalImg.src = src;
+    modalCaption.innerText = caption;
+    
+    modal.style.display = 'flex';
+    // স্মুথ অ্যানিমেশনের জন্য সামান্য ডিলে দিয়ে অপাসিটি এবং স্কেল পরিবর্তন
+    setTimeout(() => {
+        modal.style.opacity = '1';
+        modalImg.style.transform = 'scale(1)';
+    }, 10);
+}
+
+// মোডাল বন্ধ করার ফাংশন
+function closeImageModal() {
+    const modal = document.getElementById('image-modal');
+    const modalImg = document.getElementById('modal-img');
+    
+    modal.style.opacity = '0';
+    modalImg.style.transform = 'scale(0.9)';
+    
+    setTimeout(() => {
+        modal.style.display = 'none';
+    }, 300); // সিএসএস ট্রানজিশন টাইমের সাথে মিলিয়ে ৩০০ মিলি-সেকেন্ড পর হাইড হবে
+}
+function renderVideos() {
+    const container = document.querySelector('#video-view');
+    if (!container) return;
+    
+    // ব্যাক বাটন এবং টাইটেল ঠিক রেখে আগের ভিডিও কন্টেইনার মুছে ফেলার জন্য
+    container.innerHTML = `
+        <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK</button>
+        <h2 class="section-title">Video Gallery</h2>
+        <div class="video-grid" style="display:grid; grid-template-columns:1fr; gap:20px; padding:10px;"></div>
+    `;
+    
+    const grid = container.querySelector('.video-grid');
+    
+    if (allVideos.length === 0) {
+        grid.innerHTML = "<p style='color:#888; text-align:center;'>কোনো ভিডিও পাওয়া যায়নি।</p>";
+        return;
+    }
+    
+    allVideos.forEach(vid => {
+        const url = vid.video_url.trim();
+        // লিঙ্ক থেকে ভিডিও আইডি বের করার রেগুলার এক্সপ্রেশন
+        const match = url.match(/\/d\/([a-zA-Z0-9-_]+)/) || url.match(/id=([a-zA-Z0-9-_]+)/);
+        
+        if (match && match[1]) {
+            const videoId = match[1];
+            // গুগল ড্রাইভের এম্বেড প্লেয়ার লিঙ্ক
+            const embedUrl = `https://drive.google.com/file/d/${videoId}/preview`;
+            
+            const card = document.createElement('div');
+            card.className = 'video-card-item';
+            card.style.cssText = "background:rgba(255,255,255,0.02); border:1px solid #333; border-radius:12px; overflow:hidden; padding:10px;";
+            
+            const titleText = vid.title ? `<h3 style="font-size:1rem; margin-top:10px; color:var(--primary); font-family:'Hind Siliguri';">${vid.title}</h3>` : '';
+            
+            card.innerHTML = `
+                <div style="position:relative; width:100%; height:0; padding-bottom:56.25%; border-radius:8px; overflow:hidden;">
+                    <iframe src="${embedUrl}" style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;" allow="autoplay"></iframe>
+                </div>
+                ${titleText}
+            `;
+            grid.appendChild(card);
+        }
+    });
+}

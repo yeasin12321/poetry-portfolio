@@ -258,6 +258,7 @@
             <div id="page-12" class="diary-page"><h2 class="page-title">Relationship Contract</h2><div class="contract-paper" style="background:#fff; color:#000; padding:20px; border-radius:5px; font-family:'Courier New', monospace; font-size:0.9rem; text-align:left; position:relative; transform:rotate(-1deg); box-shadow:0 0 15px rgba(0,0,0,0.5); margin-bottom:20px;"><h3 style="text-align:center; border-bottom:1px solid #000;">Love Agreement</h3><p>আমি, <b>রুমি</b>, সজ্ঞানে এই মর্মে অঙ্গীকার করছি যে:</p><ul style="padding-left:20px;"><li>আমি ইয়াছিনের সাথে রাগ করে ১০ মিনিটের বেশি থাকবো মোহো না।</li><li>তার পচা জোকস শুনেও হাসবো।</li><li>তাকে ছাড়া অন্য কোনো ছেলের দিকে তাকাবো না।</li><li>সারাজীবন তাকে জ্বালাতন করবো।</li></ul><br><p>স্বাক্ষর: ________________</p><div class="stamp" id="contract-stamp" style="position:absolute; bottom:20px; right:20px; border:3px solid #d90429; color:#d90429; font-weight:bold; padding:5px 10px; transform:rotate(-15deg) scale(2); opacity:0; transition:0.5s; border-radius:5px;">AGREED</div></div><button class="contract-sign-btn" onclick="signContract()" style="background:var(--secondary); color:#fff; padding:10px 30px; border-radius:30px; border:none; font-weight:bold; cursor:pointer; margin-top:10px;">I AGREE ❤️</button></div>
             <div id="page-13" class="diary-page"><h2 class="page-title">Write to Me</h2><div class="diary-text" style="text-align:center;">কিছু বলতে চাও? যা ইচ্ছে লিখে পাঠাও, সরাসরি আমার হোয়াটসঅ্যাপে চলে আসবে।</div><textarea id="wa-msg-input" class="c-input" placeholder="তোমার মনের কথা..." style="height:150px;"></textarea><button class="sub-btn" onclick="sendToWhatsApp()" style="width:100%"><i class="fab fa-whatsapp"></i> Send to Yeasin</button></div>
             <div id="page-14" class="diary-page"><h2 class="page-title">Secret Love Calculator</h2><div class="diary-text" style="text-align:center;">কার সাথে তোমার বন্ডিং কেমন?<br>নাম লিখে টেস্ট করো!</div><div class="diary-entry-form" style="background:rgba(255,255,255,0.05); padding:20px; border-radius:12px; border:1px solid #333; margin-bottom:30px;"><input type="text" id="calc-name-1" class="c-input" placeholder="তোমার নাম"><input type="text" id="calc-name-2" class="c-input" placeholder="তার নাম"><button class="sub-btn" onclick="calculateLove()" style="width:100%">❤️ CALCULATE ❤️</button></div><div id="love-result" style="text-align:center; margin-top:20px; font-family:'Orbitron'; font-size:2rem; color:var(--secondary); display:none;"></div><p id="love-msg" style="text-align:center; color:#ccc; display:none;"></p></div>
+            
 
             <div class="nav-buttons">
                 <button class="diary-btn" onclick="prevPage()"><i class="fas fa-arrow-left"></i></button>
@@ -266,6 +267,17 @@
             </div>
         </div>
     </div>
+ <div id="image-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:99999; justify-content:center; align-items:center; opacity:0; transition:opacity 0.3s ease;">
+    <span onclick="closeImageModal()" style="position:absolute; top:20px; right:30px; color:#fff; font-size:40px; font-weight:bold; cursor:pointer; user-select:none;">&times;</span>
+    <img id="modal-img" style="max-width:90%; max-height:85%; border-radius:10px; box-shadow:0 0 25px rgba(255,77,109,0.5); transform:scale(0.9); transition:transform 0.3s ease;" src="" alt="Enlarged Image">
+    <div id="modal-caption" style="position:absolute; bottom:40px; color:#ffe6ea; font-size:1.1rem; font-family:'Hind Siliguri', sans-serif; text-align:center; width:100%; padding:0 20px;"></div>
+</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
