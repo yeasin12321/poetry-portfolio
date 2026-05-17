@@ -8,6 +8,7 @@ const NOVELS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQTdMt
 const STORIES_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT2xEwpsYvHyd7gLuSJ8J5cC4WJcjBNv1cPajVumCn-Kt5Eqk_S37g7P7bOJijbl1LJgaCoDC8bl3bw/pub?gid=0&single=true&output=csv";
 // আপনার মোনোলগ শিটের CSV লিঙ্ক এখানে বসান
 const MONOLOGUE_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTh4aqebFj9oWpmlhmQ4kNAK0rcwM4-aMUrRSt2MsbiOtju9Z-6qaclSkQUL1TYSH4ox_hw_UWqKnI-/pub?gid=0&single=true&output=csv";
+const SAYERI_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQHoOD1vOrCyaVCuY_WJaVUkLL70iwKTmZ2OGNuyzTTNg2PPxDDY12p08e6Eu75wZcGSUiRouIFVOmZ/pub?gid=0&single=true&output=csv";
 
 const EMAILJS_PUBLIC_KEY = "nrzZqd-KWp06iFnYt"; 
 const EMAILJS_SERVICE_ID = "service_8e409wl"; 
@@ -20,6 +21,7 @@ const EMAILJS_TEMPLATE_ID = "template_uk80jev";
 let allPoems = [];
 let novelsDB = [];
 let allStories = []; 
+let allSayeri = [];
 let allMonologues = []; // New
 let currentFilter = 'all';
 let currentBookIndex = 0;
@@ -73,6 +75,16 @@ function loadAllData() {
             renderStoryLibrary();
         }
     });
+    // Load Sayeri
+    Papa.parse(SAYERI_SHEET_URL, {
+        download: true, header: true,
+        complete: function(results) {
+            allSayeri = results.data.filter(item => item.text);
+            const loader = document.getElementById('loading-sayeri');
+            if(loader) loader.style.display = 'none';
+            renderSayeri();
+        }
+    });
     // Load Monologues (New)
     Papa.parse(MONOLOGUE_SHEET_URL, {
         download: true, header: true,
@@ -114,6 +126,22 @@ function renderPoems() {
     });
 }
 
+function renderSayeri() {
+    const container = document.getElementById('sayeri-list-container');
+    if(!container) return;
+    container.innerHTML = '';
+    
+    allSayeri.forEach((sayeri) => {
+        const card = document.createElement('div');
+        card.className = 'sayeri-card';
+        card.setAttribute('data-aos', 'fade-up');
+        card.innerHTML = `
+            <div class="sayeri-text">${sayeri.text}</div>
+            <div style="text-align:right; margin-top:10px; font-size:0.8rem; color:#888; font-style:italic;">- ${sayeri.author || 'Yeasin Kabir'}</div>
+        `;
+        container.appendChild(card);
+    });
+}
 function renderMonologues() {
     const container = document.getElementById('monologue-list-container');
     if(!container) return;
@@ -449,3 +477,4 @@ function startPetals() {
     }, 300);
 }
 function stopPetals() { if(petalInterval) clearInterval(petalInterval); }
+
