@@ -40,8 +40,14 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
 @keyframes cinematicFadeIn { to { opacity: 1; transform: translateY(0); } } 
 @keyframes mainTitleIn { to { opacity: 1; transform: scale(1); } }
 
-/* General UI */
-.controls-wrapper { position: fixed; bottom: 30px; right: 20px; z-index: 2000; }
+/* General UI / Music Button Position Fixed */
+.controls-wrapper { 
+    position: fixed; 
+    bottom: 20px; 
+    left: 20px; 
+    right: auto; 
+    z-index: 2000; 
+}
 .ctrl-float-btn { width: 50px; height: 50px; background: rgba(0, 0, 0, 0.8); border: 2px solid var(--secondary); border-radius: 50%; color: var(--secondary); display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.3s; }
 .music-btn.playing { animation: spin 4s linear infinite; }
 @keyframes spin { 100% { transform: rotate(360deg); } }
@@ -219,4 +225,133 @@ h1 { font-family: 'Great Vibes', cursive; font-size: 3rem; background: linear-gr
     text-align: center;
     background: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(2px);
+}
+
+/* ============================================ */
+/* ADMIN PANEL & LINK CONVERTER STYLES */
+/* ============================================ */
+#admin-toggle-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px; /* এটি ডানদিকের নিচেই থাকবে */
+    width: 45px;
+    height: 45px;
+    background: rgba(255, 77, 109, 0.2);
+    border: 1px solid rgba(255, 77, 109, 0.4);
+    border-radius: 50%;
+    color: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+#admin-toggle-btn:hover {
+    background: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
+    transform: rotate(45deg);
+}
+
+.admin-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 100000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.admin-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.admin-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(255, 77, 109, 0.25);
+    width: 90%;
+    max-width: 450px;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.admin-overlay.active .admin-card {
+    transform: scale(1);
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+}
+
+.admin-header h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.4rem;
+    color: #fff;
+}
+
+.admin-close {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.admin-close:hover { color: var(--secondary); }
+
+.admin-input {
+    width: 100%;
+    padding: 12px 15px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 77, 109, 0.2);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.admin-input:focus {
+    border-color: var(--secondary);
+    box-shadow: 0 0 10px rgba(255, 77, 109, 0.3);
+}
+
+.admin-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #ff4d6d, #ff758f);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.admin-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
+}
+
+.admin-btn-success {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+}
+.admin-btn-success:hover {
+    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
 }

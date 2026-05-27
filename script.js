@@ -602,3 +602,66 @@ function renderVideos() {
         }
     });
 }
+// ============================================
+// ADMIN PANEL & LINK CONVERTER LOGIC
+// ============================================
+const SECRET_PASSCODE = "1234"; // <--- Apnar pochondo moto passcode bosan
+
+function toggleAdminPanel() {
+    document.getElementById('admin-panel-overlay').classList.add('active');
+}
+
+function closeAdminPanel(force = false) {
+    if (force || event.target === document.getElementById('admin-panel-overlay')) {
+        document.getElementById('admin-panel-overlay').classList.remove('active');
+        // Reset inputs on close
+        document.getElementById('admin-passcode').value = "";
+    }
+}
+
+function verifyAdminPasscode() {
+    const codeInput = document.getElementById('admin-passcode').value;
+    if (codeInput === SECRET_PASSCODE) {
+        document.getElementById('admin-auth-box').style.display = 'none';
+        document.getElementById('admin-content-box').style.display = 'block';
+    } else {
+        alert("Wrong Passcode! Access Denied.");
+    }
+}
+
+function convertDriveLink() {
+    const inputUrl = document.getElementById('drive-input').value.trim();
+    const resultDiv = document.getElementById('converter-result');
+    const resultTextArea = document.getElementById('result-link');
+    
+    if (!inputUrl) {
+        alert("Doya kore akta Google Drive share link din.");
+        return;
+    }
+    
+    const match = inputUrl.match(/\/d\/([a-zA-Z0-9-_]+)/) || inputUrl.match(/id=([a-zA-Z0-9-_]+)/);
+    
+    if (match && match[1]) {
+        const fileId = match[1];
+        // Template literal backtick error fixed here
+        const directLink = `https://lh3.googleusercontent.com/d/$${fileId}`;
+        
+        resultTextArea.value = directLink;
+        resultDiv.style.display = 'block';
+    } else {
+        alert("Oops! Linkti shothik noy. Proper share link use korun.");
+        resultDiv.style.display = 'none';
+    }
+}
+
+async function copyConvertedLink() {
+    const copyText = document.getElementById('result-link');
+    try {
+        await navigator.clipboard.writeText(copyText.value);
+        alert("Link successfully copied to clipboard!");
+    } catch (err) {
+        copyText.select();
+        document.execCommand('copy');
+        alert("Link successfully copied!");
+    }
+}

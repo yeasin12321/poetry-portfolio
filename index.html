@@ -272,6 +272,44 @@
     <img id="modal-img" style="max-width:90%; max-height:85%; border-radius:10px; box-shadow:0 0 25px rgba(255,77,109,0.5); transform:scale(0.9); transition:transform 0.3s ease;" src="" alt="Enlarged Image">
     <div id="modal-caption" style="position:absolute; bottom:40px; color:#ffe6ea; font-size:1.1rem; font-family:'Hind Siliguri', sans-serif; text-align:center; width:100%; padding:0 20px;"></div>
 </div>
+<button id="admin-toggle-btn" onclick="toggleAdminPanel()" title="Admin Panel">
+        <i class="fas fa-cog"></i>
+    </button>
+
+    <div id="admin-panel-overlay" class="admin-overlay" onclick="closeAdminPanel(event)">
+        <div class="admin-card" onclick="event.stopPropagation()">
+            <div class="admin-header">
+                <h2><i class="fas fa-user-shield"></i> Admin Dashboard</h2>
+                <span class="admin-close" onclick="closeAdminPanel(true)">&times;</span>
+            </div>
+            
+            <div id="admin-auth-box">
+                <p style="margin-bottom: 12px; color: var(--primary);">Enter Admin Passcode:</p>
+                <input type="password" id="admin-passcode" class="admin-input" placeholder="••••">
+                <button class="admin-btn" style="margin-top: 15px;" onclick="verifyAdminPasscode()">Login</button>
+            </div>
+
+            <div id="admin-content-box" style="display: none;">
+                <div class="converter-section">
+                    <h3><i class="fab fa-google-drive"></i> Link Converter</h3>
+                    <p style="font-size: 0.9rem; color: #bbb; margin-bottom: 15px;">Google Drive-এর ছবি শেয়ার লিংক থেকে ডিরেক্ট ভিউ লিংক তৈরি করুন।</p>
+                    
+                    <input type="text" id="drive-input" class="admin-input" placeholder="https://drive.google.com/file/d/.../view">
+                    <button class="admin-btn" style="margin-top: 12px;" onclick="convertDriveLink()">
+                        <i class="fas fa-magic"></i> Convert Link
+                    </button>
+
+                    <div id="converter-result" style="display: none; margin-top: 20px;">
+                        <p style="font-size: 0.9rem; color: var(--accent); margin-bottom: 5px;">Direct viewable link:</p>
+                        <textarea id="result-link" class="admin-input" style="height: 60px; resize: none; font-family: monospace; font-size: 0.85rem;" readonly></textarea>
+                        <button class="admin-btn admin-btn-success" style="margin-top: 10px;" onclick="copyConvertedLink()">
+                            <i class="fas fa-copy"></i> Copy Link
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
