@@ -612,7 +612,8 @@ function toggleAdminPanel() {
 }
 
 function closeAdminPanel(force = false) {
-    if (force || event.target === document.getElementById('admin-panel-overlay')) {
+    // Fixed: 'event' pass na korle kichu browser-e error dita pare, tai explicit handle kora bhalo
+    if (force || (window.event && window.event.target === document.getElementById('admin-panel-overlay'))) {
         document.getElementById('admin-panel-overlay').classList.remove('active');
         // Reset inputs on close
         document.getElementById('admin-passcode').value = "";
@@ -639,12 +640,16 @@ function convertDriveLink() {
         return;
     }
     
-    const match = inputUrl.match(/\/d\/([a-zA-Z0-9-_]+)/) || inputUrl.match(/id=([a-zA-Z0-9-_]+)/);
+    // Robust Regex to match both types of Google Drive links perfectly
+    const regex = /\/d\/([a-zA-Z0-9_-]+)|id=([a-zA-Z0-9_-]+)/;
+    const match = inputUrl.match(regex);
     
-    if (match && match[1]) {
-        const fileId = match[1];
-        // Template literal backtick error fixed here
-        const directLink = `https://lh3.googleusercontent.com/d/$${fileId}`;
+    if (match) {
+        // Jodi prothom group empty hoy, tobe ditio group theke id nibe
+        const fileId = match[1] || match[2];
+        
+        // Corrected modern web view endpoint for Google Drive images
+        const directLink = `https://lh3.googleusercontent.com/u/0/d/${fileId}`;
         
         resultTextArea.value = directLink;
         resultDiv.style.display = 'block';
@@ -656,6 +661,8 @@ function convertDriveLink() {
 
 async function copyConvertedLink() {
     const copyText = document.getElementById('result-link');
+    if (!copyText.value) return;
+    
     try {
         await navigator.clipboard.writeText(copyText.value);
         alert("Link successfully copied to clipboard!");
