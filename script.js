@@ -38,7 +38,7 @@ window.onload = () => {
     setTimeout(() => {
         document.getElementById('preloader').style.display = 'none';
         checkUrlHash();
-    }, 4500);
+    }, 1500);
     AOS.init({ duration: 800, once: true });
     
     let visitors = localStorage.getItem('tv') || 14200;
