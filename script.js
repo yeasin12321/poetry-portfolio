@@ -90,6 +90,24 @@ function loadAllData() {
             renderNovelLibrary();
         }
     });
+    // মোবাইলের ব্যাক বাটন হ্যান্ডেল করার জন্য popstate লিসেনার
+window.onpopstate = function(event) {
+    // যদি কোনো স্টেট থাকে এবং তাতে ভিউ আইডি ডিফাইন করা থাকে
+    if (event.state && event.state.view) {
+        const viewId = event.state.view;
+        
+        // সব ফুল ভিউ এবং হোম ভিউ আগে হাইড করুন
+        document.getElementById('home-view').style.display = 'none';
+        document.querySelectorAll('.full-view').forEach(el => el.style.display = 'none');
+        
+        // নির্দিষ্ট ভিউটি শো করুন
+        document.getElementById(viewId).style.display = 'block';
+    } else {
+        // যদি কোনো স্টেট না থাকে (অর্থাৎ ইউজার একদম শুরুতে ফিরে এসেছে)
+        document.querySelectorAll('.full-view').forEach(el => el.style.display = 'none');
+        document.getElementById('home-view').style.display = 'grid';
+    }
+};
     // Load Short Stories
     Papa.parse(STORIES_SHEET_URL, {
         download: true, header: true,
