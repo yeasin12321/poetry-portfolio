@@ -6,11 +6,13 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxKwPIBZOxrsrvdI5WCC
 const POEMS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8H2Fr0k4C4L1T6aBDTFp6Qm-OBdA61wCexL5jiEIt2XXeXwcUn-rIzMlPNtRhntUcONR93HwZmraR/pub?gid=0&single=true&output=csv";
 const NOVELS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQTdMtQUXDld48piMW2uGrGev030agZacHpEVcpIIO7C-fyIMSWF1oh_0PQiRGRZ1S6pQVqMK7rGP9L/pub?gid=0&single=true&output=csv";
 const STORIES_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT2xEwpsYvHyd7gLuSJ8J5cC4WJcjBNv1cPajVumCn-Kt5Eqk_S37g7P7bOJijbl1LJgaCoDC8bl3bw/pub?gid=0&single=true&output=csv";
-// আপনার মোনোলগ শিটের CSV লিঙ্ক এখানে বসান
 const MONOLOGUE_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTh4aqebFj9oWpmlhmQ4kNAK0rcwM4-aMUrRSt2MsbiOtju9Z-6qaclSkQUL1TYSH4ox_hw_UWqKnI-/pub?gid=0&single=true&output=csv";
 const SAYERI_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQHoOD1vOrCyaVCuY_WJaVUkLL70iwKTmZ2OGNuyzTTNg2PPxDDY12p08e6Eu75wZcGSUiRouIFVOmZ/pub?gid=0&single=true&output=csv";
 const GALLERY_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSYIZNe_bFTDcs7beh1VPZtWbnxkMgbVtGwhqlyF4BSZA-m9xe3oh_LmbaTWkCpWK9Gom9wzeidrtej/pub?gid=0&single=true&output=csv";
 const VIDEO_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQtCKVcATsEMBVJTO20bNxD7wZ1qCRN_UEwPrOedcBf8k8nIbWTkeZ6GnMFitJzT3VqZFQvpOKO3giR/pub?gid=0&single=true&output=csv";
+
+// স্মৃতি কালেকশনের জন্য নতুন গুগল শিট CSV লিংক (এখানে আপনার আসল লিংকটি বসাবেন)
+const MEMORIES_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQgDbXanljaVYm0oMsRgb9cvENNudoKTQf455tYcTrN-dyCGZ9XobYEOc1MP_o3UTZPYXTwki-IqLFP/pub?gid=0&single=true&output=csv";
 
 const EMAILJS_PUBLIC_KEY = "nrzZqd-KWp06iFnYt"; 
 const EMAILJS_SERVICE_ID = "service_8e409wl"; 
@@ -26,12 +28,13 @@ let allVideos = [];
 let novelsDB = [];
 let allStories = []; 
 let allSayeri = [];
-let allMonologues = []; // New
+let allMonologues = [];
+let allMemories = []; // New Memory State
 let currentFilter = 'all';
 let currentBookIndex = 0;
 let currentChapterIndex = 0;
 let currentVaultPage = 1;
-const totalVaultPages = 14;
+const totalVaultPages = 15; // 14 থেকে বাড়িয়ে 15 করা হয়েছে
 
 window.onload = () => {
     loadAllData();
@@ -53,7 +56,7 @@ window.onload = () => {
 
 // --- DATA LOADING ---
 function loadAllData() {
-    // Load Poems[cite: 3]
+    // Load Poems
     Papa.parse(POEMS_SHEET_URL, {
         download: true, header: true,
         complete: function(results) {
@@ -78,7 +81,7 @@ function loadAllData() {
             renderVideos();
         }
     });
-    // Load Novels[cite: 3]
+    // Load Novels
     Papa.parse(NOVELS_SHEET_URL, {
         download: true, header: true,
         complete: function(results) {
@@ -87,7 +90,7 @@ function loadAllData() {
             renderNovelLibrary();
         }
     });
-    // Load Short Stories[cite: 3]
+    // Load Short Stories
     Papa.parse(STORIES_SHEET_URL, {
         download: true, header: true,
         complete: function(results) {
@@ -105,7 +108,7 @@ function loadAllData() {
             renderSayeri();
         }
     });
-    // Load Monologues (New)
+    // Load Monologues
     Papa.parse(MONOLOGUE_SHEET_URL, {
         download: true, header: true,
         complete: function(results) {
@@ -113,6 +116,14 @@ function loadAllData() {
             const loader = document.getElementById('loading-monologues');
             if(loader) loader.style.display = 'none';
             renderMonologues();
+        }
+    });
+    // Load Memory Collection (New)
+    Papa.parse(MEMORIES_SHEET_URL, {
+        download: true, header: true,
+        complete: function(results) {
+            allMemories = results.data.filter(item => item.img_src && item.memory_text);
+            renderMemories();
         }
     });
 }
@@ -162,6 +173,7 @@ function renderSayeri() {
         container.appendChild(card);
     });
 }
+
 function renderMonologues() {
     const container = document.getElementById('monologue-list-container');
     if(!container) return;
@@ -175,6 +187,37 @@ function renderMonologues() {
             <div class="monologue-title">${mono.title}</div>
             <div class="monologue-text">${mono.text}</div>
             <div style="text-align:right; margin-top:10px; font-size:0.8rem; color:#666;">- ${mono.author || 'Yeasin Kabir'}</div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+// Memory Collection Renderer (New)
+function renderMemories() {
+    const container = document.getElementById('memory-collection-container');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    if (allMemories.length === 0) {
+        container.innerHTML = "<p style='color:#888; text-align:center;'>এখনো কোনো স্মৃতি যোগ করা হয়নি।</p>";
+        return;
+    }
+    
+    allMemories.forEach((memo) => {
+        const card = document.createElement('div');
+        card.className = 'memory-item-card';
+        card.setAttribute('data-aos', 'fade-up');
+        
+        card.innerHTML = `
+            <div class="memory-flex-box">
+                <div class="memory-img-wrap">
+                    <img src="${memo.img_src}" alt="Memory Image" onclick="openImageModal('${memo.img_src}', 'আমাদের স্মৃতি ❤️')">
+                </div>
+                <div class="memory-text-wrap">
+                    <p class="memory-desc-text">${memo.memory_text}</p>
+                </div>
+            </div>
         `;
         container.appendChild(card);
     });
@@ -497,6 +540,7 @@ function startPetals() {
     }, 300);
 }
 function stopPetals() { if(petalInterval) clearInterval(petalInterval); }
+
 function renderGallery() {
     const container = document.querySelector('.gallery-grid');
     if (!container) return;
@@ -512,13 +556,10 @@ function renderGallery() {
         const item = document.createElement('div');
         item.className = 'gallery-item';
         
-        // ছবি ও ক্যাপশন ইভেন্ট হ্যান্ডেল করার জন্য সুরক্ষিতভাবে ভ্যারিয়েবল সেট করা
         const imgSrc = img.img_src;
-        const imgCaption = img.caption ? img.caption.replace(/"/g, '&quot;') : '';
+        const imgCaption = img.caption ? img.caption.replace(/"/g, '"') : '';
         
-        // এখানে onclick ইভেন্ট যোগ করা হয়েছে যাতে ক্লিক করলে ছবি বড় হয়
         item.onclick = () => openImageModal(imgSrc, imgCaption);
-        
         const captionText = img.caption ? `<div class="gallery-caption">${img.caption}</div>` : '';
         
         item.innerHTML = `
@@ -529,7 +570,7 @@ function renderGallery() {
     });
 }
 
-// ছবি বড় করে দেখানোর ফাংশন
+// ছবি বড় করে দেখানোর ফাংশন (লাইডবক্স মোডাল)
 function openImageModal(src, caption) {
     const modal = document.getElementById('image-modal');
     const modalImg = document.getElementById('modal-img');
@@ -539,7 +580,6 @@ function openImageModal(src, caption) {
     modalCaption.innerText = caption;
     
     modal.style.display = 'flex';
-    // স্মুথ অ্যানিমেশনের জন্য সামান্য ডিলে দিয়ে অপাসিটি এবং স্কেল পরিবর্তন
     setTimeout(() => {
         modal.style.opacity = '1';
         modalImg.style.transform = 'scale(1)';
@@ -556,13 +596,13 @@ function closeImageModal() {
     
     setTimeout(() => {
         modal.style.display = 'none';
-    }, 300); // সিএসএস ট্রানজিশন টাইমের সাথে মিলিয়ে ৩০০ মিলি-সেকেন্ড পর হাইড হবে
+    }, 300);
 }
+
 function renderVideos() {
     const container = document.querySelector('#video-view');
     if (!container) return;
     
-    // ব্যাক বাটন এবং টাইটেল ঠিক রেখে আগের ভিডিও কন্টেইনার মুছে ফেলার জন্য
     container.innerHTML = `
         <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK</button>
         <h2 class="section-title">Video Gallery</h2>
@@ -578,12 +618,10 @@ function renderVideos() {
     
     allVideos.forEach(vid => {
         const url = vid.video_url.trim();
-        // লিঙ্ক থেকে ভিডিও আইডি বের করার রেগুলার এক্সপ্রেশন
         const match = url.match(/\/d\/([a-zA-Z0-9-_]+)/) || url.match(/id=([a-zA-Z0-9-_]+)/);
         
         if (match && match[1]) {
             const videoId = match[1];
-            // গুগল ড্রাইভের এম্বেড প্লেয়ার লিঙ্ক
             const embedUrl = `https://drive.google.com/file/d/${videoId}/preview`;
             
             const card = document.createElement('div');
@@ -602,20 +640,19 @@ function renderVideos() {
         }
     });
 }
+
 // ============================================
 // ADMIN PANEL & LINK CONVERTER LOGIC
 // ============================================
-const SECRET_PASSCODE = "1234"; // <--- Apnar pochondo moto passcode bosan
+const SECRET_PASSCODE = "1234"; 
 
 function toggleAdminPanel() {
     document.getElementById('admin-panel-overlay').classList.add('active');
 }
 
 function closeAdminPanel(force = false) {
-    // Fixed: 'event' pass na korle kichu browser-e error dita pare, tai explicit handle kora bhalo
     if (force || (window.event && window.event.target === document.getElementById('admin-panel-overlay'))) {
         document.getElementById('admin-panel-overlay').classList.remove('active');
-        // Reset inputs on close
         document.getElementById('admin-passcode').value = "";
     }
 }
@@ -640,15 +677,11 @@ function convertDriveLink() {
         return;
     }
     
-    // Robust Regex to match both types of Google Drive links perfectly
     const regex = /\/d\/([a-zA-Z0-9_-]+)|id=([a-zA-Z0-9_-]+)/;
     const match = inputUrl.match(regex);
     
     if (match) {
-        // Jodi prothom group empty hoy, tobe ditio group theke id nibe
         const fileId = match[1] || match[2];
-        
-        // Corrected modern web view endpoint for Google Drive images
         const directLink = `https://lh3.googleusercontent.com/u/0/d/${fileId}`;
         
         resultTextArea.value = directLink;

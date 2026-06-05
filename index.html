@@ -96,29 +96,29 @@
                 </div>
 
                 <div class="section-title" data-aos="fade-in">Explore</div>
-<div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:20px;">
-    <div class="poem-btn novel-hub-btn" onclick="openNovelLibrary()" style="justify-content:center; flex-direction:column; gap:5px; margin:0;">
-        <i class="fas fa-book" style="font-size:1.5rem;"></i> <span>উপন্যাস সমগ্র</span>
-    </div>
-    <div class="poem-btn" onclick="switchView('story-library')" style="justify-content:center; flex-direction:column; gap:5px; margin:0; border-color:var(--primary); background:rgba(255,255,255,0.03);">
-        <i class="fas fa-feather-alt" style="font-size:1.5rem; color:var(--primary);"></i> <span>ছোটগল্প</span>
-    </div>
-    <div class="poem-btn" onclick="switchView('readers-diary-view')" style="justify-content:center; flex-direction:column; gap:5px; margin:0; border-color:var(--accent);">
-        <i class="fas fa-pen-nib" style="font-size:1.5rem; color:var(--accent);"></i> <span>পাঠকের ডায়েরি</span>
-    </div>
-    <div class="poem-btn video-menu-btn" onclick="switchView('gallery-view')" style="justify-content:center; flex-direction:column; gap:5px; margin:0;">
-        <i class="fas fa-images" style="font-size:1.5rem;"></i> <span>ফটো গ্যালারি</span>
-    </div>
-    <div class="poem-btn video-menu-btn" onclick="switchView('video-view')" style="justify-content:center; flex-direction:column; gap:5px; margin:0;">
-        <i class="fas fa-video"></i> <span>ভিডিও গ্যালারি</span>
-    </div>
-    <div class="poem-btn" onclick="switchView('sayeri-view')" style="justify-content:center; flex-direction:column; gap:5px; margin:0; border-color:#e67e22; background:rgba(230, 126, 34, 0.05);">
-        <i class="fas fa-heart" style="font-size:1.5rem; color:#e67e22;"></i> <span style="color:#e67e22; font-weight:bold;">শায়রি কালেকশন</span>
-    </div>
-    <div class="poem-btn" onclick="switchView('monologue-view')" style="justify-content:center; flex-direction:column; gap:5px; margin:0; border-color:#9b59b6; background:rgba(155, 89, 182, 0.05);">
-        <i class="fas fa-microphone-alt" style="font-size:1.5rem; color:#9b59b6;"></i> <span style="color:#9b59b6; font-weight:bold;">মোনোলগ</span>
-    </div>
-</div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:20px;">
+                    <div class="poem-btn novel-hub-btn" onclick="openNovelLibrary()" style="justify-content:center; flex-direction:column; gap:5px; margin:0;">
+                        <i class="fas fa-book" style="font-size:1.5rem;"></i> <span>উপন্যাস সমগ্র</span>
+                    </div>
+                    <div class="poem-btn" onclick="switchView('story-library')" style="justify-content:center; flex-direction:column; gap:5px; margin:0; border-color:var(--primary); background:rgba(255,255,255,0.03);">
+                        <i class="fas fa-feather-alt" style="font-size:1.5rem; color:var(--primary);"></i> <span>ছোটগল্প</span>
+                    </div>
+                    <div class="poem-btn" onclick="switchView('readers-diary-view')" style="justify-content:center; flex-direction:column; gap:5px; margin:0; border-color:var(--accent);">
+                        <i class="fas fa-pen-nib" style="font-size:1.5rem; color:var(--accent);"></i> <span>পাঠকের ডায়েরি</span>
+                    </div>
+                    <div class="poem-btn video-menu-btn" onclick="switchView('gallery-view')" style="justify-content:center; flex-direction:column; gap:5px; margin:0;">
+                        <i class="fas fa-images" style="font-size:1.5rem;"></i> <span>ফটো গ্যালারি</span>
+                    </div>
+                    <div class="poem-btn video-menu-btn" onclick="switchView('video-view')" style="justify-content:center; flex-direction:column; gap:5px; margin:0;">
+                        <i class="fas fa-video"></i> <span>ভিডিও গ্যালারি</span>
+                    </div>
+                    <div class="poem-btn" onclick="switchView('sayeri-view')" style="justify-content:center; flex-direction:column; gap:5px; margin:0; border-color:#e67e22; background:rgba(230, 126, 34, 0.05);">
+                        <i class="fas fa-heart" style="font-size:1.5rem; color:#e67e22;"></i> <span style="color:#e67e22; font-weight:bold;">শায়রি কালেকশন</span>
+                    </div>
+                    <div class="poem-btn" onclick="switchView('monologue-view')" style="justify-content:center; flex-direction:column; gap:5px; margin:0; border-color:#9b59b6; background:rgba(155, 89, 182, 0.05);">
+                        <i class="fas fa-microphone-alt" style="font-size:1.5rem; color:#9b59b6;"></i> <span style="color:#9b59b6; font-weight:bold;">মোনোলগ</span>
+                    </div>
+                </div>
                 <div class="section-title" data-aos="fade-in">Poetry Collection</div>
                 <div id="loading-poems" style="text-align:center; color:#888;">কবিতা লোড হচ্ছে...</div>
                 <div id="buttons-list"></div>
@@ -137,22 +137,25 @@
             <div id="loading-novels" style="text-align:center; color:#888;">উপন্যাস লোড হচ্ছে...</div>
             <div id="novel-list-container" style="padding: 0 10px;"></div>
         </div>
+
         <div id="sayeri-view" class="full-view">
-    <div class="library-header">
-        <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK TO HOME</button>
-        <h2 style="font-family:'Cinzel'; color:#e67e22; text-align:center;">শায়রি সমগ্র</h2>
-    </div>
-    <div id="loading-sayeri" style="text-align:center; color:#888;">শায়রি লোড হচ্ছে...</div>
-    <div id="sayeri-list-container" style="padding: 0 20px;"></div>
-</div>
-<div id="monologue-view" class="full-view">
-    <div class="library-header">
-        <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK TO HOME</button>
-        <h2 style="font-family:'Cinzel'; color:#9b59b6; text-align:center;">মোনোলগ কালেকশন</h2>
-    </div>
-    <div id="loading-monologues" style="text-align:center; color:#888;">মোনোলগ লোড হচ্ছে...</div>
-    <div id="monologue-list-container" style="padding: 0 20px;"></div>
-</div>
+            <div class="library-header">
+                <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK TO HOME</button>
+                <h2 style="font-family:'Cinzel'; color:#e67e22; text-align:center;">শায়রি সমগ্র</h2>
+            </div>
+            <div id="loading-sayeri" style="text-align:center; color:#888;">শায়রি লোড হচ্ছে...</div>
+            <div id="sayeri-list-container" style="padding: 0 20px;"></div>
+        </div>
+
+        <div id="monologue-view" class="full-view">
+            <div class="library-header">
+                <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK TO HOME</button>
+                <h2 style="font-family:'Cinzel'; color:#9b59b6; text-align:center;">মোনোলগ কালেকশন</h2>
+            </div>
+            <div id="loading-monologues" style="text-align:center; color:#888;">মোনোলগ লোড হচ্ছে...</div>
+            <div id="monologue-list-container" style="padding: 0 20px;"></div>
+        </div>
+
         <div id="story-library" class="full-view">
             <div class="library-header">
                 <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK TO HOME</button>
@@ -174,7 +177,6 @@
                 <button class="ctrl-btn" id="next-chap" onclick="changeChapter(1)"><i class="fas fa-chevron-right"></i></button>
             </div>
         </div>
-
 
         <div id="reader-view" class="full-view">
             <div style="position:fixed; top:0; left:0; width:100%; padding:20px; background:rgba(20,5,10,0.95); z-index:10; border-bottom:1px solid #333; display:flex; justify-content:space-between;">
@@ -210,6 +212,7 @@
              <h2 class="section-title">Photo Gallery</h2>
              <div class="gallery-grid"></div>
         </div>
+
         <div id="video-view" class="full-view">
             <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK</button>
             <div class="video-container"><iframe src="https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F638665279178407%2F&show_text=true&width=560&t=0" width="560" height="429" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe></div>
@@ -237,6 +240,9 @@
             </div>
         </div>
 
+        <!-- ============================================
+             SECRET VAULT SECTION (LOCK FOLDER)
+             ============================================ -->
         <div id="secret-vault" class="full-view">
             <div id="petals-container"></div>
             <div class="vault-header">
@@ -245,7 +251,7 @@
             </div>
             
             <div id="page-1" class="diary-page active"><h2 class="page-title">এক সন্ধ্যেবেলায়</h2><div class="diary-text">তোমার সাথে সন্ধ্যেবেলায়<br>ছাদে বসে হাওয়া খাবো।<br>সে কথা থাক বা না থাক,<br>আকাশের দিকে তাকিয়ে<br>তারাদের নিশ্চুপ কোলাহল শুনবো।<br><br>আমি গুনগুন করে গান গাইবো,<br>তুমি আস্তে করে আলতো ছোঁয়ায়<br>মাথাটা আমার কাঁধে রেখে-<br>আমার সাথে সুর মেলাবে।<br><br>তখন তুমি না হয় আলিংগনে<br>আমার বুকের ধুকপুকানি শুনবে,<br>আর আমি তোমার শ্বাস গুনবো।<br>তাও যদি দূরত্ব না দূর হয়,<br>চোখে চোখ রেখে<br>সেটাও মিটিয়ে দেবো।<br><br>ব্যাস, এরকম একটা সন্ধ্যেবেলা চাই,<br>আর আমার পাশে শুধু তোমায়।।</div></div>
-            <div id="page-2" class="diary-page"><h2 class="page-title">Happy New Year</h2><div class="diary-text"><span style="color:var(--secondary); font-weight:bold;">My Love,</span><br><br>ক্যালেন্ডারের পাতা উল্টে ২০২৬ আসছে, কিন্তু আমার হৃদয়ের ক্যালেন্ডারে আমাদের প্রথম দিনের তারিখটা আজও জ্বলজ্বল করছে।<br><br>সেদিন কি আমরা জানতাম, আমরা এতটা পথ একসাথে হাঁটবো? তোমার সেই লাজুক হাসি আর মায়াবী চোখ আজও আমাকে প্রেমে ফেলে।<br><br>নতুন বছরে আমার একটাই চাওয়া—তোমার হাতটা এভাবেই ধরে রাখতে চাই, ঠিক যেমনটা সেই প্রথম দিন ধরেছিলাম।<br><br>অনেক ভালোবাসি তোমাকে। ❤️</div></div>
+            <div id="page-2" class="diary-page"><h2 class="page-title">Happy New Year</h2><div class="diary-text"><span style="color:var(--secondary); font-weight:bold;">My Love,</span><br><br>ক্যালেন্ডারের পাতা উল্টে ২০২৬ আসছে, কিন্তু আমার হৃদয়ের ক্যালেন্ডারে আমাদের প্রথম দিনের তারিখটা আজও জ্বলজ্বল করছে।<br><br>সেদিন কি আমরা জানতাম, আমরা এতটা পথ একসাথে হাঁটবো? তোমার সেই লাজুক হাসি আর মায়াবী চোখ আজও আমাকে প্রেমে ফেলে।<br><br>নতুন বছরে আমার একটাই চাওয়া—তোমার হাতটা এভাবেই ধরে রাখতে চাই, ठीक যেমনটা সেই প্রথম দিন ধরেছিলাম।<br><br>অনেক ভালোবাসি তোমাকে। ❤️</div></div>
             <div id="page-3" class="diary-page"><h2 class="page-title">তোমার চোখ</h2><img src="eye.jpg" alt="Rumi's Eyes" class="her-eyes"><div class="diary-text" style="text-align:center;">"এই দুটি চোখেই আমি আমার পৃথিবী খুঁজে পেয়েছি। রুমি, তোমার চোখের গভীরতায় হারিয়ে যাওয়াটাই আমার সবচেয়ে প্রিয় নেশা।"</div></div>
             <div id="page-4" class="diary-page"><h2 class="page-title">প্রথম দেখা...</h2><div class="diary-text">মনে পড়ে? ইন্টার ফার্স্ট ইয়ার ভর্তির সেই দিনটা?<br> colleges করিডোরে হাজারো মানুষের ভিড়, কিন্তু আমার চোখ আটকে গিয়েছিল শুধু তোমার দিকে। সেদিনই মনে হয়েছিল, এই মেয়েটাই আমার গল্পের নায়িকা হবে।<br><br><span style="color:var(--secondary);">আমরা একসাথে পার করেছি:</span><div id="love-clock" style="font-family:'Orbitron'; color:var(--primary); border:1px solid var(--secondary); padding:10px; border-radius:10px; margin-top:10px;">Loading...</div><br>আর আমার প্রিয় ডাকনামটা মনে আছে তো?<br><h1 style="color:var(--secondary); text-align:center; margin-top:20px; font-family:'Hind Siliguri'">মোটু (Motu) ❤️</h1></div></div>
             <div id="page-5" class="diary-page"><h2 class="page-title">Love Letter</h2><div class="diary-text">প্রিয় রুমি,<br><br>জানি না কতটা ভালোবাসলে ভালোবাসা পূর্ণ হয়, তবে আমি তোমাকে আমার সবটুকু দিয়ে ভালোবাসি। আমার প্রতিটা নিশ্বাস, প্রতিটা ভাবনা শুধু তোমাকে ঘিরে।<br><br>তুমি আমার সুখ, আমার শান্তি, আমার সব অভিমান আর ভালোবাসার ঠিকানা। সারাজীবন এভাবেই থেকো আমার হয়ে।<br><br><div style="text-align: center; font-size: 1.5rem; margin-top: 30px; color: var(--secondary); font-family: 'Great Vibes';">I Love You, Rumi ❤️</div></div></div>
@@ -255,24 +261,35 @@
             <div id="page-9" class="diary-page"><h2 class="page-title">Forever Promise</h2><div class="diary-text" style="text-align: center;">"Touch & Hold to promise that you will never leave me."</div><div class="fingerprint-area" onmousedown="startScan(event)" onmouseup="stopScan()" ontouchstart="startScan(event)" ontouchend="stopScan()" oncontextmenu="return false;"><i class="fas fa-fingerprint" style="font-size:3rem; color:#555;"></i><div class="scan-line" id="scanLine"></div></div><div id="promise-msg" style="color:var(--primary); margin-top:20px; display:none;">Promise Accepted! You are mine forever. ❤️</div></div>
             <div id="page-10" class="diary-page"><h2 class="page-title">Do You Know Me?</h2><div id="quiz-box"><div id="quiz-question" class="diary-text" style="text-align:center; font-weight:bold;"></div><div id="quiz-options" class="quiz-grid"></div><div id="quiz-feedback" style="margin-top:20px; font-family:'Hind Siliguri'; font-size:1.1rem; text-align:center;"></div></div></div>
             <div id="page-11" class="diary-page"><h2 class="page-title">Today's Mood</h2><div class="mood-grid"><div class="mood-btn" onclick="handleMood('happy')"><span class="mood-icon">😊</span><span>Happy</span></div><div class="mood-btn" onclick="handleMood('sad')"><span class="mood-icon">😔</span><span>Sad</span></div><div class="mood-btn" onclick="handleMood('miss')"><span class="mood-icon">🥺</span><span>Miss You</span></div></div><div id="mood-msg" style="margin-top:30px; color:var(--accent); text-align:center; font-style:italic;"></div></div>
-            <div id="page-12" class="diary-page"><h2 class="page-title">Relationship Contract</h2><div class="contract-paper" style="background:#fff; color:#000; padding:20px; border-radius:5px; font-family:'Courier New', monospace; font-size:0.9rem; text-align:left; position:relative; transform:rotate(-1deg); box-shadow:0 0 15px rgba(0,0,0,0.5); margin-bottom:20px;"><h3 style="text-align:center; border-bottom:1px solid #000;">Love Agreement</h3><p>আমি, <b>রুমি</b>, সজ্ঞানে এই মর্মে অঙ্গীকার করছি যে:</p><ul style="padding-left:20px;"><li>আমি ইয়াছিনের সাথে রাগ করে ১০ মিনিটের বেশি থাকবো মোহো না।</li><li>তার পচা জোকস শুনেও হাসবো।</li><li>তাকে ছাড়া অন্য কোনো ছেলের দিকে তাকাবো না।</li><li>সারাজীবন তাকে জ্বালাতন করবো।</li></ul><br><p>স্বাক্ষর: ________________</p><div class="stamp" id="contract-stamp" style="position:absolute; bottom:20px; right:20px; border:3px solid #d90429; color:#d90429; font-weight:bold; padding:5px 10px; transform:rotate(-15deg) scale(2); opacity:0; transition:0.5s; border-radius:5px;">AGREED</div></div><button class="contract-sign-btn" onclick="signContract()" style="background:var(--secondary); color:#fff; padding:10px 30px; border-radius:30px; border:none; font-weight:bold; cursor:pointer; margin-top:10px;">I AGREE ❤️</button></div>
+            <div id="page-12" class="diary-page"><h2 class="page-title">Relationship Contract</h2><div class="contract-paper" style="background:#fff; color:#000; padding:20px; border-radius:5px; font-family:'Courier New', monospace; font-size:0.9rem; text-align:left; position:relative; transform:rotate(-1deg); box-shadow:0 0 15px rgba(0,0,0,0.5); margin-bottom:20px;"><h3 style="text-align:center; border-bottom:1px solid #000;">Love Agreement</h3><p>আমি, <b>রুমি</b>, সজ্ঞানে এই মর্মে অঙ্গীকার করছি যে:</p><ul style="padding-left:20px;"><li>আমি ইয়াছিনের সাথে রাগ করে ১০ মিনিটের বেশি থাকবো না।</li><li>তার পচা জোকস শুনেও হাসবো।</li><li>তাকে ছাড়া অন্য কোনো ছেলের দিকে তাকাবো না।</li><li>সারাজীবন তাকে জ্বালাতন করবো।</li></ul><br><p>স্বাক্ষর: ________________</p><div class="stamp" id="contract-stamp" style="position:absolute; bottom:20px; right:20px; border:3px solid #d90429; color:#d90429; font-weight:bold; padding:5px 10px; transform:rotate(-15deg) scale(2); opacity:0; transition:0.5s; border-radius:5px;">AGREED</div></div><button class="contract-sign-btn" onclick="signContract()" style="background:var(--secondary); color:#fff; padding:10px 30px; border-radius:30px; border:none; font-weight:bold; cursor:pointer; margin-top:10px;">I AGREE ❤️</button></div>
             <div id="page-13" class="diary-page"><h2 class="page-title">Write to Me</h2><div class="diary-text" style="text-align:center;">কিছু বলতে চাও? যা ইচ্ছে লিখে পাঠাও, সরাসরি আমার হোয়াটসঅ্যাপে চলে আসবে।</div><textarea id="wa-msg-input" class="c-input" placeholder="তোমার মনের কথা..." style="height:150px;"></textarea><button class="sub-btn" onclick="sendToWhatsApp()" style="width:100%"><i class="fab fa-whatsapp"></i> Send to Yeasin</button></div>
             <div id="page-14" class="diary-page"><h2 class="page-title">Secret Love Calculator</h2><div class="diary-text" style="text-align:center;">কার সাথে তোমার বন্ডিং কেমন?<br>নাম লিখে টেস্ট করো!</div><div class="diary-entry-form" style="background:rgba(255,255,255,0.05); padding:20px; border-radius:12px; border:1px solid #333; margin-bottom:30px;"><input type="text" id="calc-name-1" class="c-input" placeholder="তোমার নাম"><input type="text" id="calc-name-2" class="c-input" placeholder="তার নাম"><button class="sub-btn" onclick="calculateLove()" style="width:100%">❤️ CALCULATE ❤️</button></div><div id="love-result" style="text-align:center; margin-top:20px; font-family:'Orbitron'; font-size:2rem; color:var(--secondary); display:none;"></div><p id="love-msg" style="text-align:center; color:#ccc; display:none;"></p></div>
             
+            <!-- Page 15: Memory Collection (New Section Added Here) -->
+            <div id="page-15" class="diary-page">
+                <h2 class="page-title" style="font-family: 'Great Vibes'; font-size: 2.5rem; color: var(--secondary);">Our Memories ❤️</h2>
+                <p style="color: #ffccd5; font-size: 0.9rem; margin-bottom: 20px;">আমাদের একসাথে কাটানো কিছু সুন্দর মুহূর্ত...</p>
+                <div id="memory-collection-container" style="padding: 0 10px; display: flex; flex-direction: column; gap: 20px;">
+                    <!-- গুগল এক্সেল শিট থেকে ডাটা জাভাস্ক্রিপ্টের মাধ্যমে এখানে লোড হবে -->
+                </div>
+            </div>
 
             <div class="nav-buttons">
                 <button class="diary-btn" onclick="prevPage()"><i class="fas fa-arrow-left"></i></button>
-                <span style="color:#fff; margin-top:10px;" id="page-num">1 / 14</span>
+                <span style="color:#fff; margin-top:10px;" id="page-num">1 / 15</span>
                 <button class="diary-btn" onclick="nextPage()"><i class="fas fa-arrow-right"></i></button>
             </div>
         </div>
     </div>
- <div id="image-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:99999; justify-content:center; align-items:center; opacity:0; transition:opacity 0.3s ease;">
-    <span onclick="closeImageModal()" style="position:absolute; top:20px; right:30px; color:#fff; font-size:40px; font-weight:bold; cursor:pointer; user-select:none;">&times;</span>
-    <img id="modal-img" style="max-width:90%; max-height:85%; border-radius:10px; box-shadow:0 0 25px rgba(255,77,109,0.5); transform:scale(0.9); transition:transform 0.3s ease;" src="" alt="Enlarged Image">
-    <div id="modal-caption" style="position:absolute; bottom:40px; color:#ffe6ea; font-size:1.1rem; font-family:'Hind Siliguri', sans-serif; text-align:center; width:100%; padding:0 20px;"></div>
-</div>
-<button id="admin-toggle-btn" onclick="toggleAdminPanel()" title="Admin Panel">
+
+    <!-- Image Modal for lightbox preview -->
+    <div id="image-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:99999; justify-content:center; align-items:center; opacity:0; transition:opacity 0.3s ease;">
+        <span onclick="closeImageModal()" style="position:absolute; top:20px; right:30px; color:#fff; font-size:40px; font-weight:bold; cursor:pointer; user-select:none;">&times;</span>
+        <img id="modal-img" style="max-width:90%; max-height:85%; border-radius:10px; box-shadow:0 0 25px rgba(255,77,109,0.5); transform:scale(0.9); transition:transform 0.3s ease;" src="" alt="Enlarged Image">
+        <div id="modal-caption" style="position:absolute; bottom:40px; color:#ffe6ea; font-size:1.1rem; font-family:'Hind Siliguri', sans-serif; text-align:center; width:100%; padding:0 20px;"></div>
+    </div>
+
+    <button id="admin-toggle-btn" onclick="toggleAdminPanel()" title="Admin Panel">
         <i class="fas fa-cog"></i>
     </button>
 
@@ -316,10 +333,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="script.js"></script>
-</body>
-</html>
-
