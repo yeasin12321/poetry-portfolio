@@ -1,5 +1,5 @@
 // ============================================
-// CONFIGURATION
+// CONFIGURATION & LIVE API CHANNELS
 // ============================================
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxKwPIBZOxrsrvdI5WCCDxfppV2PHJTMJ_rd-G1C9bU1VV8jJVt1PA4f7dgddlFxAyT/exec";
 
@@ -10,8 +10,6 @@ const MONOLOGUE_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTh
 const SAYERI_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQHoOD1vOrCyaVCuY_WJaVUkLL70iwKTmZ2OGNuyzTTNg2PPxDDY12p08e6Eu75wZcGSUiRouIFVOmZ/pub?gid=0&single=true&output=csv";
 const GALLERY_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSYIZNe_bFTDcs7beh1VPZtWbnxkMgbVtGwhqlyF4BSZA-m9xe3oh_LmbaTWkCpWK9Gom9wzeidrtej/pub?gid=0&single=true&output=csv";
 const VIDEO_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQtCKVcATsEMBVJTO20bNxD7wZ1qCRN_UEwPrOedcBf8k8nIbWTkeZ6GnMFitJzT3VqZFQvpOKO3giR/pub?gid=0&single=true&output=csv";
-
-// স্মৃতি কালেকশনের জন্য নতুন গুগল শিট CSV লিংক (এখানে আপনার আসল লিংকটি বসাবেন)
 const MEMORIES_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQgDbXanljaVYm0oMsRgb9cvENNudoKTQf455tYcTrN-dyCGZ9XobYEOc1MP_o3UTZPYXTwki-IqLFP/pub?gid=0&single=true&output=csv";
 
 const EMAILJS_PUBLIC_KEY = "nrzZqd-KWp06iFnYt"; 
@@ -21,7 +19,7 @@ const EMAILJS_TEMPLATE_ID = "template_uk80jev";
 // Initialize EmailJS
 (function() { emailjs.init(EMAILJS_PUBLIC_KEY); })();
 
-// Global State
+// Global App State
 let allPoems = [];
 let allGalleryImages = [];
 let allVideos = [];
@@ -29,43 +27,46 @@ let novelsDB = [];
 let allStories = []; 
 let allSayeri = [];
 let allMonologues = [];
-let allMemories = []; // New Memory State
+let allMemories = []; 
 let currentFilter = 'all';
 let currentBookIndex = 0;
 let currentChapterIndex = 0;
 let currentVaultPage = 1;
-const totalVaultPages = 15; // 14 থেকে বাড়িয়ে 15 করা হয়েছে
+const totalVaultPages = 15;
+let isMusicPlaying = false;
+let scanTimer;
 
 window.onload = () => {
     loadAllData();
+    createPoeticLeaves();
+    
     setTimeout(() => {
         document.getElementById('preloader').style.display = 'none';
         checkUrlHash();
     }, 1500);
-    AOS.init({ duration: 800, once: true });
+    
+    AOS.init({ duration: 900, once: true });
     
     let visitors = localStorage.getItem('tv') || 14200;
     document.getElementById('total-visitors').innerText = parseInt(visitors).toLocaleString();
     
-    createFireflies();
     setupMusic();
     type();
-    initParticles();
-    animateParticles();
 };
 
-// --- DATA LOADING ---
+window.addEventListener('hashchange', checkUrlHash);
+
+// --- DATA FETCH MATRIX ---
 function loadAllData() {
-    // Load Poems
     Papa.parse(POEMS_SHEET_URL, {
         download: true, header: true,
         complete: function(results) {
             allPoems = results.data.filter(item => item.title && item.text);
             document.getElementById('loading-poems').style.display = 'none';
             renderPoems();
+            checkUrlHash();
         }
     });
-    // Load Gallery Images from Google Sheet
     Papa.parse(GALLERY_SHEET_URL, {
         download: true, header: true,
         complete: function(results) {
@@ -73,7 +74,6 @@ function loadAllData() {
             renderGallery();
         }
     });
-    // Load Video Gallery from Google Sheet
     Papa.parse(VIDEO_SHEET_URL, {
         download: true, header: true,
         complete: function(results) {
@@ -81,42 +81,23 @@ function loadAllData() {
             renderVideos();
         }
     });
-    // Load Novels
     Papa.parse(NOVELS_SHEET_URL, {
         download: true, header: true,
         complete: function(results) {
             processNovelsData(results.data);
             document.getElementById('loading-novels').style.display = 'none';
             renderNovelLibrary();
+            checkUrlHash();
         }
     });
-    // মোবাইলের ব্যাক বাটন হ্যান্ডেল করার জন্য popstate লিসেনার
-window.onpopstate = function(event) {
-    // যদি কোনো স্টেট থাকে এবং তাতে ভিউ আইডি ডিফাইন করা থাকে
-    if (event.state && event.state.view) {
-        const viewId = event.state.view;
-        
-        // সব ফুল ভিউ এবং হোম ভিউ আগে হাইড করুন
-        document.getElementById('home-view').style.display = 'none';
-        document.querySelectorAll('.full-view').forEach(el => el.style.display = 'none');
-        
-        // নির্দিষ্ট ভিউটি শো করুন
-        document.getElementById(viewId).style.display = 'block';
-    } else {
-        // যদি কোনো স্টেট না থাকে (অর্থাৎ ইউজার একদম শুরুতে ফিরে এসেছে)
-        document.querySelectorAll('.full-view').forEach(el => el.style.display = 'none');
-        document.getElementById('home-view').style.display = 'grid';
-    }
-};
-    // Load Short Stories
     Papa.parse(STORIES_SHEET_URL, {
         download: true, header: true,
         complete: function(results) {
             allStories = results.data.filter(item => item.story_title && item.story_text);
             renderStoryLibrary();
+            checkUrlHash();
         }
     });
-    // Load Sayeri
     Papa.parse(SAYERI_SHEET_URL, {
         download: true, header: true,
         complete: function(results) {
@@ -126,7 +107,6 @@ window.onpopstate = function(event) {
             renderSayeri();
         }
     });
-    // Load Monologues
     Papa.parse(MONOLOGUE_SHEET_URL, {
         download: true, header: true,
         complete: function(results) {
@@ -136,7 +116,6 @@ window.onpopstate = function(event) {
             renderMonologues();
         }
     });
-    // Load Memory Collection (New)
     Papa.parse(MEMORIES_SHEET_URL, {
         download: true, header: true,
         complete: function(results) {
@@ -158,7 +137,65 @@ function processNovelsData(flatData) {
     novelsDB = Object.values(novelMap);
 }
 
-// --- RENDERING ---
+window.onpopstate = function(event) {
+    if (event.state && event.state.view) {
+        document.getElementById('home-view').style.display = 'none';
+        document.querySelectorAll('.full-view').forEach(el => el.style.display = 'none');
+        document.getElementById(event.state.view).style.display = 'block';
+    } else {
+        document.querySelectorAll('.full-view').forEach(el => el.style.display = 'none');
+        document.getElementById('home-view').style.display = 'grid';
+    }
+};
+
+// --- SHARE ROUTER SYSTEM ---
+function checkUrlHash() { 
+    const hash = window.location.hash; 
+    if (!hash) {
+        document.querySelectorAll('.full-view').forEach(el => el.style.display = 'none');
+        document.getElementById('home-view').style.display = 'grid';
+        return;
+    }
+
+    if (hash.includes('#poem=') && allPoems.length > 0) { 
+        const index = parseInt(hash.split('=')[1]); 
+        if (allPoems[index]) openPoemDirectly(index); 
+    } else if (hash.includes('#story=') && allStories.length > 0) {
+        const index = parseInt(hash.split('=')[1]);
+        if (allStories[index]) openStoryDirectly(index);
+    } else if (hash.includes('#novel=') && novelsDB.length > 0) { 
+        const segments = hash.split('=')[1].split('&');
+        const bookIndex = parseInt(segments[0]);
+        const chapIndex = segments[1] && segments[1].includes('chap=') ? parseInt(segments[1].split('=')[1]) : 0;
+        if (novelsDB[bookIndex]) startReadingDirectly(bookIndex, chapIndex); 
+    } else if (hash === '#secret-vault') {
+        goBack();
+    } else {
+        const viewId = hash.substring(1);
+        const targetView = document.getElementById(viewId);
+        if (targetView && targetView.classList.contains('full-view')) {
+            document.getElementById('home-view').style.display = 'none';
+            document.querySelectorAll('.full-view').forEach(el => el.style.display = 'none');
+            targetView.style.display = 'block';
+        }
+    }
+}
+
+function switchView(viewId) { 
+    window.location.hash = viewId;
+    document.getElementById('home-view').style.display='none'; 
+    document.querySelectorAll('.full-view').forEach(el => el.style.display='none'); 
+    document.getElementById(viewId).style.display='block'; 
+    window.scrollTo(0,0); 
+}
+
+function goBack() { 
+    window.location.hash = ''; 
+    document.querySelectorAll('.full-view').forEach(el => el.style.display='none'); 
+    document.getElementById('home-view').style.display='grid'; 
+}
+
+// --- CORE RENDERING ENGINES ---
 function renderPoems() {
     const listDiv = document.getElementById('buttons-list');
     listDiv.innerHTML = '';
@@ -167,26 +204,34 @@ function renderPoems() {
     allPoems.forEach((poem, index) => {
         if((currentFilter === 'all' || poem.tag === currentFilter) && poem.title.toLowerCase().includes(searchVal)) {
             const btn = document.createElement('div');
-            btn.className = 'poem-btn'; btn.setAttribute('data-aos', 'fade-up');
+            btn.className = 'poem-btn vintage-item-node'; btn.setAttribute('data-aos', 'fade-up');
             btn.innerHTML = `<span>${poem.title}</span> <i class="fas fa-chevron-right"></i>`;
-            btn.onclick = () => openPoem(index);
+            btn.onclick = () => { window.location.hash = `poem=${index}`; };
             listDiv.appendChild(btn);
         }
     });
 }
 
+function openPoemDirectly(index) {
+    document.getElementById('poem-title-display').innerText = allPoems[index].title;
+    document.getElementById('poem-content-display').innerHTML = allPoems[index].text.replace(/\n/g, '<br>');
+    document.getElementById('home-view').style.display='none'; 
+    document.querySelectorAll('.full-view').forEach(el => el.style.display='none'); 
+    document.getElementById('reader-view').style.display = 'block';
+    loadComments();
+}
+
 function renderSayeri() {
     const container = document.getElementById('sayeri-list-container');
-    if(!container) return;
-    container.innerHTML = '';
-    
+    if(!container) return; container.innerHTML = '';
     allSayeri.forEach((sayeri) => {
         const card = document.createElement('div');
-        card.className = 'sayeri-card';
+        card.className = 'sayeri-card vintage-paper-node';
         card.setAttribute('data-aos', 'fade-up');
+        const processedText = sayeri.text.replace(/\\n/g, '<br>').replace(/\n/g, '<br>');
         card.innerHTML = `
-            <div class="sayeri-text">${sayeri.text}</div>
-            <div style="text-align:right; margin-top:10px; font-size:0.8rem; color:#888; font-style:italic;">- ${sayeri.author || 'Yeasin Kabir'}</div>
+            <div class="sayeri-text">${processedText}</div>
+            <div style="text-align:right; margin-top:15px; font-size:0.8rem; color:#888; font-style:italic;">- ${sayeri.author || 'Yeasin Kabir'}</div>
         `;
         container.appendChild(card);
     });
@@ -194,46 +239,44 @@ function renderSayeri() {
 
 function renderMonologues() {
     const container = document.getElementById('monologue-list-container');
-    if(!container) return;
-    container.innerHTML = '';
-    
+    if(!container) return; container.innerHTML = '';
     allMonologues.forEach((mono) => {
         const card = document.createElement('div');
-        card.className = 'monologue-card';
+        card.className = 'monologue-card vintage-paper-node';
         card.setAttribute('data-aos', 'fade-up');
+        const processedText = mono.text.replace(/\\n/g, '<br>').replace(/\n/g, '<br>');
         card.innerHTML = `
             <div class="monologue-title">${mono.title}</div>
-            <div class="monologue-text">${mono.text}</div>
-            <div style="text-align:right; margin-top:10px; font-size:0.8rem; color:#666;">- ${mono.author || 'Yeasin Kabir'}</div>
+            <div class="monologue-text">${processedText}</div>
+            <div style="text-align:right; margin-top:15px; font-size:0.8rem; color:#666;">- ${mono.author || 'Yeasin Kabir'}</div>
         `;
         container.appendChild(card);
     });
 }
 
-// Memory Collection Renderer (New)
 function renderMemories() {
     const container = document.getElementById('memory-collection-container');
-    if (!container) return;
-    
-    container.innerHTML = '';
-    
+    if (!container) return; container.innerHTML = '';
     if (allMemories.length === 0) {
         container.innerHTML = "<p style='color:#888; text-align:center;'>এখনো কোনো স্মৃতি যোগ করা হয়নি।</p>";
         return;
     }
-    
     allMemories.forEach((memo) => {
         const card = document.createElement('div');
-        card.className = 'memory-item-card';
+        card.className = 'memory-item-card vintage-paper-node';
         card.setAttribute('data-aos', 'fade-up');
+        
+        // ডাবল কোটেশন ও নিউলাইন ফিক্স ক্লিনার মডিউল
+        const cleanText = memo.memory_text ? memo.memory_text.replace(/"/g, '&quot;').replace(/\n/g, '<br>') : '';
+        const rawTextForJs = memo.memory_text ? memo.memory_text.replace(/"/g, '\\"').replace(/\n/g, ' ') : '';
         
         card.innerHTML = `
             <div class="memory-flex-box">
                 <div class="memory-img-wrap">
-                    <img src="${memo.img_src}" alt="Memory Image" onclick="openImageModal('${memo.img_src}', 'আমাদের স্মৃতি ❤️')">
+                    <img src="${memo.img_src}" alt="Memory Image" onclick="openImageModal('${memo.img_src}', '${rawTextForJs}')">
                 </div>
                 <div class="memory-text-wrap">
-                    <p class="memory-desc-text">${memo.memory_text}</p>
+                    <p class="memory-desc-text">${cleanText}</p>
                 </div>
             </div>
         `;
@@ -241,18 +284,10 @@ function renderMemories() {
     });
 }
 
-function openPoem(index) {
-    window.location.hash = "poem=" + index;
-    document.getElementById('poem-title-display').innerText = allPoems[index].title;
-    document.getElementById('poem-content-display').innerHTML = allPoems[index].text;
-    switchView('reader-view');
-    loadComments();
-}
-
 function renderNovelLibrary() {
     const container = document.getElementById('novel-list-container'); container.innerHTML = '';
     novelsDB.forEach((novel, index) => {
-        const card = document.createElement('div'); card.className = 'novel-card';
+        const card = document.createElement('div'); card.className = 'novel-card vintage-paper-node';
         card.innerHTML = `<h3>${novel.title}</h3><div class="novel-meta"><span>${novel.author}</span></div><div class="novel-summary">${novel.summary}</div><button class="read-btn" onclick="startReading(${index})">পড়া শুরু করুন</button>`;
         container.appendChild(card);
     });
@@ -260,32 +295,61 @@ function renderNovelLibrary() {
 
 function renderStoryLibrary() {
     const container = document.getElementById('story-list-container');
-    if(!container) return;
-    container.innerHTML = '';
+    if(!container) return; container.innerHTML = '';
     allStories.forEach((story, index) => {
-        const card = document.createElement('div'); card.className = 'novel-card';
+        const card = document.createElement('div'); card.className = 'novel-card vintage-paper-node';
         card.innerHTML = `<h3>${story.story_title}</h3><div class="novel-meta"><span>${story.author || 'Yeasin Kabir'}</span></div><div class="novel-summary">${story.summary || ''}</div><button class="read-btn" onclick="openStory(${index})">গল্পটি পড়ুন</button>`;
         container.appendChild(card);
     });
 }
 
-function openStory(index) {
+function openStory(index) { window.location.hash = `story=${index}`; }
+
+function openStoryDirectly(index) {
     const story = allStories[index];
-    window.location.hash = "story=" + index;
     const display = document.getElementById('poem-content-display');
     document.getElementById('poem-title-display').innerText = story.story_title;
     display.innerHTML = `<div style="text-align:justify; font-size:1.1rem; line-height:1.8;">${story.story_text.replace(/\n/g, '<br>')}</div>`;
-    switchView('reader-view');
+    document.getElementById('home-view').style.display='none'; 
+    document.querySelectorAll('.full-view').forEach(el => el.style.display='none'); 
+    document.getElementById('reader-view').style.display = 'block';
     document.getElementById('reader-view').scrollTop = 0;
     loadComments();
 }
 
-// --- NOVEL READER LOGIC ---
-function startReading(bookIndex) { 
-    currentBookIndex = bookIndex; currentChapterIndex = 0; 
-    window.location.hash = "novel=" + bookIndex;
-    updateChapSelect(); switchView('novel-reader'); loadChapter(); 
+function startReading(bookIndex) { window.location.hash = `novel=${bookIndex}&chap=0`; }
+
+function startReadingDirectly(bookIndex, chapIndex) {
+    currentBookIndex = bookIndex; currentChapterIndex = chapIndex;
+    updateChapSelect();
+    document.getElementById('home-view').style.display='none'; 
+    document.querySelectorAll('.full-view').forEach(el => el.style.display='none'); 
+    document.getElementById('novel-reader').style.display = 'block';
+    loadChapter();
 }
+
+// --- LIGHTBOX IMAGE POP-UP CONTROLLER ---
+function openImageModal(imgSrc, captionText) {
+    const modal = document.getElementById('image-lightbox-modal');
+    const modalImg = document.getElementById('expanded-lightbox-image');
+    const captionContainer = document.getElementById('lightbox-image-caption');
+    
+    if(modal && modalImg) {
+        modal.style.display = "flex";
+        modalImg.src = imgSrc;
+        if(captionContainer) {
+            captionContainer.innerHTML = captionText ? captionText : '';
+        }
+    }
+}
+
+function closeImageModal() {
+    const modal = document.getElementById('image-lightbox-modal');
+    if(modal) {
+        modal.style.display = "none";
+    }
+}
+
 function updateChapSelect() {
     const select = document.getElementById('chapter-dropdown'); select.innerHTML = '';
     novelsDB[currentBookIndex].chapters.forEach((chap, i) => {
@@ -295,26 +359,43 @@ function updateChapSelect() {
 function loadChapter() {
     const ch = novelsDB[currentBookIndex].chapters[currentChapterIndex];
     document.getElementById('current-chapter-title').innerText = ch.title;
-    document.getElementById('story-content').innerHTML = ch.text;
+    document.getElementById('story-content').innerHTML = ch.text.replace(/\n/g, '<br>');
     document.getElementById('chapter-dropdown').value = currentChapterIndex;
     window.scrollTo(0,0);
 }
 function changeChapter(d) { 
     const len = novelsDB[currentBookIndex].chapters.length;
-    if(currentChapterIndex + d >= 0 && currentChapterIndex + d < len) { currentChapterIndex += d; loadChapter(); }
+    if(currentChapterIndex + d >= 0 && currentChapterIndex + d < len) { 
+        currentChapterIndex += d; 
+        window.location.hash = `novel=${currentBookIndex}&chap=${currentChapterIndex}`;
+    }
 }
-function jumpToChapter(v) { currentChapterIndex = parseInt(v); loadChapter(); }
+function jumpToChapter(v) { 
+    currentChapterIndex = parseInt(v); 
+    window.location.hash = `novel=${currentBookIndex}&chap=${currentChapterIndex}`;
+}
 
-// --- COMMENT SYSTEM LOGIC ---
+// --- SEARCH FILTER SYSTEM ---
+function filterPoems() {
+    renderPoems();
+}
+
+function filterByTag(tag) {
+    currentFilter = tag;
+    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+    if(event && event.target) {
+        event.target.classList.add('active');
+    }
+    renderPoems();
+}
+
+// --- COMMENT MATRIX ---
 async function submitComment() {
     const poemId = window.location.hash;
     const name = document.getElementById('user-name').value;
     const comment = document.getElementById('user-comment').value;
-
     if(!name || !comment) return alert("দয়া করে নাম এবং মন্তব্য লিখুন।");
-
     const payload = { type: "comment", poemId: poemId, name: name, comment: comment };
-
     try {
         await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) });
         alert("আপনার মন্তব্যটি জমা হয়েছে!");
@@ -335,25 +416,35 @@ async function loadComments() {
             display.innerHTML = "<p style='color:#666; font-style:italic;'>এখনও কোনো মন্তব্য নেই। প্রথম মন্তব্যটি আপনার হোক!</p>";
         } else {
             filtered.forEach(row => {
-                display.innerHTML += `<div style="background:rgba(255,255,255,0.05); padding:12px; border-radius:10px; margin-bottom:10px; border-left:3px solid var(--secondary);"><b style="color:var(--primary); font-size:0.9rem;">${row[1]}</b><p style="margin:5px 0 0; font-size:1rem; color:#eee;">${row[2]}</p></div>`;
+                display.innerHTML += `<div class="vintage-comment-box"><b style="color:var(--primary); font-size:0.9rem;">${row[1]}</b><p style="margin:5px 0 0; font-size:1rem; color:#eee;">${row[2]}</p></div>`;
             });
         }
     } catch(e) { display.innerHTML = "<p style='color:#e74c3c;'>মন্তব্য লোড করা সম্ভব হয়নি।</p>"; }
 }
 
-// --- SECRET VAULT LOGIC ---
+// --- ROMANTIC SECRET VAULT SYSTEM CONTROLS ---
 function openSecretVaultInput() { 
     if(prompt("ENTER ACCESS CODE:") === "3460") { 
-        switchView('secret-vault'); 
-        createFireflies(); 
+        document.getElementById('home-view').style.display='none'; 
+        document.querySelectorAll('.full-view').forEach(el => el.style.display='none'); 
+        document.getElementById('secret-vault').style.display='block';
+        window.scrollTo(0,0);
         startPetals();
+        currentVaultPage = 1;
+        showPage(1);
     } else { alert("ACCESS DENIED!"); } 
 }
 function closeVault() { goBack(); document.getElementById('vault-audio').pause(); stopPetals(); }
 
 function showPage(n) { 
     document.querySelectorAll('.diary-page').forEach(p=>p.classList.remove('active')); 
-    document.getElementById(`page-${n}`).classList.add('active'); 
+    const targetPage = document.getElementById(`page-${n}`);
+    if(targetPage) {
+        targetPage.classList.add('active');
+        targetPage.style.animation = 'none';
+        targetPage.offsetHeight; 
+        targetPage.style.animation = 'pageTurnEffect 0.6s ease-out forwards';
+    }
     document.getElementById('page-num').innerText = `${n} / ${totalVaultPages}`; 
     if(n === 10) loadQuiz();
 }
@@ -363,23 +454,21 @@ function prevPage() { if(currentVaultPage > 1) { currentVaultPage--; showPage(cu
 function toggleMsg(id) { let el = document.getElementById(id); el.style.display = (el.style.display === 'block') ? 'none' : 'block'; }
 function generateReason() { 
     const r = ["তোমার ওই মায়াবী চোখ","আমার রাগ ভাঙাতে পারো","তোমার হাসিতে দিন ভালো হয়","আমাকে ভালো বোঝো"]; 
-    document.getElementById('love-reason').innerText = r[Math.floor(Math.random()*r.length)]; 
+    const reasonBox = document.getElementById('love-reason');
+    reasonBox.innerText = r[Math.floor(Math.random()*r.length)]; 
 }
 
-// Fingerprint Scan
-let scanTimer; 
 function startScan(e) { 
     if(e.preventDefault) e.preventDefault(); 
     document.getElementById('scanLine').style.display='block'; 
     scanTimer=setTimeout(()=>{
         document.getElementById('promise-msg').style.display='block'; 
         document.getElementById('scanLine').style.display='none'; 
-        try{navigator.vibrate(200)}catch(e){}
+        try{navigator.vibrate(200)}catch(err){}
     },1500); 
 } 
 function stopScan() { clearTimeout(scanTimer); document.getElementById('scanLine').style.display='none'; }
 
-// Quiz
 const quizData = [ 
     { q: "আমার রাগ ভাঙানোর সেরা উপায় কী?", options: ["সরি বলা", "কান ধরে ওঠবস", "মিষ্টি করে একটা হাসি", "চকলেট দেওয়া"], a: 2 }, 
     { q: "আমি তোমার কোন জিনিসটা সবচেয়ে বেশি ভালোবাসি?", options: ["তোমার চোখ", "তোমার হাসি", "তোমার বোকামি", "সবগুলোই"], a: 3 }, 
@@ -388,7 +477,7 @@ const quizData = [
 let currentQuiz = 0;
 function loadQuiz() { 
     if(currentQuiz >= quizData.length) { 
-        document.getElementById('quiz-box').innerHTML = "<h2 style='color:var(--secondary)'>অভিনন্দন জানপাখি! 🎉</h2><p style='color:#fff'>তুমি আমাকে ১০০% চেনো!</p>"; 
+        document.getElementById('quiz-box').innerHTML = "<h2 style='color:var(--secondary); font-family:Great Vibes; font-size:2.5rem;'>অভিনন্দন জানপাখি! 🎉</h2><p style='color:#ffe6ea; font-style:italic;'>তুমি আমাকে ১০০% চেনো!</p>"; 
         return; 
     }
     const q = quizData[currentQuiz]; document.getElementById('quiz-question').innerText = q.q; 
@@ -410,7 +499,6 @@ function checkAnswer(selected, btnElement) {
     } 
 }
 
-// Other vault functions
 function handleMood(type) { 
     const msg = document.getElementById('mood-msg'); 
     if(type === 'happy') { triggerConfetti(); msg.innerText = "তোমার হাসি দেখলেই আমার দিন ভালো হয়ে যায়! 😊"; } 
@@ -418,7 +506,7 @@ function handleMood(type) {
     else { msg.innerText = "আমিও তোমাকে ভীষণ মিস করছি... খুব জলদি দেখা হবে! 🤗"; } 
 }
 function signContract() { 
-    document.getElementById('contract-stamp').style.opacity = '0.8'; 
+    document.getElementById('contract-stamp').style.opacity = '0.9'; 
     document.getElementById('contract-stamp').style.transform = 'rotate(-15deg) scale(1)'; 
     alert("চুক্তি স্বাক্ষরিত! ❤️"); 
 }
@@ -436,7 +524,6 @@ function calculateLove() {
     triggerConfetti();
 }
 
-// Love Clock
 const startDate = new Date("2024-09-14T00:00:00").getTime();
 setInterval(() => { 
     const now = new Date().getTime(); 
@@ -445,97 +532,57 @@ setInterval(() => {
     if(display) display.innerHTML = `${Math.floor(d/(1000*60*60*24))} Days : ${Math.floor((d%(1000*60*60*24))/(1000*60*60))} Hr : ${Math.floor((d%(1000*60*60))/(1000*60))} Min : ${Math.floor((d%(1000*60))/1000)} Sec`; 
 }, 1000);
 
-// --- UTILS & CORE ---
-function switchView(viewId) { 
-    history.pushState({view:viewId}, null, ''); 
-    document.getElementById('home-view').style.display='none'; 
-    document.querySelectorAll('.full-view').forEach(el => el.style.display='none'); 
-    document.getElementById(viewId).style.display='block'; 
-    window.scrollTo(0,0); 
-}
-function goBack() { 
-    history.pushState("", document.title, window.location.pathname + window.location.search); 
-    document.querySelectorAll('.full-view').forEach(el => el.style.display='none'); 
-    document.getElementById('home-view').style.display='grid'; 
-}
-function filterPoems() { renderPoems(); }
-function filterByTag(tag) { 
-    currentFilter = tag; 
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); 
-    if(event.target) event.target.classList.add('active'); 
-    renderPoems(); 
-}
-function checkUrlHash() { 
-    const hash = window.location.hash; 
-    if (hash.includes('poem=') && allPoems.length > 0) { 
-        const index = parseInt(hash.split('=')[1]); 
-        if (allPoems[index]) openPoem(index); 
-    } else if (hash.includes('novel=') && novelsDB.length > 0) { 
-        const index = parseInt(hash.split('=')[1]); 
-        if (novelsDB[index]) startReading(index); 
-    } 
+// --- AUXILIARY AMBIENT UNITS ---
+function createPoeticLeaves() {
+    const container = document.getElementById('leaf-container'); if(!container) return;
+    setInterval(() => {
+        const leaf = document.createElement('div'); leaf.className = 'ambient-leaf';
+        leaf.style.left = Math.random() * 100 + "vw";
+        leaf.style.animationDuration = Math.random() * 5 + 5 + "s";
+        leaf.style.opacity = Math.random() * 0.25 + 0.05;
+        container.appendChild(leaf);
+        setTimeout(() => leaf.remove(), 9000);
+    }, 1500);
 }
 
-// Music Logic
-function setupMusic() { window.music = document.getElementById('bg-music'); }
-function toggleMusic() { 
-    const icon = document.getElementById('music-icon'); 
-    if (window.music.paused) { 
-        window.music.play(); 
-        document.querySelector('.music-btn').classList.add('playing'); 
-        icon.className = 'fas fa-pause'; 
-    } else { 
-        window.music.pause(); 
-        document.querySelector('.music-btn').classList.remove('playing'); 
-        icon.className = 'fas fa-play'; 
-    } 
-}
-
-// Effects (Particles & Fireflies)
-function createFireflies() { 
-    const container = document.getElementById('firefly-container'); 
-    if(!container) return;
+function renderGallery() {
+    const container = document.querySelector('.gallery-grid'); if (!container) return;
     container.innerHTML = ''; 
-    for (let i = 0; i < 10; i++) { 
-        const fly = document.createElement('div'); fly.classList.add('firefly'); 
-        fly.style.left = Math.random() * 100 + 'vw'; fly.style.top = Math.random() * 100 + 'vh'; 
-        container.appendChild(fly); 
-    } 
-}
-function triggerConfetti() { 
-    const c = document.getElementById('confetti-canvas'); 
-    if(c) { c.style.display = 'block'; setTimeout(() => c.style.display = 'none', 3000); }
-}
-
-// Typewriter
-const words = ["< POET />", "< WRITER />", "< DREAMER />"]; 
-let wordIdx=0, charIdx=0, isDeleting=false;
-function type() { 
-    const current = words[wordIdx]; 
-    const target = document.getElementById('typewriter');
-    if(!target) return;
-    target.textContent = isDeleting ? current.substring(0, charIdx--) : current.substring(0, charIdx++); 
-    if (!isDeleting && charIdx === current.length + 1) { isDeleting = true; setTimeout(type, 2000); } 
-    else if (isDeleting && charIdx === 0) { isDeleting = false; wordIdx = (wordIdx + 1) % words.length; setTimeout(type, 500); } 
-    else { setTimeout(type, isDeleting ? 50 : 100); } 
+    allGalleryImages.forEach(img => {
+        const item = document.createElement('div'); item.className = 'gallery-item vintage-gallery-card';
+        const imgSrc = img.img_src; 
+        const rawCaptionText = img.caption ? img.caption.replace(/"/g, '\\"') : '';
+        const escapedCaptionHtml = img.caption ? img.caption.replace(/"/g, '&quot;') : '';
+        
+        item.onclick = () => openImageModal(imgSrc, rawCaptionText);
+        const captionText = img.caption ? `<div class="gallery-caption">${escapedCaptionHtml}</div>` : '';
+        item.innerHTML = `<img src="${imgSrc}" class="gallery-img" alt="Gallery Image" style="cursor: pointer;">${captionText}`;
+        container.appendChild(item);
+    });
 }
 
-// Background Particles
-const canvas = document.getElementById('particles'); 
-if(canvas) {
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-    let particlesArray = [];
-    class Particle { 
-        constructor() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.size = Math.random() * 2; this.opacity = Math.random(); } 
-        update() { this.y += 0.2; if(this.y > canvas.height) this.y=0; } 
-        draw() { ctx.fillStyle = `rgba(255, 215, 0, ${this.opacity})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); } 
+function renderVideos() {
+    const container = document.querySelector('#video-view'); if (!container) return;
+    container.innerHTML = `<button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK</button><h2 class="section-title">Video Gallery</h2><div class="video-grid" style="display:grid; grid-template-columns:1fr; gap:20px; padding:10px;"></div>`;
+    const grid = container.querySelector('.video-grid');
+    if (allVideos.length === 0) {
+        grid.innerHTML = "<p style='color:#888; text-align:center;'>কোনো ভিডিও পাওয়া যায়নি।</p>";
+        return;
     }
-    function initParticles() { for(let i=0; i<40; i++) particlesArray.push(new Particle()); } 
-    function animateParticles() { ctx.clearRect(0,0,canvas.width,canvas.height); particlesArray.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animateParticles); }
+    allVideos.forEach(vid => {
+        const url = vid.video_url.trim();
+        const match = url.match(/\/d\/([a-zA-Z0-9-_]+)/) || url.match(/id=([a-zA-Z0-9-_]+)/);
+        if (match && match[1]) {
+            const embedUrl = `https://drive.google.com/file/d/${match[1]}/preview`;
+            const card = document.createElement('div'); card.className = 'video-card-item vintage-paper-node';
+            card.style.cssText = "background:rgba(25,18,19,0.5); border:1px solid #332426; border-radius:4px; overflow:hidden; padding:10px;";
+            const titleText = vid.title ? `<h3 style="font-size:1rem; margin-top:10px; color:var(--primary); font-family:'Hind Siliguri';">${vid.title}</h3>` : '';
+            card.innerHTML = `<div style="position:relative; width:100%; height:0; padding-bottom:56.25%; border-radius:4px; overflow:hidden;"><iframe src="${embedUrl}" style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;" allow="autoplay"></iframe></div>${titleText}`;
+            grid.appendChild(card);
+        }
+    });
 }
 
-// External Services
 function sendRealEmail() { emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, { from_name: document.getElementById('contact-name').value, message: document.getElementById('contact-msg').value }).then(() => alert("Sent!")); }
 function sendDiaryToEmail() { emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, { from_name: document.getElementById('story-author-name').value, message: document.getElementById('story-content-input').value }).then(() => alert("Sent!")); }
 function handleRealSubscribe() { const email = document.getElementById('sub-email').value; if(email) emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, { from_email: email, type: "Subscription" }).then(() => alert("Subscribed!")); }
@@ -544,182 +591,85 @@ function changeFont(dir) { const root = document.documentElement; let current = 
 function backToLibrary() { switchView('novel-library'); }
 function openNovelLibrary() { switchView('novel-library'); }
 
+// --- MUSIC CONTROL PLATFORM ---
+function setupMusic() {
+    const music = document.getElementById('bg-music');
+    document.body.addEventListener('click', () => {
+        if(!isMusicPlaying && music && music.paused) {
+            // Safe initializer
+        }
+    }, { once: true });
+}
+
+function toggleMusic() {
+    const music = document.getElementById('bg-music');
+    const icon = document.getElementById('music-icon');
+    const btn = document.querySelector('.ctrl-float-btn.music-btn');
+
+    if (!music) return;
+
+    if (music.paused) {
+        music.play().then(() => {
+            isMusicPlaying = true;
+            icon.className = "fas fa-pause";
+            btn.classList.add('playing');
+        }).catch(err => {
+            console.log("Audio block active:", err);
+        });
+    } else {
+        music.pause();
+        isMusicPlaying = false;
+        icon.className = "fas fa-play";
+        btn.classList.remove('playing');
+    }
+}
+
 let petalInterval;
 function startPetals() {
-    const container = document.getElementById('petals-container');
-    if(!container) return;
+    const container = document.getElementById('petals-container'); if(!container) return;
     petalInterval = setInterval(() => {
-        const petal = document.createElement('div');
-        petal.classList.add('petal');
-        petal.style.left = Math.random() * 100 + "vw";
-        petal.style.animationDuration = Math.random() * 3 + 3 + "s";
+        const petal = document.createElement('div'); petal.className = 'petal';
+        petal.style.left = Math.random() * 100 + "vw"; petal.style.animationDuration = Math.random() * 3 + 3 + "s";
         container.appendChild(petal);
         setTimeout(() => petal.remove(), 5000);
     }, 300);
 }
 function stopPetals() { if(petalInterval) clearInterval(petalInterval); }
 
-function renderGallery() {
-    const container = document.querySelector('.gallery-grid');
-    if (!container) return;
-    
-    container.innerHTML = ''; 
-    
-    if (allGalleryImages.length === 0) {
-        container.innerHTML = "<p style='color:#888; text-align:center; grid-column: 1/-1;'>কোনো ছবি পাওয়া যায়নি।</p>";
-        return;
-    }
-    
-    allGalleryImages.forEach(img => {
-        const item = document.createElement('div');
-        item.className = 'gallery-item';
-        
-        const imgSrc = img.img_src;
-        const imgCaption = img.caption ? img.caption.replace(/"/g, '"') : '';
-        
-        item.onclick = () => openImageModal(imgSrc, imgCaption);
-        const captionText = img.caption ? `<div class="gallery-caption">${img.caption}</div>` : '';
-        
-        item.innerHTML = `
-            <img src="${imgSrc}" class="gallery-img" alt="Gallery Image" style="cursor: pointer;">
-            ${captionText}
-        `;
-        container.appendChild(item);
-    });
-}
-
-// ছবি বড় করে দেখানোর ফাংশন (লাইডবক্স মোডাল)
-function openImageModal(src, caption) {
-    const modal = document.getElementById('image-modal');
-    const modalImg = document.getElementById('modal-img');
-    const modalCaption = document.getElementById('modal-caption');
-    
-    modalImg.src = src;
-    modalCaption.innerText = caption;
-    
-    modal.style.display = 'flex';
-    setTimeout(() => {
-        modal.style.opacity = '1';
-        modalImg.style.transform = 'scale(1)';
-    }, 10);
-}
-
-// মোডাল বন্ধ করার ফাংশন
-function closeImageModal() {
-    const modal = document.getElementById('image-modal');
-    const modalImg = document.getElementById('modal-img');
-    
-    modal.style.opacity = '0';
-    modalImg.style.transform = 'scale(0.9)';
-    
-    setTimeout(() => {
-        modal.style.display = 'none';
-    }, 300);
-}
-
-function renderVideos() {
-    const container = document.querySelector('#video-view');
-    if (!container) return;
-    
-    container.innerHTML = `
-        <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK</button>
-        <h2 class="section-title">Video Gallery</h2>
-        <div class="video-grid" style="display:grid; grid-template-columns:1fr; gap:20px; padding:10px;"></div>
-    `;
-    
-    const grid = container.querySelector('.video-grid');
-    
-    if (allVideos.length === 0) {
-        grid.innerHTML = "<p style='color:#888; text-align:center;'>কোনো ভিডিও পাওয়া যায়নি।</p>";
-        return;
-    }
-    
-    allVideos.forEach(vid => {
-        const url = vid.video_url.trim();
-        const match = url.match(/\/d\/([a-zA-Z0-9-_]+)/) || url.match(/id=([a-zA-Z0-9-_]+)/);
-        
-        if (match && match[1]) {
-            const videoId = match[1];
-            const embedUrl = `https://drive.google.com/file/d/${videoId}/preview`;
-            
-            const card = document.createElement('div');
-            card.className = 'video-card-item';
-            card.style.cssText = "background:rgba(255,255,255,0.02); border:1px solid #333; border-radius:12px; overflow:hidden; padding:10px;";
-            
-            const titleText = vid.title ? `<h3 style="font-size:1rem; margin-top:10px; color:var(--primary); font-family:'Hind Siliguri';">${vid.title}</h3>` : '';
-            
-            card.innerHTML = `
-                <div style="position:relative; width:100%; height:0; padding-bottom:56.25%; border-radius:8px; overflow:hidden;">
-                    <iframe src="${embedUrl}" style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;" allow="autoplay"></iframe>
-                </div>
-                ${titleText}
-            `;
-            grid.appendChild(card);
-        }
-    });
-}
-
-// ============================================
-// ADMIN PANEL & LINK CONVERTER LOGIC
-// ============================================
-const SECRET_PASSCODE = "1234"; 
-
-function toggleAdminPanel() {
-    document.getElementById('admin-panel-overlay').classList.add('active');
-}
-
-function closeAdminPanel(force = false) {
-    if (force || (window.event && window.event.target === document.getElementById('admin-panel-overlay'))) {
-        document.getElementById('admin-panel-overlay').classList.remove('active');
-        document.getElementById('admin-passcode').value = "";
-    }
-}
-
-function verifyAdminPasscode() {
-    const codeInput = document.getElementById('admin-passcode').value;
-    if (codeInput === SECRET_PASSCODE) {
-        document.getElementById('admin-auth-box').style.display = 'none';
-        document.getElementById('admin-content-box').style.display = 'block';
-    } else {
-        alert("Wrong Passcode! Access Denied.");
-    }
-}
-
+// --- ADMIN PORTAL CONVERTERS ---
 function convertDriveLink() {
     const inputUrl = document.getElementById('drive-input').value.trim();
-    const resultDiv = document.getElementById('converter-result');
-    const resultTextArea = document.getElementById('result-link');
-    
-    if (!inputUrl) {
-        alert("Doya kore akta Google Drive share link din.");
-        return;
-    }
-    
-    const regex = /\/d\/([a-zA-Z0-9_-]+)|id=([a-zA-Z0-9_-]+)/;
-    const match = inputUrl.match(regex);
-    
+    const match = inputUrl.match(/\/d\/([a-zA-Z0-9_-]+)|id=([a-zA-Z0-9_-]+)/);
     if (match) {
-        const fileId = match[1] || match[2];
-        const directLink = `https://lh3.googleusercontent.com/u/0/d/${fileId}`;
-        
-        resultTextArea.value = directLink;
-        resultDiv.style.display = 'block';
-    } else {
-        alert("Oops! Linkti shothik noy. Proper share link use korun.");
-        resultDiv.style.display = 'none';
-    }
+        document.getElementById('result-link').value = `https://lh3.googleusercontent.com/u/0/d/${match[1] || match[2]}`;
+        document.getElementById('converter-result').style.display = 'block';
+    } else { alert("Oops! Linkti shothik noy."); }
+}
+async function copyConvertedLink() {
+    await navigator.clipboard.writeText(document.getElementById('result-link').value); alert("Link successfully copied!");
 }
 
-async function copyConvertedLink() {
-    const copyText = document.getElementById('result-link');
-    if (!copyText.value) return;
-    
-    try {
-        await navigator.clipboard.writeText(copyText.value);
-        alert("Link successfully copied to clipboard!");
-    } catch (err) {
-        copyText.select();
-        document.execCommand('copy');
-        alert("Link successfully copied!");
+let timer;
+function type() {
+    const tw = document.getElementById('typewriter');
+    if(!tw) return;
+    const txt = "WEB DEVELOPER | POET | NOVELIST";
+    let i = 0;
+    clearInterval(timer);
+    timer = setInterval(() => {
+        if(i < txt.length) {
+            tw.innerHTML += txt.charAt(i);
+            i++;
+        } else {
+            clearInterval(timer);
+        }
+    }, 100);
+}
+
+function triggerConfetti() {
+    const canvas = document.getElementById('confetti-canvas');
+    if(canvas) {
+        canvas.style.display = 'block';
+        setTimeout(() => { canvas.style.display = 'none'; }, 3000);
     }
 }
