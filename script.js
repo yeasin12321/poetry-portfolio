@@ -148,7 +148,7 @@ window.onpopstate = function(event) {
     }
 };
 
-// --- SHARE ROUTER SYSTEM ---
+// --- SHARE ROUTER SYSTEM (CRITICAL NOVEL NAV FIX) ---
 function checkUrlHash() { 
     const hash = window.location.hash; 
     if (!hash) {
@@ -163,11 +163,26 @@ function checkUrlHash() {
     } else if (hash.includes('#story=') && allStories.length > 0) {
         const index = parseInt(hash.split('=')[1]);
         if (allStories[index]) openStoryDirectly(index);
-    } else if (hash.includes('#novel=') && novelsDB.length > 0) { 
-        const segments = hash.split('=')[1].split('&');
-        const bookIndex = parseInt(segments[0]);
-        const chapIndex = segments[1] && segments[1].includes('chap=') ? parseInt(segments[1].split('=')[1]) : 0;
-        if (novelsDB[bookIndex]) startReadingDirectly(bookIndex, chapIndex); 
+    } else if (hash.includes('#novel=')) { 
+        // নোবেল চ্যাপ্টার রাউটার পার্সিং ফিক্স মডিউল
+        const mainParams = hash.split('#novel=')[1];
+        if(mainParams && novelsDB.length > 0) {
+            const segments = mainParams.split('&');
+            const bookIdx = parseInt(segments[0]);
+            let chapIdx = 0;
+            if(segments[1] && segments[1].includes('chap=')) {
+                chapIdx = parseInt(segments[1].split('chap=')[1]);
+            }
+            if (novelsDB[bookIdx]) {
+                currentBookIndex = bookIdx;
+                currentChapterIndex = chapIdx;
+                updateChapSelect();
+                document.getElementById('home-view').style.display='none'; 
+                document.querySelectorAll('.full-view').forEach(el => el.style.display='none'); 
+                document.getElementById('novel-reader').style.display = 'block';
+                loadChapter();
+            }
+        }
     } else if (hash === '#secret-vault') {
         goBack();
     } else {
@@ -237,6 +252,42 @@ function renderSayeri() {
     });
 }
 
+// --- NOVEL CONTROL LOGIC FIX ---
+function startReading(bookIndex) { 
+    window.location.hash = `novel=${bookIndex}&chap=0`; 
+}
+
+function loadChapter() {
+    if (!novelsDB[currentBookIndex] || !novelsDB[currentBookIndex].chapters[currentChapterIndex]) return;
+    const ch = novelsDB[currentBookIndex].chapters[currentChapterIndex];
+    document.getElementById('current-chapter-title').innerText = ch.title;
+    document.getElementById('story-content').innerHTML = ch.text.replace(/\n/g, '<br>');
+    document.getElementById('chapter-dropdown').value = currentChapterIndex;
+    document.getElementById('novel-reader').scrollTop = 0;
+}
+
+function changeChapter(d) { 
+    const len = novelsDB[currentBookIndex].chapters.length;
+    if(currentChapterIndex + d >= 0 && currentChapterIndex + d < len) { 
+        currentChapterIndex += d; 
+        window.location.hash = `novel=${currentBookIndex}&chap=${currentChapterIndex}`;
+    }
+}
+
+function jumpToChapter(v) { 
+    currentChapterIndex = parseInt(v); 
+    window.location.hash = `novel=${currentBookIndex}&chap=${currentChapterIndex}`;
+}
+
+function updateChapSelect() {
+    const select = document.getElementById('chapter-dropdown'); 
+    if(!select) return;
+    select.innerHTML = '';
+    novelsDB[currentBookIndex].chapters.forEach((chap, i) => {
+        let opt = document.createElement('option'); opt.value = i; opt.text = chap.title; select.appendChild(opt);
+    });
+}
+
 function renderMonologues() {
     const container = document.getElementById('monologue-list-container');
     if(!container) return; container.innerHTML = '';
@@ -266,7 +317,6 @@ function renderMemories() {
         card.className = 'memory-item-card vintage-paper-node';
         card.setAttribute('data-aos', 'fade-up');
         
-        // ডাবল কোটেশন ও নিউলাইন ফিক্স ক্লিনার মডিউল
         const cleanText = memo.memory_text ? memo.memory_text.replace(/"/g, '&quot;').replace(/\n/g, '<br>') : '';
         const rawTextForJs = memo.memory_text ? memo.memory_text.replace(/"/g, '\\"').replace(/\n/g, ' ') : '';
         
@@ -317,17 +367,6 @@ function openStoryDirectly(index) {
     loadComments();
 }
 
-function startReading(bookIndex) { window.location.hash = `novel=${bookIndex}&chap=0`; }
-
-function startReadingDirectly(bookIndex, chapIndex) {
-    currentBookIndex = bookIndex; currentChapterIndex = chapIndex;
-    updateChapSelect();
-    document.getElementById('home-view').style.display='none'; 
-    document.querySelectorAll('.full-view').forEach(el => el.style.display='none'); 
-    document.getElementById('novel-reader').style.display = 'block';
-    loadChapter();
-}
-
 // --- LIGHTBOX IMAGE POP-UP CONTROLLER ---
 function openImageModal(imgSrc, captionText) {
     const modal = document.getElementById('image-lightbox-modal');
@@ -348,31 +387,6 @@ function closeImageModal() {
     if(modal) {
         modal.style.display = "none";
     }
-}
-
-function updateChapSelect() {
-    const select = document.getElementById('chapter-dropdown'); select.innerHTML = '';
-    novelsDB[currentBookIndex].chapters.forEach((chap, i) => {
-        let opt = document.createElement('option'); opt.value = i; opt.text = chap.title; select.appendChild(opt);
-    });
-}
-function loadChapter() {
-    const ch = novelsDB[currentBookIndex].chapters[currentChapterIndex];
-    document.getElementById('current-chapter-title').innerText = ch.title;
-    document.getElementById('story-content').innerHTML = ch.text.replace(/\n/g, '<br>');
-    document.getElementById('chapter-dropdown').value = currentChapterIndex;
-    window.scrollTo(0,0);
-}
-function changeChapter(d) { 
-    const len = novelsDB[currentBookIndex].chapters.length;
-    if(currentChapterIndex + d >= 0 && currentChapterIndex + d < len) { 
-        currentChapterIndex += d; 
-        window.location.hash = `novel=${currentBookIndex}&chap=${currentChapterIndex}`;
-    }
-}
-function jumpToChapter(v) { 
-    currentChapterIndex = parseInt(v); 
-    window.location.hash = `novel=${currentBookIndex}&chap=${currentChapterIndex}`;
 }
 
 // --- SEARCH FILTER SYSTEM ---
@@ -583,9 +597,79 @@ function renderVideos() {
     });
 }
 
-function sendRealEmail() { emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, { from_name: document.getElementById('contact-name').value, message: document.getElementById('contact-msg').value }).then(() => alert("Sent!")); }
-function sendDiaryToEmail() { emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, { from_name: document.getElementById('story-author-name').value, message: document.getElementById('story-content-input').value }).then(() => alert("Sent!")); }
-function handleRealSubscribe() { const email = document.getElementById('sub-email').value; if(email) emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, { from_email: email, type: "Subscription" }).then(() => alert("Subscribed!")); }
+// --- EMAILJS FUNCTIONALITY LOGICS ---
+function handleRealSubscribe() { 
+    const emailField = document.getElementById('sub-email');
+    const email = emailField.value.trim(); 
+    
+    if (!email) {
+        alert("দয়া করে একটি সঠিক ইমেইল আইডি লিখুন।");
+        return;
+    }
+
+    const templateParams = {
+        from_name: "New Website Subscriber",
+        from_email: email,
+        message: `আপনার কবিতা পোর্টালে নতুন কবিতা ও উপন্যাস আপডেটের জন্য সাবস্ক্রাইব করেছেন। ইউজারের ইমেইল: ${email}`
+    };
+
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+    .then(() => { 
+        alert("সফলভাবে সাবস্ক্রাইব করা হয়েছে! আপনাকে ধন্যবাদ।"); 
+        emailField.value = ""; 
+    })
+    .catch((error) => {
+        console.error("EmailJS Error:", error);
+        alert("দুঃখিত, এই মুহূর্তে সাবস্ক্রিপশন নেওয়া সম্ভব হচ্ছে না।");
+    }); 
+}
+
+function sendRealEmail() { 
+    const name = document.getElementById('contact-name').value.trim();
+    const email = document.getElementById('contact-email').value.trim();
+    const msg = document.getElementById('contact-msg').value.trim();
+
+    if(!name || !msg) return alert("দয়া করে নাম এবং বার্তা ফিল্ড পূরণ করুন।");
+
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, { 
+        from_name: name,
+        from_email: email || "No Email Given",
+        message: `কন্টাক্ট ফর্ম থেকে মেসেজ এসেছে:\nনাম: ${name}\nইমেইল: ${email}\nবার্তা: ${msg}` 
+    }).then(() => {
+        alert("আপনার বার্তাটি সফলভাবে পাঠানো হয়েছে!");
+        document.getElementById('contact-name').value = "";
+        document.getElementById('contact-email').value = "";
+        document.getElementById('contact-msg').value = "";
+    }); 
+}
+
+// --- READERS DIARY FIXED FUNCTION ---
+function sendDiaryToEmail() { 
+    const authorName = document.getElementById('story-author-name').value.trim();
+    const storyTitle = document.getElementById('story-title-input').value.trim();
+    const storyContent = document.getElementById('story-content-input').value.trim();
+
+    if(!authorName || !storyTitle || !storyContent) {
+        alert("দয়া করে পাঠকের ডায়েরির সবকটি ফিল্ড (নাম, শিরোনাম ও গল্প) সম্পূর্ণ পূরণ করুন।");
+        return;
+    }
+
+    const formattedMessage = `पाठकेेेুর ডায়েরি থেকে নতুন গল্প জমা পড়েছে:\n\nলেখকের নাম: ${authorName}\nগল্পের শিরোনাম: ${storyTitle}\n\nগল্পের মূল অংশ:\n${storyContent}`;
+
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, { 
+        from_name: authorName, 
+        message: formattedMessage 
+    }).then(() => {
+        alert("আপনার লেখা গল্পটি সফলভাবে ইয়াছিনের নিকট পাঠানো হয়েছে!");
+        document.getElementById('story-author-name').value = "";
+        document.getElementById('story-title-input').value = "";
+        document.getElementById('story-content-input').value = "";
+    }).catch(err => {
+        console.error("EmailJS Error:", err);
+        alert("দুঃখিত, লেখাটি মেইল করা যায়নি।");
+    });
+}
+
 function toggleSettings() { const panel = document.getElementById('settings-panel'); if(panel) panel.style.display = panel.style.display === 'block' ? 'none' : 'block'; }
 function changeFont(dir) { const root = document.documentElement; let current = parseFloat(getComputedStyle(root).getPropertyValue('--text-size')); root.style.setProperty('--text-size', (current + (dir * 0.1)) + 'rem'); }
 function backToLibrary() { switchView('novel-library'); }
