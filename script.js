@@ -56,8 +56,36 @@ window.onload = () => {
 
 window.addEventListener('hashchange', checkUrlHash);
 
-// --- DATA FETCH MATRIX ---
+// --- DATA FETCH MATRIX (OPTIMIZED FOR FAST LOAD) ---
 function loadAllData() {
+    // ১. শায়রি ও হালকা ডাটাগুলো সবার আগে লোড হবে যাতে ইউজার ক্লিক করা মাত্রই দেখতে পায়
+    Papa.parse(SAYERI_SHEET_URL, {
+        download: true, header: true,
+        complete: function(results) {
+            allSayeri = results.data.filter(item => item.text);
+            const loader = document.getElementById('loading-sayeri');
+            if(loader) loader.style.display = 'none';
+            renderSayeri();
+        }
+    });
+    Papa.parse(MONOLOGUE_SHEET_URL, {
+        download: true, header: true,
+        complete: function(results) {
+            allMonologues = results.data.filter(item => item.title && item.text);
+            const loader = document.getElementById('loading-monologues');
+            if(loader) loader.style.display = 'none';
+            renderMonologues();
+        }
+    });
+    Papa.parse(MEMORIES_SHEET_URL, {
+        download: true, header: true,
+        complete: function(results) {
+            allMemories = results.data.filter(item => item.img_src && item.memory_text);
+            renderMemories();
+        }
+    });
+
+    // ২. এরপর কবিতা ও বাকি ভারী ডাটাগুলো ব্যাকগ্রাউন্ডে লোড হতে থাকবে
     Papa.parse(POEMS_SHEET_URL, {
         download: true, header: true,
         complete: function(results) {
@@ -96,31 +124,6 @@ function loadAllData() {
             allStories = results.data.filter(item => item.story_title && item.story_text);
             renderStoryLibrary();
             checkUrlHash();
-        }
-    });
-    Papa.parse(SAYERI_SHEET_URL, {
-        download: true, header: true,
-        complete: function(results) {
-            allSayeri = results.data.filter(item => item.text);
-            const loader = document.getElementById('loading-sayeri');
-            if(loader) loader.style.display = 'none';
-            renderSayeri();
-        }
-    });
-    Papa.parse(MONOLOGUE_SHEET_URL, {
-        download: true, header: true,
-        complete: function(results) {
-            allMonologues = results.data.filter(item => item.title && item.text);
-            const loader = document.getElementById('loading-monologues');
-            if(loader) loader.style.display = 'none';
-            renderMonologues();
-        }
-    });
-    Papa.parse(MEMORIES_SHEET_URL, {
-        download: true, header: true,
-        complete: function(results) {
-            allMemories = results.data.filter(item => item.img_src && item.memory_text);
-            renderMemories();
         }
     });
 }
@@ -164,7 +167,6 @@ function checkUrlHash() {
         const index = parseInt(hash.split('=')[1]);
         if (allStories[index]) openStoryDirectly(index);
     } else if (hash.includes('#novel=')) { 
-        // নোবেল চ্যাপ্টার রাউটার পার্সিং ফিক্স মডিউল
         const mainParams = hash.split('#novel=')[1];
         if(mainParams && novelsDB.length > 0) {
             const segments = mainParams.split('&');
@@ -238,11 +240,19 @@ function openPoemDirectly(index) {
 
 function renderSayeri() {
     const container = document.getElementById('sayeri-list-container');
-    if(!container) return; container.innerHTML = '';
+    if(!container) return; 
+    container.innerHTML = '';
+    
+    if (allSayeri.length === 0) {
+        container.innerHTML = "<p style='text-align:center; color:#888; font-style:italic;'>শায়রি লোড হচ্ছে...</p>";
+        return;
+    }
+
     allSayeri.forEach((sayeri) => {
         const card = document.createElement('div');
         card.className = 'sayeri-card vintage-paper-node';
-        card.setAttribute('data-aos', 'fade-up');
+        card.setAttribute('data-aos', 'fade-up'); 
+        
         const processedText = sayeri.text.replace(/\\n/g, '<br>').replace(/\n/g, '<br>');
         card.innerHTML = `
             <div class="sayeri-text">${processedText}</div>
@@ -250,9 +260,13 @@ function renderSayeri() {
         `;
         container.appendChild(card);
     });
+    
+    if(window.AOS) {
+        AOS.refresh();
+    }
 }
 
-// --- NOVEL CONTROL LOGIC FIX ---
+// --- NOVEL CONTROL LOGIC FIXED ---
 function startReading(bookIndex) { 
     window.location.hash = `novel=${bookIndex}&chap=0`; 
 }
@@ -317,7 +331,7 @@ function renderMemories() {
         card.className = 'memory-item-card vintage-paper-node';
         card.setAttribute('data-aos', 'fade-up');
         
-        const cleanText = memo.memory_text ? memo.memory_text.replace(/"/g, '&quot;').replace(/\n/g, '<br>') : '';
+        const cleanText = memo.memory_text ? memo.memory_text.replace(/"/g, '"').replace(/\n/g, '<br>') : '';
         const rawTextForJs = memo.memory_text ? memo.memory_text.replace(/"/g, '\\"').replace(/\n/g, ' ') : '';
         
         card.innerHTML = `
@@ -343,6 +357,7 @@ function renderNovelLibrary() {
     });
 }
 
+// --- STORY MODULES ---
 function renderStoryLibrary() {
     const container = document.getElementById('story-list-container');
     if(!container) return; container.innerHTML = '';
@@ -566,7 +581,7 @@ function renderGallery() {
         const item = document.createElement('div'); item.className = 'gallery-item vintage-gallery-card';
         const imgSrc = img.img_src; 
         const rawCaptionText = img.caption ? img.caption.replace(/"/g, '\\"') : '';
-        const escapedCaptionHtml = img.caption ? img.caption.replace(/"/g, '&quot;') : '';
+        const escapedCaptionHtml = img.caption ? img.caption.replace(/"/g, '"') : '';
         
         item.onclick = () => openImageModal(imgSrc, rawCaptionText);
         const captionText = img.caption ? `<div class="gallery-caption">${escapedCaptionHtml}</div>` : '';
@@ -654,7 +669,7 @@ function sendDiaryToEmail() {
         return;
     }
 
-    const formattedMessage = `पाठकेेेুর ডায়েরি থেকে নতুন গল্প জমা পড়েছে:\n\nলেখকের নাম: ${authorName}\nগল্পের শিরোনাম: ${storyTitle}\n\nগল্পের মূল অংশ:\n${storyContent}`;
+    const formattedMessage = `পাঠকের ডায়েরি থেকে নতুন গল্প জমা পড়েছে:\n\nলেখকের নাম: ${authorName}\nগল্পের শিরোনাম: ${storyTitle}\n\nগল্পের মূল অংশ:\n${storyContent}`;
 
     emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, { 
         from_name: authorName, 
