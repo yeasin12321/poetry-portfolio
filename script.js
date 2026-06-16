@@ -12,6 +12,9 @@ const GALLERY_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSYIZ
 const VIDEO_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQtCKVcATsEMBVJTO20bNxD7wZ1qCRN_UEwPrOedcBf8k8nIbWTkeZ6GnMFitJzT3VqZFQvpOKO3giR/pub?gid=0&single=true&output=csv";
 const MEMORIES_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQgDbXanljaVYm0oMsRgb9cvENNudoKTQf455tYcTrN-dyCGZ9XobYEOc1MP_o3UTZPYXTwki-IqLFP/pub?gid=0&single=true&output=csv";
 
+// আপনার 'শেষ চিঠি' গুগল শিটের CSV লিংকটি নিচে বসান
+const LETTERS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGduKyJNADw2OtENJhqwnjzYL8qDRhhMCdM4b-zp2EZeGLPyeAefOk-V6ZGvMXeB-yrOcCiz6sLwU9/pub?gid=0&single=true&output=csv"; 
+
 const EMAILJS_PUBLIC_KEY = "nrzZqd-KWp06iFnYt"; 
 const EMAILJS_SERVICE_ID = "service_8e409wl"; 
 const EMAILJS_TEMPLATE_ID = "template_uk80jev"; 
@@ -24,6 +27,7 @@ let allPoems = [];
 let allGalleryImages = [];
 let allVideos = [];
 let novelsDB = [];
+let lettersDB = []; // New letters DB
 let allStories = []; 
 let allSayeri = [];
 let allMonologues = [];
@@ -31,6 +35,8 @@ let allMemories = [];
 let currentFilter = 'all';
 let currentBookIndex = 0;
 let currentChapterIndex = 0;
+let currentLetterBookIndex = 0;
+let currentLetterPartIndex = 0;
 let currentVaultPage = 1;
 const totalVaultPages = 15;
 let isMusicPlaying = false;
@@ -58,7 +64,6 @@ window.addEventListener('hashchange', checkUrlHash);
 
 // --- DATA FETCH MATRIX (OPTIMIZED FOR FAST LOAD) ---
 function loadAllData() {
-    // ১. শায়রি ও হালকা ডাটাগুলো সবার আগে লোড হবে যাতে ইউজার ক্লিক করা মাত্রই দেখতে পায়
     Papa.parse(SAYERI_SHEET_URL, {
         download: true, header: true,
         complete: function(results) {
@@ -85,7 +90,6 @@ function loadAllData() {
         }
     });
 
-    // ২. এরপর কবিতা ও বাকি ভারী ডাটাগুলো ব্যাকগ্রাউন্ডে লোড হতে থাকবে
     Papa.parse(POEMS_SHEET_URL, {
         download: true, header: true,
         complete: function(results) {
@@ -126,6 +130,23 @@ function loadAllData() {
             checkUrlHash();
         }
     });
+    
+    // Letters Data Parsing
+    if(LETTERS_SHEET_URL !== "YOUR_LETTERS_SHEET_URL_HERE") {
+        Papa.parse(LETTERS_SHEET_URL, {
+            download: true, header: true,
+            complete: function(results) {
+                processLettersData(results.data);
+                const loader = document.getElementById('loading-letters');
+                if(loader) loader.style.display = 'none';
+                renderLettersLibrary();
+                checkUrlHash();
+            }
+        });
+    } else {
+        const loader = document.getElementById('loading-letters');
+        if(loader) loader.innerHTML = "<span style='font-size:0.9rem'>শিট লিংক যুক্ত করা হয়নি।</span>";
+    }
 }
 
 function processNovelsData(flatData) {
@@ -140,6 +161,18 @@ function processNovelsData(flatData) {
     novelsDB = Object.values(novelMap);
 }
 
+function processLettersData(flatData) {
+    let letterMap = {};
+    flatData.forEach(row => {
+        if(!row.id || !row.letter_title) return;
+        if (!letterMap[row.id]) {
+            letterMap[row.id] = { id: row.id, title: row.letter_title, author: row.author, summary: row.summary, parts: [] };
+        }
+        letterMap[row.id].parts.push({ title: row.part_title, text: row.part_text });
+    });
+    lettersDB = Object.values(letterMap);
+}
+
 window.onpopstate = function(event) {
     if (event.state && event.state.view) {
         document.getElementById('home-view').style.display = 'none';
@@ -151,7 +184,7 @@ window.onpopstate = function(event) {
     }
 };
 
-// --- SHARE ROUTER SYSTEM (CRITICAL NOVEL NAV FIX) ---
+// --- SHARE ROUTER SYSTEM ---
 function checkUrlHash() { 
     const hash = window.location.hash; 
     if (!hash) {
@@ -183,6 +216,25 @@ function checkUrlHash() {
                 document.querySelectorAll('.full-view').forEach(el => el.style.display='none'); 
                 document.getElementById('novel-reader').style.display = 'block';
                 loadChapter();
+            }
+        }
+    } else if (hash.includes('#letter=')) {
+        const mainParams = hash.split('#letter=')[1];
+        if(mainParams && lettersDB.length > 0) {
+            const segments = mainParams.split('&');
+            const bookIdx = parseInt(segments[0]);
+            let partIdx = 0;
+            if(segments[1] && segments[1].includes('part=')) {
+                partIdx = parseInt(segments[1].split('part=')[1]);
+            }
+            if (lettersDB[bookIdx]) {
+                currentLetterBookIndex = bookIdx;
+                currentLetterPartIndex = partIdx;
+                updateLetterPartSelect();
+                document.getElementById('home-view').style.display='none';
+                document.querySelectorAll('.full-view').forEach(el => el.style.display='none');
+                document.getElementById('letter-reader').style.display = 'block';
+                loadLetterPart();
             }
         }
     } else if (hash === '#secret-vault') {
@@ -266,7 +318,7 @@ function renderSayeri() {
     }
 }
 
-// --- NOVEL CONTROL LOGIC FIXED ---
+// --- NOVEL CONTROL LOGIC ---
 function startReading(bookIndex) { 
     window.location.hash = `novel=${bookIndex}&chap=0`; 
 }
@@ -299,6 +351,63 @@ function updateChapSelect() {
     select.innerHTML = '';
     novelsDB[currentBookIndex].chapters.forEach((chap, i) => {
         let opt = document.createElement('option'); opt.value = i; opt.text = chap.title; select.appendChild(opt);
+    });
+}
+
+function renderNovelLibrary() {
+    const container = document.getElementById('novel-list-container'); container.innerHTML = '';
+    novelsDB.forEach((novel, index) => {
+        const card = document.createElement('div'); card.className = 'novel-card vintage-paper-node';
+        card.innerHTML = `<h3>${novel.title}</h3><div class="novel-meta"><span>${novel.author}</span></div><div class="novel-summary">${novel.summary}</div><button class="read-btn" onclick="startReading(${index})">পড়া শুরু করুন</button>`;
+        container.appendChild(card);
+    });
+}
+
+// --- LETTERS CONTROL LOGIC ---
+function renderLettersLibrary() {
+    const container = document.getElementById('letters-list-container');
+    if(!container) return; container.innerHTML = '';
+    lettersDB.forEach((letter, index) => {
+        const card = document.createElement('div'); card.className = 'novel-card vintage-paper-node';
+        card.innerHTML = `<h3>${letter.title}</h3><div class="novel-meta"><span>${letter.author || 'Yeasin Kabir'}</span></div><div class="novel-summary">${letter.summary || ''}</div><button class="read-btn" style="border-color:#e74c3c; color:#ff9a9e;" onclick="startReadingLetter(${index})">চিঠি পড়ুন</button>`;
+        container.appendChild(card);
+    });
+}
+
+function openLettersLibrary() { switchView('letters-library'); }
+function backToLettersLibrary() { switchView('letters-library'); }
+
+function startReadingLetter(bookIndex) {
+    window.location.hash = `letter=${bookIndex}&part=0`;
+}
+
+function loadLetterPart() {
+    if (!lettersDB[currentLetterBookIndex] || !lettersDB[currentLetterBookIndex].parts[currentLetterPartIndex]) return;
+    const pt = lettersDB[currentLetterBookIndex].parts[currentLetterPartIndex];
+    document.getElementById('current-letter-title').innerText = pt.title;
+    document.getElementById('letter-content').innerHTML = pt.text.replace(/\n/g, '<br>');
+    document.getElementById('letter-part-dropdown').value = currentLetterPartIndex;
+    document.getElementById('letter-reader').scrollTop = 0;
+}
+
+function changeLetterPart(d) {
+    const len = lettersDB[currentLetterBookIndex].parts.length;
+    if(currentLetterPartIndex + d >= 0 && currentLetterPartIndex + d < len) {
+        currentLetterPartIndex += d;
+        window.location.hash = `letter=${currentLetterBookIndex}&part=${currentLetterPartIndex}`;
+    }
+}
+
+function jumpToLetterPart(v) {
+    currentLetterPartIndex = parseInt(v);
+    window.location.hash = `letter=${currentLetterBookIndex}&part=${currentLetterPartIndex}`;
+}
+
+function updateLetterPartSelect() {
+    const select = document.getElementById('letter-part-dropdown');
+    if(!select) return; select.innerHTML = '';
+    lettersDB[currentLetterBookIndex].parts.forEach((pt, i) => {
+        let opt = document.createElement('option'); opt.value = i; opt.text = pt.title; select.appendChild(opt);
     });
 }
 
@@ -344,15 +453,6 @@ function renderMemories() {
                 </div>
             </div>
         `;
-        container.appendChild(card);
-    });
-}
-
-function renderNovelLibrary() {
-    const container = document.getElementById('novel-list-container'); container.innerHTML = '';
-    novelsDB.forEach((novel, index) => {
-        const card = document.createElement('div'); card.className = 'novel-card vintage-paper-node';
-        card.innerHTML = `<h3>${novel.title}</h3><div class="novel-meta"><span>${novel.author}</span></div><div class="novel-summary">${novel.summary}</div><button class="read-btn" onclick="startReading(${index})">পড়া শুরু করুন</button>`;
         container.appendChild(card);
     });
 }
@@ -405,9 +505,7 @@ function closeImageModal() {
 }
 
 // --- SEARCH FILTER SYSTEM ---
-function filterPoems() {
-    renderPoems();
-}
+function filterPoems() { renderPoems(); }
 
 function filterByTag(tag) {
     currentFilter = tag;
@@ -658,7 +756,6 @@ function sendRealEmail() {
     }); 
 }
 
-// --- READERS DIARY FIXED FUNCTION ---
 function sendDiaryToEmail() { 
     const authorName = document.getElementById('story-author-name').value.trim();
     const storyTitle = document.getElementById('story-title-input').value.trim();
@@ -735,7 +832,6 @@ function startPetals() {
 }
 function stopPetals() { if(petalInterval) clearInterval(petalInterval); }
 
-// --- ADMIN PORTAL CONVERTERS ---
 function convertDriveLink() {
     const inputUrl = document.getElementById('drive-input').value.trim();
     const match = inputUrl.match(/\/d\/([a-zA-Z0-9_-]+)|id=([a-zA-Z0-9_-]+)/);

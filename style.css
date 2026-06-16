@@ -311,6 +311,17 @@ h1 {
     border-color: var(--novel-accent);
     background: rgba(176, 58, 78, 0.1);
 }
+/* চিঠি সেকশনের নতুন বাটন ডিজাইন */
+.letter-hub-btn { 
+    border-left-color: #e74c3c; 
+    color: #ff9a9e; 
+    font-weight: 600; 
+    background: rgba(231, 76, 60, 0.05); 
+}
+.letter-hub-btn:hover {
+    border-color: #e74c3c;
+    background: rgba(231, 76, 60, 0.1);
+}
 
 /* ফুল ভিউ ওভারলে প্যানেল */
 .full-view { 
@@ -414,7 +425,7 @@ h1 {
 
 /* উপন্যাস রিডার চ্যাপ্টার নেভিগেশন */
 .reader-nav { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(212,175,55,0.1); padding-bottom: 18px; margin-bottom: 25px; align-items: center; }
-#chapter-dropdown { 
+#chapter-dropdown, #letter-part-dropdown { 
     background: #0d090a; 
     color: var(--primary); 
     border: 1px solid rgba(212,175,55,0.2); 

@@ -100,6 +100,9 @@
                     <div class="poem-btn novel-hub-btn" onclick="openNovelLibrary()">
                         <i class="fas fa-book"></i> <span>উপন্যাস সমগ্র</span>
                     </div>
+                    <div class="poem-btn letter-hub-btn" onclick="openLettersLibrary()">
+                        <i class="fas fa-envelope-open-text"></i> <span>শেষ চিঠি</span>
+                    </div>
                     <div class="poem-btn story-hub-btn" onclick="switchView('story-library')">
                         <i class="fas fa-feather-alt"></i> <span>ছোটগল্প</span>
                     </div>
@@ -136,6 +139,16 @@
             </div>
             <div id="loading-novels" style="text-align:center; color:#888;">উপন্যাস লোড হচ্ছে...</div>
             <div id="novel-list-container" style="padding: 0 10px;"></div>
+        </div>
+        
+        <!-- Letters Library View -->
+        <div id="letters-library" class="full-view">
+            <div class="library-header">
+                <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK TO HOME</button>
+                <h2 style="font-family:'Cinzel'; color:#e74c3c;">শেষ চিঠি</h2>
+            </div>
+            <div id="loading-letters" style="text-align:center; color:#888;">চিঠি লোড হচ্ছে...</div>
+            <div id="letters-list-container" style="padding: 0 10px;"></div>
         </div>
 
         <div id="sayeri-view" class="full-view">
@@ -175,6 +188,21 @@
                 <button class="ctrl-btn" id="prev-chap" onclick="changeChapter(-1)"><i class="fas fa-chevron-left"></i></button>
                 <span style="color:var(--secondary); font-size:1.2rem; padding-top:5px;"><i class="fas fa-book-open"></i></span>
                 <button class="ctrl-btn" id="next-chap" onclick="changeChapter(1)"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+        
+        <!-- Letter Reader View -->
+        <div id="letter-reader" class="full-view">
+            <div class="reader-nav">
+                <button class="back-btn" onclick="backToLettersLibrary()" style="margin:0"><i class="fas fa-arrow-left"></i> LIST</button>
+                <select id="letter-part-dropdown" onchange="jumpToLetterPart(this.value)"></select>
+            </div>
+            <h2 id="current-letter-title" style="color:#e74c3c; text-align:center; font-family: 'Hind Siliguri';"></h2>
+            <div id="letter-content" class="story-text"></div>
+            <div class="chapter-controls">
+                <button class="ctrl-btn" id="prev-letter-part" onclick="changeLetterPart(-1)"><i class="fas fa-chevron-left"></i></button>
+                <span style="color:var(--secondary); font-size:1.2rem; padding-top:5px;"><i class="fas fa-envelope-open-text"></i></span>
+                <button class="ctrl-btn" id="next-letter-part" onclick="changeLetterPart(1)"><i class="fas fa-chevron-right"></i></button>
             </div>
         </div>
 
@@ -291,7 +319,7 @@
                             <button class="open-when-btn" onclick="toggleMsg('msg2')">💌 When You Are Sad</button>
                             <div id="msg2" class="open-when-msg">"কান্না করো না প্লিজ! তোমার হাসিতেই আমার পৃথিবী আলো হয়। সব ঠিক হয়ে যাবে, আমি আছি তো।"</div>
                             <button class="open-when-btn" onclick="toggleMsg('msg3')">💌 When You Are Angry</button>
-                            <div id="msg3" class="open-when-msg">"রাগ করলে তোমাকে আরও কিউট লাগে! কিন্তু বেশিক্ষণ রেগে থেকো না, তোমার মোটু কষ্ট পাবে।"</div>
+                            <div id="msg3" class="open-when-msg">"রাগ করলে তোমাকে আরও কিউট লাগে! কিন্তু বেশিক্ষণ রেগে থেকো মহাশয়া, তোমার মোটু কষ্ট পাবে।"</div>
                         </div>
                     </div>
                     
