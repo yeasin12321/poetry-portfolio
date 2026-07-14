@@ -32,6 +32,8 @@
      
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <!-- html2pdf library যুক্ত করা হলো -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Hind+Siliguri:wght@300;400;600;700&family=Orbitron:wght@500&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
@@ -182,8 +184,14 @@
                 <button class="back-btn" onclick="backToLibrary()" style="margin:0"><i class="fas fa-arrow-left"></i> LIST</button>
                 <select id="chapter-dropdown" onchange="jumpToChapter(this.value)"></select>
             </div>
-            <h2 id="current-chapter-title" style="color:var(--novel-accent); text-align:center; font-family: 'Hind Siliguri';"></h2>
-            <div id="story-content" class="story-text"></div>
+            <!-- উপন্যাসের PDF অপশন -->
+            <div id="novel-pdf-area">
+                <h2 id="current-chapter-title" style="color:var(--novel-accent); text-align:center; font-family: 'Hind Siliguri';"></h2>
+                <div id="story-content" class="story-text"></div>
+                <button class="sub-btn pdf-btn" style="width:100%; margin-bottom:30px; background:var(--novel-accent); color:#fff;" onclick="downloadItemPDF('novel-pdf-area', 'Novel_Chapter')">
+                    <i class="fas fa-file-pdf"></i> PDF ডাউনলোড করুন
+                </button>
+            </div>
             <div class="chapter-controls">
                 <button class="ctrl-btn" id="prev-chap" onclick="changeChapter(-1)"><i class="fas fa-chevron-left"></i></button>
                 <span style="color:var(--secondary); font-size:1.2rem; padding-top:5px;"><i class="fas fa-book-open"></i></span>
@@ -197,8 +205,14 @@
                 <button class="back-btn" onclick="backToLettersLibrary()" style="margin:0"><i class="fas fa-arrow-left"></i> LIST</button>
                 <select id="letter-part-dropdown" onchange="jumpToLetterPart(this.value)"></select>
             </div>
-            <h2 id="current-letter-title" style="color:#e74c3c; text-align:center; font-family: 'Hind Siliguri';"></h2>
-            <div id="letter-content" class="story-text"></div>
+            <!-- চিঠির PDF অপশন -->
+            <div id="letter-pdf-area">
+                <h2 id="current-letter-title" style="color:#e74c3c; text-align:center; font-family: 'Hind Siliguri';"></h2>
+                <div id="letter-content" class="story-text"></div>
+                <button class="sub-btn pdf-btn" style="width:100%; margin-bottom:30px; background:#e74c3c; color:#fff;" onclick="downloadItemPDF('letter-pdf-area', 'Letter_By_Yeasin')">
+                    <i class="fas fa-file-pdf"></i> PDF ডাউনলোড করুন
+                </button>
+            </div>
             <div class="chapter-controls">
                 <button class="ctrl-btn" id="prev-letter-part" onclick="changeLetterPart(-1)"><i class="fas fa-chevron-left"></i></button>
                 <span style="color:var(--secondary); font-size:1.2rem; padding-top:5px;"><i class="fas fa-envelope-open-text"></i></span>
@@ -217,9 +231,14 @@
             </div>
             <div style="padding-top: 70px;">
                 <h2 id="poem-title-display" class="vintage-poem-title"></h2>
+                
+                <!-- কবিতা ও গল্পের PDF অপশন -->
                 <div id="poem-container-box">
                     <div id="poem-content-display"></div>
                     <div style="text-align:right; font-family:'Great Vibes'; color:var(--secondary); margin-top:25px; font-size:1.5rem;">- ইয়াছিন কবির</div>
+                    <button class="sub-btn pdf-btn" style="width:100%; margin-top:20px; background:var(--gold-gradient); color:#000;" onclick="downloadItemPDF('poem-container-box', 'Yeasin_Kabir_Collection')">
+                        <i class="fas fa-file-pdf"></i> PDF ডাউনলোড করুন
+                    </button>
                 </div>
                 
                 <div id="comment-section">

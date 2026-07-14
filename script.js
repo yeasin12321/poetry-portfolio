@@ -300,15 +300,17 @@ function renderSayeri() {
         return;
     }
 
-    allSayeri.forEach((sayeri) => {
+    allSayeri.forEach((sayeri, index) => {
         const card = document.createElement('div');
         card.className = 'sayeri-card vintage-paper-node';
+        card.id = `sayeri-card-${index}`;
         card.setAttribute('data-aos', 'fade-up'); 
         
         const processedText = sayeri.text.replace(/\\n/g, '<br>').replace(/\n/g, '<br>');
         card.innerHTML = `
             <div class="sayeri-text">${processedText}</div>
             <div style="text-align:right; margin-top:15px; font-size:0.8rem; color:#888; font-style:italic;">- ${sayeri.author || 'Yeasin Kabir'}</div>
+            <button class="sub-btn pdf-btn" style="margin-top:15px; padding:8px; font-size:0.8rem; width:100%;" onclick="downloadItemPDF('sayeri-card-${index}', 'Sayeri_By_Yeasin')"><i class="fas fa-file-pdf"></i> PDF ডাউনলোড করুন</button>
         `;
         container.appendChild(card);
     });
@@ -414,15 +416,17 @@ function updateLetterPartSelect() {
 function renderMonologues() {
     const container = document.getElementById('monologue-list-container');
     if(!container) return; container.innerHTML = '';
-    allMonologues.forEach((mono) => {
+    allMonologues.forEach((mono, index) => {
         const card = document.createElement('div');
         card.className = 'monologue-card vintage-paper-node';
+        card.id = `monologue-card-${index}`;
         card.setAttribute('data-aos', 'fade-up');
         const processedText = mono.text.replace(/\\n/g, '<br>').replace(/\n/g, '<br>');
         card.innerHTML = `
             <div class="monologue-title">${mono.title}</div>
             <div class="monologue-text">${processedText}</div>
             <div style="text-align:right; margin-top:15px; font-size:0.8rem; color:#666;">- ${mono.author || 'Yeasin Kabir'}</div>
+            <button class="sub-btn pdf-btn" style="margin-top:15px; padding:8px; font-size:0.8rem; width:100%;" onclick="downloadItemPDF('monologue-card-${index}', '${mono.title}')"><i class="fas fa-file-pdf"></i> PDF ডাউনলোড করুন</button>
         `;
         container.appendChild(card);
     });
@@ -867,4 +871,32 @@ function triggerConfetti() {
         canvas.style.display = 'block';
         setTimeout(() => { canvas.style.display = 'none'; }, 3000);
     }
+}
+
+// ============================================
+// UNIVERSAL PDF DOWNLOAD CONTROLLER
+// ============================================
+function downloadItemPDF(elementId, fileNameTitle) {
+    const element = document.getElementById(elementId);
+    if (!element) {
+        alert("কন্টেন্ট পাওয়া যায়নি!");
+        return;
+    }
+
+    // সাময়িকভাবে PDF বাটনটি হাইড করা হচ্ছে
+    const pdfBtn = element.querySelector('.pdf-btn');
+    if(pdfBtn) pdfBtn.style.display = 'none';
+
+    const opt = {
+        margin:       0.5,
+        filename:     fileNameTitle + '.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true }, 
+        jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(element).save().then(() => {
+        // ডাউনলোড শেষ হলে বাটনটি আবার ভিজিবল করা হচ্ছে
+        if(pdfBtn) pdfBtn.style.display = 'block';
+    });
 }
