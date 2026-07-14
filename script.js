@@ -1,7 +1,7 @@
 // ============================================
 // CONFIGURATION & LIVE API CHANNELS
 // ============================================
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxyvCSvsP8DpeBBkiOpc2agin1igY8xmkOOxM-pylsA83muKOxrlR6Pg4HXs9-pUJoq/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxKwPIBZOxrsrvdI5WCCDxfppV2PHJTMJ_rd-G1C9bU1VV8jJVt1PA4f7dgddlFxAyT/exec";
 
 const POEMS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8H2Fr0k4C4L1T6aBDTFp6Qm-OBdA61wCexL5jiEIt2XXeXwcUn-rIzMlPNtRhntUcONR93HwZmraR/pub?gid=0&single=true&output=csv";
 const NOVELS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQTdMtQUXDld48piMW2uGrGev030agZacHpEVcpIIO7C-fyIMSWF1oh_0PQiRGRZ1S6pQVqMK7rGP9L/pub?gid=0&single=true&output=csv";
@@ -12,19 +12,22 @@ const GALLERY_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSYIZ
 const VIDEO_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQtCKVcATsEMBVJTO20bNxD7wZ1qCRN_UEwPrOedcBf8k8nIbWTkeZ6GnMFitJzT3VqZFQvpOKO3giR/pub?gid=0&single=true&output=csv";
 const MEMORIES_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQgDbXanljaVYm0oMsRgb9cvENNudoKTQf455tYcTrN-dyCGZ9XobYEOc1MP_o3UTZPYXTwki-IqLFP/pub?gid=0&single=true&output=csv";
 
+// আপনার 'শেষ চিঠি' গুগল শিটের CSV লিংকটি নিচে বসান
 const LETTERS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGduKyJNADw2OtENJhqwnjzYL8qDRhhMCdM4b-zp2EZeGLPyeAefOk-V6ZGvMXeB-yrOcCiz6sLwU9/pub?gid=0&single=true&output=csv"; 
 
 const EMAILJS_PUBLIC_KEY = "nrzZqd-KWp06iFnYt"; 
 const EMAILJS_SERVICE_ID = "service_8e409wl"; 
 const EMAILJS_TEMPLATE_ID = "template_uk80jev"; 
 
+// Initialize EmailJS
 (function() { emailjs.init(EMAILJS_PUBLIC_KEY); })();
 
+// Global App State
 let allPoems = [];
 let allGalleryImages = [];
 let allVideos = [];
 let novelsDB = [];
-let lettersDB = []; 
+let lettersDB = []; // New letters DB
 let allStories = []; 
 let allSayeri = [];
 let allMonologues = [];
@@ -38,7 +41,6 @@ let currentVaultPage = 1;
 const totalVaultPages = 15;
 let isMusicPlaying = false;
 let scanTimer;
-let allLikesData = {}; // NEW - For real-time likes
 
 window.onload = () => {
     loadAllData();
@@ -56,15 +58,11 @@ window.onload = () => {
     
     setupMusic();
     type();
-    fetchRealLikes(); // NEW - Fetch likes immediately when loaded
 };
 
-window.addEventListener('hashchange', () => {
-    checkUrlHash();
-    setTimeout(setupLoveButton, 200);
-});
+window.addEventListener('hashchange', checkUrlHash);
 
-// --- DATA FETCH MATRIX ---
+// --- DATA FETCH MATRIX (OPTIMIZED FOR FAST LOAD) ---
 function loadAllData() {
     Papa.parse(SAYERI_SHEET_URL, {
         download: true, header: true,
@@ -133,6 +131,7 @@ function loadAllData() {
         }
     });
     
+    // Letters Data Parsing
     if(LETTERS_SHEET_URL !== "YOUR_LETTERS_SHEET_URL_HERE") {
         Papa.parse(LETTERS_SHEET_URL, {
             download: true, header: true,
@@ -185,6 +184,7 @@ window.onpopstate = function(event) {
     }
 };
 
+// --- SHARE ROUTER SYSTEM ---
 function checkUrlHash() { 
     const hash = window.location.hash; 
     if (!hash) {
@@ -836,12 +836,16 @@ function startPetals() {
 }
 function stopPetals() { if(petalInterval) clearInterval(petalInterval); }
 
-function triggerConfetti() {
-    const canvas = document.getElementById('confetti-canvas');
-    if(canvas) {
-        canvas.style.display = 'block';
-        setTimeout(() => { canvas.style.display = 'none'; }, 3000);
-    }
+function convertDriveLink() {
+    const inputUrl = document.getElementById('drive-input').value.trim();
+    const match = inputUrl.match(/\/d\/([a-zA-Z0-9_-]+)|id=([a-zA-Z0-9_-]+)/);
+    if (match) {
+        document.getElementById('result-link').value = `https://lh3.googleusercontent.com/u/0/d/${match[1] || match[2]}`;
+        document.getElementById('converter-result').style.display = 'block';
+    } else { alert("Oops! Linkti shothik noy."); }
+}
+async function copyConvertedLink() {
+    await navigator.clipboard.writeText(document.getElementById('result-link').value); alert("Link successfully copied!");
 }
 
 let timer;
@@ -861,6 +865,14 @@ function type() {
     }, 100);
 }
 
+function triggerConfetti() {
+    const canvas = document.getElementById('confetti-canvas');
+    if(canvas) {
+        canvas.style.display = 'block';
+        setTimeout(() => { canvas.style.display = 'none'; }, 3000);
+    }
+}
+
 // ============================================
 // UNIVERSAL PDF DOWNLOAD CONTROLLER
 // ============================================
@@ -871,11 +883,9 @@ function downloadItemPDF(elementId, fileNameTitle) {
         return;
     }
 
+    // সাময়িকভাবে PDF বাটনটি হাইড করা হচ্ছে
     const pdfBtn = element.querySelector('.pdf-btn');
-    const interactBar = element.querySelector('.interaction-bar');
-    
     if(pdfBtn) pdfBtn.style.display = 'none';
-    if(interactBar) interactBar.style.display = 'none';
 
     const opt = {
         margin:       0.5,
@@ -886,127 +896,7 @@ function downloadItemPDF(elementId, fileNameTitle) {
     };
 
     html2pdf().set(opt).from(element).save().then(() => {
+        // ডাউনলোড শেষ হলে বাটনটি আবার ভিজিবল করা হচ্ছে
         if(pdfBtn) pdfBtn.style.display = 'block';
-        if(interactBar) interactBar.style.display = 'flex';
     });
-}
-
-// ============================================
-// SCROLL TO TOP CONTROLLER
-// ============================================
-const scrollTopBtn = document.getElementById("scroll-top-btn");
-
-window.addEventListener('scroll', checkScroll);
-document.querySelectorAll('.full-view').forEach(view => {
-    view.addEventListener('scroll', checkScroll);
-});
-
-function checkScroll(e) {
-    let scrollPos = e.target.scrollTop || window.scrollY;
-    if (scrollPos > 300) {
-        scrollTopBtn.style.display = "flex";
-    } else {
-        scrollTopBtn.style.display = "none";
-    }
-}
-
-function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    document.querySelectorAll('.full-view').forEach(view => {
-        if (view.style.display === 'block') {
-            view.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    });
-}
-
-// ============================================
-// SHARE BUTTON LOGIC (NATIVE POPUP)
-// ============================================
-function shareCurrentPage() {
-    const url = window.location.href;
-    const title = document.title;
-    
-    if (navigator.share) {
-        navigator.share({
-            title: title,
-            text: 'ইয়াছিন কবিরের এই দারুণ লেখাটি পড়ুন:',
-            url: url
-        }).catch(err => {
-            console.log('শেয়ার ক্যানসেল করা হয়েছে');
-        });
-    } else {
-        navigator.clipboard.writeText(url).then(() => {
-            alert("লিংক কপি করা হয়েছে! এখন আপনি এটি শেয়ার করতে পারবেন।");
-        }).catch(err => {
-            console.error('Could not copy text: ', err);
-        });
-    }
-}
-
-// ============================================
-// REAL-TIME LOVE BUTTON LOGIC (Google Sheets)
-// ============================================
-async function fetchRealLikes() {
-    try {
-        const response = await fetch(SCRIPT_URL + "?action=getLikes");
-        allLikesData = await response.json();
-        setupLoveButton(); 
-    } catch(e) {
-        console.error("লাইক লোড হতে সমস্যা হয়েছে:", e);
-    }
-}
-
-function setupLoveButton() {
-    const currentHash = window.location.hash || '#home';
-    const activeView = document.querySelector('.full-view[style*="display: block"]');
-    if(!activeView) return;
-
-    const loveBtn = activeView.querySelector('.love-toggle-btn');
-    if(!loveBtn) return;
-    
-    const loveCountText = loveBtn.querySelector('.love-count-text');
-    
-    let realLikes = allLikesData[currentHash] || 0;
-    let hasLiked = localStorage.getItem('loved_' + currentHash);
-    
-    if (hasLiked) {
-        loveBtn.classList.add('loved');
-        loveBtn.querySelector('i').className = "fas fa-heart";
-    } else {
-        loveBtn.classList.remove('loved');
-        loveBtn.querySelector('i').className = "far fa-heart";
-    }
-    
-    loveCountText.innerText = realLikes;
-}
-
-function toggleLove(btn) {
-    const currentHash = window.location.hash || '#home';
-    const loveCountText = btn.querySelector('.love-count-text');
-    
-    let hasLiked = localStorage.getItem('loved_' + currentHash);
-    let currentCount = parseInt(loveCountText.innerText) || 0;
-
-    if (hasLiked) {
-        localStorage.removeItem('loved_' + currentHash);
-        btn.classList.remove('loved');
-        btn.querySelector('i').className = "far fa-heart";
-        loveCountText.innerText = currentCount - 1;
-        
-        fetch(SCRIPT_URL, { 
-            method: "POST", mode: "no-cors", 
-            body: JSON.stringify({ type: "like", postId: currentHash, action: "remove" }) 
-        });
-    } else {
-        localStorage.setItem('loved_' + currentHash, 'true');
-        btn.classList.add('loved');
-        btn.querySelector('i').className = "fas fa-heart";
-        loveCountText.innerText = currentCount + 1;
-        triggerConfetti(); 
-        
-        fetch(SCRIPT_URL, { 
-            method: "POST", mode: "no-cors", 
-            body: JSON.stringify({ type: "like", postId: currentHash, action: "add" }) 
-        });
-    }
 }
