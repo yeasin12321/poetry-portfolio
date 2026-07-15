@@ -292,8 +292,7 @@ function openPoemDirectly(index) {
 
 function renderSayeri() {
     const container = document.getElementById('sayeri-list-container');
-    if(!container) return; 
-    container.innerHTML = '';
+    if(!container) return; container.innerHTML = '';
     
     if (allSayeri.length === 0) {
         container.innerHTML = "<p style='text-align:center; color:#888; font-style:italic;'>শায়রি লোড হচ্ছে...</p>";
@@ -310,14 +309,15 @@ function renderSayeri() {
         card.innerHTML = `
             <div class="sayeri-text">${processedText}</div>
             <div style="text-align:right; margin-top:15px; font-size:0.8rem; color:#888; font-style:italic;">- ${sayeri.author || 'Yeasin Kabir'}</div>
-            <button class="sub-btn pdf-btn" style="margin-top:15px; padding:8px; font-size:0.8rem; width:100%;" onclick="downloadItemPDF('sayeri-card-${index}', 'Sayeri_By_Yeasin')"><i class="fas fa-file-pdf"></i> PDF ডাউনলোড করুন</button>
+            <div style="display:flex; gap:10px; margin-top:20px;">
+                <button class="sub-btn pdf-btn" style="flex:1; padding:8px; font-size:0.8rem;" onclick="downloadItemPDF('sayeri-card-${index}', 'Sayeri_By_Yeasin')"><i class="fas fa-file-pdf"></i> PDF</button>
+                <button class="sub-btn" style="padding:8px; font-size:0.8rem; background:transparent; border:1px solid var(--accent); color:var(--primary);" onclick="nativeShare('sayeri-view', 'Sayeri by Yeasin Kabir')"><i class="fas fa-share-alt"></i> Share</button>
+            </div>
         `;
         container.appendChild(card);
     });
     
-    if(window.AOS) {
-        AOS.refresh();
-    }
+    if(window.AOS) AOS.refresh();
 }
 
 // --- NOVEL CONTROL LOGIC ---
@@ -416,6 +416,7 @@ function updateLetterPartSelect() {
 function renderMonologues() {
     const container = document.getElementById('monologue-list-container');
     if(!container) return; container.innerHTML = '';
+    
     allMonologues.forEach((mono, index) => {
         const card = document.createElement('div');
         card.className = 'monologue-card vintage-paper-node';
@@ -426,7 +427,10 @@ function renderMonologues() {
             <div class="monologue-title">${mono.title}</div>
             <div class="monologue-text">${processedText}</div>
             <div style="text-align:right; margin-top:15px; font-size:0.8rem; color:#666;">- ${mono.author || 'Yeasin Kabir'}</div>
-            <button class="sub-btn pdf-btn" style="margin-top:15px; padding:8px; font-size:0.8rem; width:100%;" onclick="downloadItemPDF('monologue-card-${index}', '${mono.title}')"><i class="fas fa-file-pdf"></i> PDF ডাউনলোড করুন</button>
+            <div style="display:flex; gap:10px; margin-top:20px;">
+                <button class="sub-btn pdf-btn" style="flex:1; padding:8px; font-size:0.8rem;" onclick="downloadItemPDF('monologue-card-${index}', '${mono.title}')"><i class="fas fa-file-pdf"></i> PDF</button>
+                <button class="sub-btn" style="padding:8px; font-size:0.8rem; background:transparent; border:1px solid var(--accent); color:var(--primary);" onclick="nativeShare('monologue-view', '${mono.title}')"><i class="fas fa-share-alt"></i> Share</button>
+            </div>
         `;
         container.appendChild(card);
     });
@@ -883,7 +887,6 @@ function downloadItemPDF(elementId, fileNameTitle) {
         return;
     }
 
-    // সাময়িকভাবে PDF বাটনটি হাইড করা হচ্ছে
     const pdfBtn = element.querySelector('.pdf-btn');
     if(pdfBtn) pdfBtn.style.display = 'none';
 
@@ -896,7 +899,73 @@ function downloadItemPDF(elementId, fileNameTitle) {
     };
 
     html2pdf().set(opt).from(element).save().then(() => {
-        // ডাউনলোড শেষ হলে বাটনটি আবার ভিজিবল করা হচ্ছে
         if(pdfBtn) pdfBtn.style.display = 'block';
+    });
+}
+
+// ============================================
+// NATIVE WEB SHARE API CONTROLLER
+// ============================================
+async function nativeShare(hashPath, title) {
+    const baseUrl = window.location.href.split('#')[0];
+    const shareUrl = baseUrl + '#' + hashPath;
+    
+    if (navigator.share) {
+        try {
+            await navigator.share({
+                title: title,
+                text: 'এই চমৎকার লেখাটি পড়ুন: ' + title,
+                url: shareUrl
+            });
+        } catch (error) {
+            console.log('শেয়ার করা বাতিল করা হয়েছে বা ত্রুটি হয়েছে:', error);
+        }
+    } else {
+        try {
+            await navigator.clipboard.writeText(shareUrl);
+            alert("আপনার ব্রাউজারে সরাসরি শেয়ার সাপোর্ট করছে না। লিংকটি কপি করা হয়েছে! ❤️");
+        } catch (err) {
+            alert("লিংক কপি করা যায়নি।");
+        }
+    }
+}
+
+// ============================================
+// SCROLL TO TOP FUNCTIONALITY
+// ============================================
+
+function handleScrollVisibility(e) {
+    const topBtn = document.getElementById("backToTopBtn");
+    if (!topBtn) return;
+    
+    let scrollTopPos = 0;
+    if (e && e.target && e.target.scrollTop !== undefined) {
+        scrollTopPos = e.target.scrollTop;
+    } else {
+        scrollTopPos = window.scrollY || document.documentElement.scrollTop;
+    }
+
+    if (scrollTopPos > 250) {
+        topBtn.classList.add("show");
+    } else {
+        topBtn.classList.remove("show");
+    }
+}
+
+window.addEventListener('scroll', handleScrollVisibility);
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.full-view').forEach(el => {
+        el.addEventListener('scroll', handleScrollVisibility);
+    });
+});
+
+function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    document.querySelectorAll('.full-view').forEach(el => {
+        if (el.style.display === 'block') {
+            el.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     });
 }

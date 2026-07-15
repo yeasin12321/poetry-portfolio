@@ -184,13 +184,18 @@
                 <button class="back-btn" onclick="backToLibrary()" style="margin:0"><i class="fas fa-arrow-left"></i> LIST</button>
                 <select id="chapter-dropdown" onchange="jumpToChapter(this.value)"></select>
             </div>
-            <!-- উপন্যাসের PDF অপশন -->
+            <!-- উপন্যাসের PDF এবং Native Share অপশন -->
             <div id="novel-pdf-area">
                 <h2 id="current-chapter-title" style="color:var(--novel-accent); text-align:center; font-family: 'Hind Siliguri';"></h2>
                 <div id="story-content" class="story-text"></div>
-                <button class="sub-btn pdf-btn" style="width:100%; margin-bottom:30px; background:var(--novel-accent); color:#fff;" onclick="downloadItemPDF('novel-pdf-area', 'Novel_Chapter')">
-                    <i class="fas fa-file-pdf"></i> PDF ডাউনলোড করুন
-                </button>
+                <div style="display:flex; gap:10px; margin-bottom:30px;">
+                    <button class="sub-btn pdf-btn" style="flex:1; background:var(--novel-accent); color:#fff;" onclick="downloadItemPDF('novel-pdf-area', 'Novel_Chapter')">
+                        <i class="fas fa-file-pdf"></i> PDF ডাউনলোড
+                    </button>
+                    <button class="sub-btn" style="background:transparent; border:1px solid var(--novel-accent); color:var(--novel-accent); padding:12px 20px;" onclick="nativeShare(window.location.hash.substring(1), document.getElementById('current-chapter-title').innerText)">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                </div>
             </div>
             <div class="chapter-controls">
                 <button class="ctrl-btn" id="prev-chap" onclick="changeChapter(-1)"><i class="fas fa-chevron-left"></i></button>
@@ -205,13 +210,18 @@
                 <button class="back-btn" onclick="backToLettersLibrary()" style="margin:0"><i class="fas fa-arrow-left"></i> LIST</button>
                 <select id="letter-part-dropdown" onchange="jumpToLetterPart(this.value)"></select>
             </div>
-            <!-- চিঠির PDF অপশন -->
+            <!-- চিঠির PDF এবং Native Share অপশন -->
             <div id="letter-pdf-area">
                 <h2 id="current-letter-title" style="color:#e74c3c; text-align:center; font-family: 'Hind Siliguri';"></h2>
                 <div id="letter-content" class="story-text"></div>
-                <button class="sub-btn pdf-btn" style="width:100%; margin-bottom:30px; background:#e74c3c; color:#fff;" onclick="downloadItemPDF('letter-pdf-area', 'Letter_By_Yeasin')">
-                    <i class="fas fa-file-pdf"></i> PDF ডাউনলোড করুন
-                </button>
+                <div style="display:flex; gap:10px; margin-bottom:30px;">
+                    <button class="sub-btn pdf-btn" style="flex:1; background:#e74c3c; color:#fff;" onclick="downloadItemPDF('letter-pdf-area', 'Letter_By_Yeasin')">
+                        <i class="fas fa-file-pdf"></i> PDF ডাউনলোড
+                    </button>
+                    <button class="sub-btn" style="background:transparent; border:1px solid #e74c3c; color:#e74c3c; padding:12px 20px;" onclick="nativeShare(window.location.hash.substring(1), document.getElementById('current-letter-title').innerText)">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                </div>
             </div>
             <div class="chapter-controls">
                 <button class="ctrl-btn" id="prev-letter-part" onclick="changeLetterPart(-1)"><i class="fas fa-chevron-left"></i></button>
@@ -232,13 +242,18 @@
             <div style="padding-top: 70px;">
                 <h2 id="poem-title-display" class="vintage-poem-title"></h2>
                 
-                <!-- কবিতা ও গল্পের PDF অপশন -->
+                <!-- কবিতা ও গল্পের PDF এবং Native Share অপশন -->
                 <div id="poem-container-box">
                     <div id="poem-content-display"></div>
                     <div style="text-align:right; font-family:'Great Vibes'; color:var(--secondary); margin-top:25px; font-size:1.5rem;">- ইয়াছিন কবির</div>
-                    <button class="sub-btn pdf-btn" style="width:100%; margin-top:20px; background:var(--gold-gradient); color:#000;" onclick="downloadItemPDF('poem-container-box', 'Yeasin_Kabir_Collection')">
-                        <i class="fas fa-file-pdf"></i> PDF ডাউনলোড করুন
-                    </button>
+                    <div style="display:flex; gap:10px; margin-top:20px;">
+                        <button class="sub-btn pdf-btn" style="flex:1; background:var(--gold-gradient); color:#000;" onclick="downloadItemPDF('poem-container-box', 'Yeasin_Kabir_Collection')">
+                            <i class="fas fa-file-pdf"></i> PDF ডাউনলোড
+                        </button>
+                        <button class="sub-btn" style="background:transparent; border:1px solid var(--accent); color:var(--primary); padding:12px 20px;" onclick="nativeShare(window.location.hash.substring(1), document.getElementById('poem-title-display').innerText)">
+                            <i class="fas fa-share-alt"></i>
+                        </button>
+                    </div>
                 </div>
                 
                 <div id="comment-section">
@@ -447,6 +462,11 @@
         <img class="lightbox-modal-content" id="expanded-lightbox-image">
         <div id="lightbox-image-caption"></div>
     </div>
+
+    <!-- Back to Top Button -->
+    <button id="backToTopBtn" onclick="scrollToTop()" title="Go to top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
