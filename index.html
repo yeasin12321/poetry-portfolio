@@ -98,7 +98,7 @@
                 </div>
 
                 <div class="section-title">Explore</div>
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:20px;">
+                <div class="menu-button-grid">
                     <div class="poem-btn novel-hub-btn" onclick="openNovelLibrary()">
                         <i class="fas fa-book"></i> <span>উপন্যাস সমগ্র</span>
                     </div>
@@ -116,6 +116,9 @@
                     </div>
                     <div class="poem-btn video-menu-btn" onclick="switchView('video-view')">
                         <i class="fas fa-video"></i> <span>ভিডিও গ্যালারি</span>
+                    </div>
+                    <div class="poem-btn pdf-hub-btn" onclick="openPdfLibrary()">
+                        <i class="fas fa-book-reader"></i> <span>পিডিএফ লাইব্রেরি</span>
                     </div>
                     <div class="poem-btn sayeri-hub-btn" onclick="switchView('sayeri-view')">
                         <i class="fas fa-heart"></i> <span>শায়রি কালেকশন</span>
@@ -141,6 +144,21 @@
             </div>
             <div id="loading-novels" style="text-align:center; color:#888;">উপন্যাস লোড হচ্ছে...</div>
             <div id="novel-list-container" style="padding: 0 10px;"></div>
+        </div>
+
+        <div id="pdf-library" class="full-view">
+            <div class="library-header">
+                <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK TO HOME</button>
+                <h2 style="font-family:'Cinzel'; color:#2ecc71;">পিডিএফ লাইব্রেরি</h2>
+            </div>
+            <div class="pdf-library-intro">
+                <p>আপনার প্রিয় কবিতা, উপন্যাস ও গল্পের পিডিএফ এখানে এক ঝাঁকেই অনলাইন এবং ডাউনলোডের জন্য প্রস্তুত।</p>
+            </div>
+            <div id="pdf-loading-message" class="pdf-loading-message">
+                <div class="spinner"></div>
+                <span>পিডিএফ লোড হচ্ছে...</span>
+            </div>
+            <div id="pdf-list-container" class="pdf-grid-layout"></div>
         </div>
         
         <!-- Letters Library View -->

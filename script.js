@@ -14,6 +14,7 @@ const MEMORIES_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQgD
 
 // আপনার 'শেষ চিঠি' গুগল শিটের CSV লিংকটি নিচে বসান
 const LETTERS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGduKyJNADw2OtENJhqwnjzYL8qDRhhMCdM4b-zp2EZeGLPyeAefOk-V6ZGvMXeB-yrOcCiz6sLwU9/pub?gid=0&single=true&output=csv"; 
+const PDFS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRnDJ7yjAkNiijjDLP-3jykU8GV3_4-lEvkEAoBaXuoCmNE3Tr0Wtc7tfUgY_xngXwxbJo2Fio2JzJP/pub?gid=0&single=true&output=csv";
 
 const EMAILJS_PUBLIC_KEY = "nrzZqd-KWp06iFnYt"; 
 const EMAILJS_SERVICE_ID = "service_8e409wl"; 
@@ -28,6 +29,7 @@ let allGalleryImages = [];
 let allVideos = [];
 let novelsDB = [];
 let lettersDB = []; // New letters DB
+let pdfCatalog = [];
 let allStories = []; 
 let allSayeri = [];
 let allMonologues = [];
@@ -131,6 +133,20 @@ function loadAllData() {
         }
     });
     
+    Papa.parse(PDFS_SHEET_URL, {
+        download: true, header: true,
+        complete: function(results) {
+            pdfCatalog = results.data.filter(item => item.title && item.pdf_url);
+            const loader = document.getElementById('pdf-loading-message');
+            if(loader) loader.style.display = 'none';
+            renderPdfLibrary();
+        },
+        error: function() {
+            const loader = document.getElementById('pdf-loading-message');
+            if(loader) loader.innerHTML = '<span style="color:#e74c3c">পিডিএফ লোড করতে সমস্যা হয়েছে।</span>';
+        }
+    });
+
     // Letters Data Parsing
     if(LETTERS_SHEET_URL !== "YOUR_LETTERS_SHEET_URL_HERE") {
         Papa.parse(LETTERS_SHEET_URL, {
@@ -477,6 +493,48 @@ function renderStoryLibrary() {
 }
 
 function openStory(index) { window.location.hash = `story=${index}`; }
+
+function openPdfLibrary() {
+    switchView('pdf-library');
+}
+
+function renderPdfLibrary() {
+    const container = document.getElementById('pdf-list-container');
+    if(!container) return;
+    container.innerHTML = '';
+
+    if (pdfCatalog.length === 0) {
+        container.innerHTML = '<p style="color:#888; text-align:center; width:100%;">কোনো পিডিএফ পাওয়া যায়নি।</p>';
+        return;
+    }
+
+    pdfCatalog.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'pdf-card';
+        const thumbnail = item.thumbnail_url && item.thumbnail_url.trim() ? item.thumbnail_url.trim() : 'https://via.placeholder.com/240x320.png?text=PDF+Cover';
+        const author = item.author ? item.author : 'Yeasin Kabir';
+        const description = item.description ? item.description : 'এই পিডিএফটি আপনার কাছে এক নিকট আত্মীয় গল্প ও কবিতার আকারে।';
+        const pdfUrl = item.pdf_url.trim();
+        const displayTitle = item.title;
+
+        card.innerHTML = `
+            <div class="pdf-card-thumb"><img src="${thumbnail}" alt="${displayTitle}"></div>
+            <div class="pdf-card-info">
+                <div>
+                    <h3 class="pdf-card-title">${displayTitle}</h3>
+                    <p class="pdf-card-author">লেখক: ${author}</p>
+                    <p class="pdf-card-meta">${item.genre || 'Poetry / Novel'}</p>
+                </div>
+                <p class="pdf-card-desc">${description}</p>
+                <div class="pdf-card-action">
+                    <a class="sub-btn" href="${pdfUrl}" target="_blank" rel="noopener noreferrer"><i class="fas fa-download"></i> ডাউনলোড / পড়ুন</a>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+}
 
 function openStoryDirectly(index) {
     const story = allStories[index];
