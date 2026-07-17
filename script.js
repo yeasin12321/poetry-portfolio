@@ -1,19 +1,19 @@
 // ============================================
 // CONFIGURATION & LIVE API CHANNELS
 // ============================================
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxKwPIBZOxrsrvdI5WCCDxfppV2PHJTMJ_rd-G1C9bU1VV8jJVt1PA4f7dgddlFxAyT/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz5JmhcT7np70iTpNgP04ZOvnKLdagnDwmci5uN3QsG2t6aAUPpjk_qV5U9B1bhJuSs/exec";
 
-const POEMS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8H2Fr0k4C4L1T6aBDTFp6Qm-OBdA61wCexL5jiEIt2XXeXwcUn-rIzMlPNtRhntUcONR93HwZmraR/pub?gid=0&single=true&output=csv";
-const NOVELS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQTdMtQUXDld48piMW2uGrGev030agZacHpEVcpIIO7C-fyIMSWF1oh_0PQiRGRZ1S6pQVqMK7rGP9L/pub?gid=0&single=true&output=csv";
-const STORIES_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT2xEwpsYvHyd7gLuSJ8J5cC4WJcjBNv1cPajVumCn-Kt5Eqk_S37g7P7bOJijbl1LJgaCoDC8bl3bw/pub?gid=0&single=true&output=csv";
-const MONOLOGUE_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTh4aqebFj9oWpmlhmQ4kNAK0rcwM4-aMUrRSt2MsbiOtju9Z-6qaclSkQUL1TYSH4ox_hw_UWqKnI-/pub?gid=0&single=true&output=csv";
-const SAYERI_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQHoOD1vOrCyaVCuY_WJaVUkLL70iwKTmZ2OGNuyzTTNg2PPxDDY12p08e6Eu75wZcGSUiRouIFVOmZ/pub?gid=0&single=true&output=csv";
-const GALLERY_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSYIZNe_bFTDcs7beh1VPZtWbnxkMgbVtGwhqlyF4BSZA-m9xe3oh_LmbaTWkCpWK9Gom9wzeidrtej/pub?gid=0&single=true&output=csv";
-const VIDEO_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQtCKVcATsEMBVJTO20bNxD7wZ1qCRN_UEwPrOedcBf8k8nIbWTkeZ6GnMFitJzT3VqZFQvpOKO3giR/pub?gid=0&single=true&output=csv";
-const MEMORIES_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQgDbXanljaVYm0oMsRgb9cvENNudoKTQf455tYcTrN-dyCGZ9XobYEOc1MP_o3UTZPYXTwki-IqLFP/pub?gid=0&single=true&output=csv";
+const POEMS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRlpPAxUAUJ72vJCc4KPLj5hIWWDin37qTHhBKNdYAHsd3N_HpEw5lH0kXE0LbqCjQby8lUDNS6BM0q/pub?gid=763267853&single=true&output=csv";
+const NOVELS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRkgCGhiJDREGrOos0Tea29m73pRCPacWMZQE3pSRSnV5mYhbgjSn8pWvXP1zGdjXR68VEIuCiL2W4U/pub?gid=1311656493&single=true&output=csv";
+const STORIES_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTzfIaDfNtq2rOqIvAuCOkAr0jFP30M7PmdGeEvplZeAGsN9cANbgQOW46CeiwUQeB67IJPPY_Q-JSe/pub?gid=1617707442&single=true&output=csv";
+const MONOLOGUE_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSNcm6SVXNnP_DIMGcxGF9QvZ66geNFaZmt4xI-Yxl0Wbzb1bT6GQCX5-GQ4F3NC9Qi33wfzb5QMwLa/pub?gid=661967226&single=true&output=csv";
+const SAYERI_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS9333MyiMbNlAHqkBnzHP0_G-B_tikgiKB3Hq1Clkhn8xbQIn0YSjAcDXZSpPzIo9J44iATMNM04Bc/pub?gid=1755852887&single=true&output=csv";
+const GALLERY_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTI94hqOgRnLaeyOG-VKW1LoRUmCKWpxzhbFzw9AJB-f0T0X_bMn-Gx4XEJz_1QxuKC4XvjS0DbgR5F/pub?gid=1972328520&single=true&output=csv";
+const VIDEO_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS6PvpAlo7qba5TzP1XA6weZla_3RQ2FPSoKMyc5IUCjhwfUSwaFiE7zdL4BBAK9mjykBnDCbQWSmg8/pub?gid=1072689663&single=true&output=csv";
+const MEMORIES_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQlrBbCJ7fsTrj5LByJWZRgmbOuSJHdhCzmnkVRPzJv8GXEVVpR-MS1kv3RYyN7mNMfSZDRivc-jan-/pub?gid=1726230306&single=true&output=csv";
 
 // আপনার 'শেষ চিঠি' গুগল শিটের CSV লিংকটি নিচে বসান
-const LETTERS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGduKyJNADw2OtENJhqwnjzYL8qDRhhMCdM4b-zp2EZeGLPyeAefOk-V6ZGvMXeB-yrOcCiz6sLwU9/pub?gid=0&single=true&output=csv"; 
+const LETTERS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR576ug8K6He3n45XG424ZErBt9OJOxWrIGsZNbGKt9LZR3z8oto5F8b_KuCex6574mWKkqxXUomNZg/pub?gid=1296346762&single=true&output=csv"; 
 const PDFS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRnDJ7yjAkNiijjDLP-3jykU8GV3_4-lEvkEAoBaXuoCmNE3Tr0Wtc7tfUgY_xngXwxbJo2Fio2JzJP/pub?gid=0&single=true&output=csv";
 
 const EMAILJS_PUBLIC_KEY = "nrzZqd-KWp06iFnYt"; 
