@@ -708,7 +708,81 @@ h1 {
     border: 1px solid rgba(230, 92, 123, 0.15); 
     box-shadow: 0 15px 35px rgba(0,0,0,0.5); 
 }
-.italic-quote { font-style: italic; color: #ffb3c1; border-left: 3px solid var(--secondary); border-radius: 0 6px 6px 0; }
+.vault-social-footer {
+    padding: 30px 20px;
+    background: rgba(12, 6, 10, 0.92);
+    border-top: 1px solid rgba(255,255,255,0.05);
+}
+.vault-social-inner {
+    max-width: 850px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.vault-social-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.08);
+    text-decoration: none;
+    color: #fff;
+    font-family: 'Hind Siliguri', sans-serif;
+    font-weight: 600;
+    backdrop-filter: blur(14px);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.vault-social-btn i {
+    font-size: 1.35rem;
+}
+.vault-social-btn span {
+    white-space: nowrap;
+    font-size: 0.95rem;
+}
+.vault-social-btn:hover {
+    transform: translateY(-2px) scale(1.03);
+    border-color: rgba(255,255,255,0.2);
+}
+.telegram-btn { color: #26A5E4; }
+.telegram-btn:hover { box-shadow: 0 10px 30px rgba(38,165,228,0.35); }
+.instagram-btn { color: #E1306C; }
+.instagram-btn:hover { box-shadow: 0 10px 30px rgba(225,48,108,0.35); }
+.youtube-btn { color: #FF0000; }
+.youtube-btn:hover { box-shadow: 0 10px 30px rgba(255,0,0,0.35); }
+
+.vault-social-footer a { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+
+.vault-social-footer .vault-social-btn { min-width: 170px; justify-content: center; }
+.vault-social-footer .vault-social-inner { gap: 16px; }
+
+.vault-social-footer .vault-social-btn:hover span { text-decoration: underline; }
+
+.vintage-letter-bg {
+    background: linear-gradient(145deg, rgba(255,243,235,0.12), rgba(255, 255, 255, 0.02));
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #ffe7e7;
+    backdrop-filter: blur(10px);
+}
+.open-when-container { display: grid; gap: 12px; }
+.open-when-btn { display: block; width: 100%; padding: 18px; background: rgba(230, 92, 123, 0.06); border: 1px solid rgba(230, 92, 123, 0.2); border-radius: 6px; color: #fff; cursor: pointer; text-align: left; font-family: 'Hind Siliguri'; font-size: 1.1rem; }
+.open-when-btn:hover { background: rgba(230, 92, 123, 0.12); border-color: #e65c7b; }
+.open-when-msg { display: none; background: rgba(0,0,0,0.5); padding: 18px; border-radius: 6px; margin-bottom: 5px; color: #ffb3c1; font-style: italic; border-left: 3px solid #e65c7b; line-height: 1.7; }
+.mood-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin-bottom: 24px; }
+.mood-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(230,92,123,0.2); border-radius: 14px; padding: 18px 14px; cursor: pointer; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s ease; }
+.mood-btn:hover { transform: translateY(-2px); border-color: #ff9ab8; box-shadow: 0 10px 25px rgba(230,92,123,0.2); }
+.mood-icon { font-size: 2.2rem; }
+#mood-msg { color: #ffd7e4; font-size: 1rem; text-align: center; min-height: 2.4rem; margin-top: 12px; }
+.quiz-grid { display: grid; gap: 12px; margin-top: 18px; }
+#love-result { display: none; margin-top: 20px; color: #ffea00; font-size: 3rem; text-align: center; font-family: 'Orbitron', sans-serif; text-shadow: 0 0 30px rgba(255,234,0,0.4); }
+#love-msg { color: #ffd7e4; font-size: 1rem; margin-top: 12px; }
+#memory-collection-container { display: grid; gap: 16px; }
+.memory-item-card { padding: 18px; }
+.memory-img-wrap img { border-radius: 12px; transition: transform 0.35s ease; }
+.memory-img-wrap img:hover { transform: scale(1.03); }
 
 .eyes-frame-vintage { padding: 10px; background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(230, 92, 123, 0.25); border-radius: 6px; display: inline-block; margin: 0 auto 25px; width: 100%; max-width: 340px; cursor: pointer; }
 .eyes-frame-vintage:hover { border-color: #e65c7b; transform: scale(1.02); }
@@ -728,11 +802,24 @@ h1 {
 .fingerprint-area i { font-size: 3.8rem; color: #ff85a1; }
 .scan-line { position: absolute; width: 100%; height: 2px; background: #e65c7b; top: 0; display: none; animation: scan 1.5s infinite linear; box-shadow: 0 0 10px #e65c7b; }
 
+@keyframes scan {
+    0% { top: 0; opacity: 0.9; }
+    50% { top: calc(100% - 2px); opacity: 0.4; }
+    100% { top: 0; opacity: 0.9; }
+}
+
+#promise-msg { display: none; text-align: center; color: #ff9cb9; margin-top: 18px; font-size: 1rem; letter-spacing: 0.5px; }
+
+.unique-bucket-layout { display: grid; gap: 12px; }
+.bucket-item { display: flex; align-items: center; gap: 12px; padding: 16px 18px; border-radius: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); font-size: 1rem; color: #fff; }
+.animated-check { color: #2ecc71; animation: bounceCheck 1.2s ease infinite; }
+@keyframes bounceCheck { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+
 .quiz-btn { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(230, 92, 123, 0.2); color: #fff; padding: 16px; border-radius: 6px; cursor: pointer; font-family: 'Hind Siliguri'; font-size: 1.05rem; }
 .quiz-btn:hover { border-color: #e65c7b; background: rgba(230,92,123,0.05); }
 
-.contract-paper { background: #fff; color: #111; padding: 30px; border-radius: 6px; font-family: 'Hind Siliguri', serif; font-size: 1rem; box-shadow: 0 20px 50px rgba(0,0,0,0.7); margin-bottom: 30px; }
-.stamp { position: absolute; bottom: 30px; right: 30px; border: 3px solid #d90429; color: #d90429; font-weight: 700; padding: 6px 15px; transform: rotate(-15deg) scale(2); opacity: 0; border-radius: 4px; font-family: 'Orbitron'; }
+.contract-paper { position: relative; background: #fff; color: #111; padding: 30px; border-radius: 6px; font-family: 'Hind Siliguri', serif; font-size: 1rem; box-shadow: 0 20px 50px rgba(0,0,0,0.7); margin-bottom: 30px; }
+.stamp { position: absolute; bottom: 30px; right: 30px; border: 3px solid #d90429; color: #d90429; font-weight: 700; padding: 6px 15px; transform: rotate(-15deg) scale(2); opacity: 0; border-radius: 4px; font-family: 'Orbitron'; transition: all 0.4s ease; }
 .contract-sign-btn { background: #e65c7b; color: #fff; padding: 14px 40px; border-radius: 6px; border: none; font-weight: 700; cursor: pointer; width: 100%; box-shadow: 0 5px 20px rgba(230,92,123,0.4); }
 
 .vault-custom-input { background: rgba(0, 0, 0, 0.5) !important; border: 1px solid rgba(230, 92, 123, 0.25) !important; border-radius: 6px !important; }
@@ -742,6 +829,22 @@ h1 {
 .scrapbook-controls-dock { padding: 20px 25px; display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed rgba(230, 92, 123, 0.25); background: rgba(12,5,8,0.9); }
 .scrapbook-page-btn { background: transparent; border: 1px solid rgba(255, 180, 195, 0.25); color: #ffccd5; padding: 10px 20px; border-radius: 6px; font-family: 'Cinzel', serif; font-size: 0.85rem; cursor: pointer; }
 .scrapbook-page-btn:hover { background: rgba(230,92,123,0.1); border-color: #e65c7b; color: #fff; }
+
+.aura-scanner-page { display: flex; flex-direction: column; align-items: center; gap: 24px; }
+.aura-field { position: relative; width: 100%; max-width: 320px; height: 320px; border-radius: 50%; background: radial-gradient(circle at 50% 50%, rgba(255, 181, 209, 0.16), rgba(98, 11, 33, 0.18) 40%, transparent 70%); box-shadow: 0 0 50px rgba(230,92,123,0.25), inset 0 0 45px rgba(255, 180, 195, 0.1); border: 1px solid rgba(255,255,255,0.08); cursor: pointer; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.aura-field::before { content: ''; position: absolute; inset: 8px; border-radius: 50%; background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.18), transparent 52%); filter: blur(4px); }
+.aura-field::after { content: ''; position: absolute; inset: 0; border-radius: 50%; box-shadow: 0 0 80px rgba(230,92,123,0.35); opacity: 0.9; }
+.aura-field.scanning { animation: auraPulse 1.8s ease-in-out infinite; }
+.aura-field.scanning .aura-scan-line { opacity: 1; }
+.aura-scan-line { position: absolute; width: 80%; height: 4px; background: linear-gradient(90deg, rgba(255,255,255,0.95), rgba(255, 182, 193, 0.9)); border-radius: 999px; top: 10%; left: 10%; opacity: 0; animation: auraScan 1.5s infinite ease-in-out; }
+.aura-center-text { position: relative; z-index: 2; color: #ffe7f0; font-family: 'Great Vibes', cursive; font-size: 2rem; letter-spacing: 1px; text-shadow: 0 0 20px rgba(255, 204, 230, 0.4); text-align: center; }
+.aura-instruction { color: #ffdde3; text-align: center; font-family: 'Great Vibes', cursive; font-size: 1.05rem; line-height: 1.7; max-width: 84%; }
+.aura-result { min-height: 4.2rem; color: #ffd6e0; text-align: center; font-size: 1rem; line-height: 1.8; padding: 10px 20px; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); }
+.aura-result strong { color: #ffe69e; }
+
+@keyframes auraPulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 50px rgba(230,92,123,0.25), inset 0 0 45px rgba(255, 180, 195, 0.05); } 50% { transform: scale(1.02); box-shadow: 0 0 90px rgba(230,92,123,0.45), inset 0 0 70px rgba(255, 180, 195, 0.12); } }
+
+@keyframes auraScan { 0% { top: 12%; opacity: 0.4; } 50% { top: 78%; opacity: 1; } 100% { top: 12%; opacity: 0.4; } }
 
 /* ==========================================================================
    M E D I A   G R I D S   &   L U X U R Y   L I G H T B O X

@@ -40,9 +40,11 @@ let currentChapterIndex = 0;
 let currentLetterBookIndex = 0;
 let currentLetterPartIndex = 0;
 let currentVaultPage = 1;
-const totalVaultPages = 15;
+const totalVaultPages = 16;
 let isMusicPlaying = false;
 let scanTimer;
+let auraTimer = null;
+let auraScanned = false;
 
 window.onload = () => {
     loadAllData();
@@ -624,6 +626,16 @@ function openSecretVaultInput() {
         window.scrollTo(0,0);
         startPetals();
         currentVaultPage = 1;
+        currentQuiz = 0;
+        auraScanned = false;
+        document.getElementById('promise-msg').style.display = 'none';
+        document.getElementById('love-reason').innerText = '';
+        document.getElementById('love-result').style.display = 'none';
+        document.getElementById('love-msg').innerText = '';
+        document.getElementById('aura-result').innerText = '';
+        const auraFieldReset = document.getElementById('aura-field');
+        if(auraFieldReset) auraFieldReset.classList.remove('scanning');
+        document.querySelectorAll('.open-when-msg').forEach(el => el.style.display = 'none');
         showPage(1);
     } else { alert("ACCESS DENIED!"); } 
 }
@@ -639,16 +651,50 @@ function showPage(n) {
         targetPage.style.animation = 'pageTurnEffect 0.6s ease-out forwards';
     }
     document.getElementById('page-num').innerText = `${n} / ${totalVaultPages}`; 
-    if(n === 10) loadQuiz();
+    if(n === 10) {
+        currentQuiz = currentQuiz || 0;
+        loadQuiz();
+    }
 }
 function nextPage() { if(currentVaultPage < totalVaultPages) { currentVaultPage++; showPage(currentVaultPage); } }
 function prevPage() { if(currentVaultPage > 1) { currentVaultPage--; showPage(currentVaultPage); } }
 
 function toggleMsg(id) { let el = document.getElementById(id); el.style.display = (el.style.display === 'block') ? 'none' : 'block'; }
 function generateReason() { 
-    const r = ["তোমার ওই মায়াবী চোখ","আমার রাগ ভাঙাতে পারো","তোমার হাসিতে দিন ভালো হয়","আমাকে ভালো বোঝো"]; 
+    const r = ["তোমার ওই মায়াবী চোখ","আমার রাগ ভাঙাতে পারো","তোমার হাসিতে দিন ভালো হয়","আমাকে ভালো বোঝো", "তুমি আমার পৃথিবীর রোশনাই", "তোমার কাছে সব ভয় হারিয়ে যায়"];
     const reasonBox = document.getElementById('love-reason');
     reasonBox.innerText = r[Math.floor(Math.random()*r.length)]; 
+}
+
+function startAuraScan(e) {
+    if(auraScanned) return;
+    if(e.preventDefault) e.preventDefault();
+    const auraField = document.getElementById('aura-field');
+    const auraResult = document.getElementById('aura-result');
+    if(auraField) auraField.classList.add('scanning');
+    if(auraResult) auraResult.innerText = 'Scanning your love residue...';
+    clearTimeout(auraTimer);
+    auraTimer = setTimeout(() => {
+        auraScanned = true;
+        if(auraField) auraField.classList.remove('scanning');
+        const auraScore = ['99.9%', 'Infinite', 'Glowing Gold'][Math.floor(Math.random() * 3)];
+        const auraPhrases = [
+            `Aura: ${auraScore} - Your heart beats in perfect sync with mine. I am entirely yours.`,
+            `Aura: ${auraScore} - The depth of your love defies calculation. My poet soul is trapped in your eyes forever.`,
+            `Aura: ${auraScore} - Safe and pure. You are my peace, Rumi.`
+        ];
+        const resultText = auraPhrases[Math.floor(Math.random() * auraPhrases.length)];
+        if(auraResult) auraResult.innerHTML = `<strong>${resultText}</strong>`;
+        try { navigator.vibrate(100); } catch(err) {}
+    }, 1500);
+}
+
+function stopAuraScan() {
+    const auraField = document.getElementById('aura-field');
+    const auraResult = document.getElementById('aura-result');
+    if(auraField) auraField.classList.remove('scanning');
+    clearTimeout(auraTimer);
+    if(!auraScanned && auraResult) auraResult.innerText = 'Hold a little longer for the aura to reveal your love energy...';
 }
 
 function startScan(e) { 
@@ -669,12 +715,15 @@ const quizData = [
 ];
 let currentQuiz = 0;
 function loadQuiz() { 
+    const questionEl = document.getElementById('quiz-question');
+    const optsDiv = document.getElementById('quiz-options');
+    if(!questionEl || !optsDiv) return;
     if(currentQuiz >= quizData.length) { 
         document.getElementById('quiz-box').innerHTML = "<h2 style='color:var(--secondary); font-family:Great Vibes; font-size:2.5rem;'>অভিনন্দন জানপাখি! 🎉</h2><p style='color:#ffe6ea; font-style:italic;'>তুমি আমাকে ১০০% চেনো!</p>"; 
         return; 
     }
-    const q = quizData[currentQuiz]; document.getElementById('quiz-question').innerText = q.q; 
-    const optsDiv = document.getElementById('quiz-options'); optsDiv.innerHTML = ''; 
+    const q = quizData[currentQuiz]; questionEl.innerText = q.q; 
+    optsDiv.innerHTML = ''; 
     q.options.forEach((opt, index) => { 
         const btn = document.createElement('button'); btn.className = 'quiz-btn'; btn.innerText = opt; 
         btn.onclick = () => checkAnswer(index, btn); optsDiv.appendChild(btn); 
@@ -685,7 +734,7 @@ function checkAnswer(selected, btnElement) {
     if(selected === correct) { 
         btnElement.style.background = "#2ecc71"; 
         triggerConfetti(); 
-        setTimeout(() => { currentQuiz++; loadQuiz(); }, 2000); 
+        setTimeout(() => { currentQuiz++; loadQuiz(); }, 1200); 
     } else { 
         btnElement.style.background = "#e74c3c"; 
         try{navigator.vibrate(200);}catch(e){} 
@@ -927,12 +976,56 @@ function type() {
     }, 100);
 }
 
+let confettiParticles = [];
+let confettiAnimationId = null;
+
 function triggerConfetti() {
     const canvas = document.getElementById('confetti-canvas');
-    if(canvas) {
-        canvas.style.display = 'block';
-        setTimeout(() => { canvas.style.display = 'none'; }, 3000);
+    if(!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+    canvas.style.display = 'block';
+
+    for (let i = 0; i < 40; i++) {
+        confettiParticles.push({
+            x: Math.random() * width,
+            y: Math.random() * height - height,
+            size: Math.random() * 10 + 6,
+            gravity: Math.random() * 0.12 + 0.04,
+            velocityX: Math.random() * 2 - 1,
+            velocityY: Math.random() * 2 + 2,
+            rotation: Math.random() * 360,
+            rotationSpeed: Math.random() * 10 - 5,
+            color: `hsl(${Math.random() * 30 + 330}, 90%, ${Math.random() * 10 + 65}%)`
+        });
     }
+
+    if (confettiAnimationId) cancelAnimationFrame(confettiAnimationId);
+    function animateConfetti() {
+        ctx.clearRect(0, 0, width, height);
+        confettiParticles = confettiParticles.filter(p => p.y < height + p.size);
+        confettiParticles.forEach(p => {
+            p.x += p.velocityX;
+            p.y += p.velocityY;
+            p.velocityY += p.gravity;
+            p.rotation += p.rotationSpeed;
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rotation * Math.PI / 180);
+            ctx.fillStyle = p.color;
+            ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size / 2);
+            ctx.restore();
+        });
+        if (confettiParticles.length > 0) {
+            confettiAnimationId = requestAnimationFrame(animateConfetti);
+        } else {
+            canvas.style.display = 'none';
+        }
+    }
+    animateConfetti();
 }
 
 // ============================================

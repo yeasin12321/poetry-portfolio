@@ -75,6 +75,9 @@
                 <p class="poet-vintage-bio">"হৃদয়ের ক্যানভাসে শব্দের আল্পনা এঁকে যাই মনের অজান্তে। কখনো বিরহ, কখনো প্রেম—সবটুকুই কবিতার পাতায়।"</p>
                 <div class="social-links">
                     <a href="https://wa.me/8801851715713" class="social-btn" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://t.me/yeaxmi" class="social-btn telegram-btn" target="_blank"><i class="fab fa-telegram"></i></a>
+                    <a href="https://www.instagram.com/yeasinxmi/" class="social-btn instagram-btn" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.youtube.com/@yeasingaming0000" class="social-btn youtube-btn" target="_blank"><i class="fab fa-youtube"></i></a>
                     <a href="https://www.facebook.com/share/14LP9NJQ2KQ/" class="social-btn" target="_blank"><i class="fab fa-facebook-f"></i></a>
                     <a href="mailto:yeasinkabir0000@gmail.com" class="social-btn"><i class="fas fa-envelope"></i></a>
                 </div>
@@ -344,7 +347,7 @@
                     <div id="page-3" class="diary-page">
                         <h2 class="page-title"><i class="fas fa-eye"></i> তোমার চোখ</h2>
                         <div class="eyes-frame-vintage">
-                            <img src="eye.jpg" alt="Rumi's Eyes" class="her-eyes" onclick="openImageModal('eye.jpg', 'রুমি\'র চোখ ❤️')">
+                            <img src="eye.jpg" alt="Rumi's Eyes" class="her-eyes" onclick="event.stopPropagation(); openImageModal('eye.jpg', 'রুমি\'র চোখ ❤️')">
                         </div>
                         <div class="diary-text italic-quote" style="text-align:center;">"এই দুটি চোখেই আমি আমার পৃথিবী খুঁজে পেয়েছি। রুমি, তোমার চোখের গভীরতায় হারিয়ে যাওয়াটাই আমার সবচেয়ে প্রিয় নেশা।"</div>
                     </div>
@@ -398,7 +401,7 @@
                     <div id="page-9" class="diary-page">
                         <h2 class="page-title"><i class="fas fa-fingerprint"></i> Forever Promise</h2>
                         <div class="diary-text" style="text-align: center; font-style: italic;">"Touch & Hold to promise that you will never leave me."</div>
-                        <div class="fingerprint-area" onmousedown="startScan(event)" onmouseup="stopScan()" ontouchstart="startScan(event)" ontouchend="stopScan()" oncontextmenu="return false;"><i class="fas fa-fingerprint"></i><div class="scan-line" id="scanLine"></div></div>
+                        <div class="fingerprint-area" onmousedown="startScan(event)" onmouseup="stopScan()" ontouchstart="startScan(event)" ontouchend="stopScan()" onmouseleave="stopScan()" oncontextmenu="return false;"><i class="fas fa-fingerprint"></i><div class="scan-line" id="scanLine"></div></div>
                         <div id="promise-msg">Promise Accepted! You are mine forever. ❤️</div>
                     </div>
                     
@@ -463,13 +466,26 @@
                         <p style="color: #ffccd5; font-size: 0.9rem; margin-bottom: 25px; font-style: italic;">আমাদের একসাথে কাটানো কিছু সুন্দর মুহূর্ত...</p>
                         <div id="memory-collection-container"></div>
                     </div>
+
+                    <div id="page-16" class="diary-page">
+                        <h2 class="page-title"><i class="fas fa-heartbeat"></i> Love Residue Scanner</h2>
+                        <div class="aura-scanner-page">
+                            <div class="aura-field" id="aura-field" onmousedown="startAuraScan(event)" onmouseup="stopAuraScan()" onmouseleave="stopAuraScan()" ontouchstart="startAuraScan(event)" ontouchend="stopAuraScan()" ontouchcancel="stopAuraScan()" oncontextmenu="return false;">
+                                <div class="aura-scan-line" id="aura-scan-line"></div>
+                                <span class="aura-center-text">Touch & Hold</span>
+                            </div>
+                            <p class="aura-instruction">Place your finger (or gently press your cheek/lips) on the glowing aura to scan your love residue...</p>
+                            <div id="aura-result" class="aura-result"></div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="scrapbook-controls-dock">
                     <button class="scrapbook-page-btn" onclick="prevPage()"><i class="fas fa-book-open"></i> Prev</button>
-                    <div class="scrapbook-page-number" id="page-num">1 / 15</div>
+                    <div class="scrapbook-page-number" id="page-num">1 / 16</div>
                     <button class="scrapbook-page-btn" onclick="nextPage()">Next <i class="fas fa-book-reader"></i></button>
                 </div>
+
             </div>
         </div>
 
@@ -477,7 +493,7 @@
 
     <div id="image-lightbox-modal" class="lightbox-modal-wrapper" onclick="closeImageModal()">
         <span class="lightbox-close-btn">×</span>
-        <img class="lightbox-modal-content" id="expanded-lightbox-image">
+        <img class="lightbox-modal-content" id="expanded-lightbox-image" onclick="event.stopPropagation();">
         <div id="lightbox-image-caption"></div>
     </div>
 
