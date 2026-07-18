@@ -327,9 +327,11 @@ function renderSayeri() {
         card.innerHTML = `
             <div class="sayeri-text">${processedText}</div>
             <div style="text-align:right; margin-top:15px; font-size:0.8rem; color:#888; font-style:italic;">- ${sayeri.author || 'Yeasin Kabir'}</div>
-            <div style="display:flex; gap:10px; margin-top:20px;">
-                <button class="sub-btn pdf-btn" style="flex:1; padding:8px; font-size:0.8rem;" onclick="downloadItemPDF('sayeri-card-${index}', 'Sayeri_By_Yeasin')"><i class="fas fa-file-pdf"></i> PDF</button>
-                <button class="sub-btn" style="padding:8px; font-size:0.8rem; background:transparent; border:1px solid var(--accent); color:var(--primary);" onclick="nativeShare('sayeri-view', 'Sayeri by Yeasin Kabir')"><i class="fas fa-share-alt"></i> Share</button>
+            <div class="action-buttons-group hide-during-capture">
+                <button class="sub-btn copy-btn" onclick="copyToClipboard('sayeri-card-${index}', 'sayeri')"><i class="fas fa-copy"></i> কপি করুন</button>
+                <button class="sub-btn image-btn" onclick="downloadAsImage('sayeri-card-${index}', 'Sayeri_By_Yeasin')"><i class="fas fa-image"></i> ইমেজ ডাউনলোড</button>
+                <button class="sub-btn pdf-btn" onclick="downloadItemPDF('sayeri-card-${index}', 'Sayeri_By_Yeasin')"><i class="fas fa-file-pdf"></i> PDF</button>
+                <button class="sub-btn share-btn" onclick="nativeShare('sayeri-view', 'Sayeri by Yeasin Kabir')"><i class="fas fa-share-alt"></i> Share</button>
             </div>
         `;
         container.appendChild(card);
@@ -445,9 +447,11 @@ function renderMonologues() {
             <div class="monologue-title">${mono.title}</div>
             <div class="monologue-text">${processedText}</div>
             <div style="text-align:right; margin-top:15px; font-size:0.8rem; color:#666;">- ${mono.author || 'Yeasin Kabir'}</div>
-            <div style="display:flex; gap:10px; margin-top:20px;">
-                <button class="sub-btn pdf-btn" style="flex:1; padding:8px; font-size:0.8rem;" onclick="downloadItemPDF('monologue-card-${index}', '${mono.title}')"><i class="fas fa-file-pdf"></i> PDF</button>
-                <button class="sub-btn" style="padding:8px; font-size:0.8rem; background:transparent; border:1px solid var(--accent); color:var(--primary);" onclick="nativeShare('monologue-view', '${mono.title}')"><i class="fas fa-share-alt"></i> Share</button>
+            <div class="action-buttons-group hide-during-capture">
+                <button class="sub-btn copy-btn" onclick="copyToClipboard('monologue-card-${index}', 'monologue')"><i class="fas fa-copy"></i> কপি করুন</button>
+                <button class="sub-btn image-btn" onclick="downloadAsImage('monologue-card-${index}', '${mono.title}')"><i class="fas fa-image"></i> ইমেজ ডাউনলোড</button>
+                <button class="sub-btn pdf-btn" onclick="downloadItemPDF('monologue-card-${index}', '${mono.title}')"><i class="fas fa-file-pdf"></i> PDF</button>
+                <button class="sub-btn share-btn" onclick="nativeShare('monologue-view', '${mono.title}')"><i class="fas fa-share-alt"></i> Share</button>
             </div>
         `;
         container.appendChild(card);
@@ -1038,8 +1042,8 @@ function downloadItemPDF(elementId, fileNameTitle) {
         return;
     }
 
-    const pdfBtn = element.querySelector('.pdf-btn');
-    if(pdfBtn) pdfBtn.style.display = 'none';
+    const hiddenEls = [...element.querySelectorAll('.hide-during-capture, .pdf-btn')];
+    hiddenEls.forEach(el => el.style.display = 'none');
 
     const opt = {
         margin:       0.5,
@@ -1050,13 +1054,100 @@ function downloadItemPDF(elementId, fileNameTitle) {
     };
 
     html2pdf().set(opt).from(element).save().then(() => {
-        if(pdfBtn) pdfBtn.style.display = 'block';
+        hiddenEls.forEach(el => el.style.display = '');
+    }).catch(() => {
+        hiddenEls.forEach(el => el.style.display = '');
     });
 }
 
 // ============================================
 // NATIVE WEB SHARE API CONTROLLER
 // ============================================
+function copyToClipboard(elementId, type) {
+    const element = document.getElementById(elementId);
+    if (!element) {
+        alert('কন্টেন্ট পাওয়া যায়নি!');
+        return;
+    }
+
+    const clone = element.cloneNode(true);
+    clone.querySelectorAll('button, .action-buttons-group, .hide-during-capture').forEach(node => node.remove());
+    const text = clone.innerText.trim();
+    if (!text) {
+        alert('কোনো টেক্সট পাওয়া যায়নি।');
+        return;
+    }
+
+    const successMessage = type === 'novel' ? 'উপন্যাস কন্টেন্ট ক্লিপবোর্ডে কপি করা হলো!' : type === 'letter' ? 'চিঠির লেখা কপি করা হলো!' : 'কন্টেন্ট ক্লিপবোর্ডে কপি করা হলো!';
+
+    const fallbackCopy = () => {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            document.execCommand('copy');
+            alert(successMessage);
+        } catch (error) {
+            alert('ক্লিপবোর্ডে কপি করা যায়নি।');
+        }
+        document.body.removeChild(textarea);
+    };
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+            alert(successMessage);
+        }).catch(() => {
+            fallbackCopy();
+        });
+    } else {
+        fallbackCopy();
+    }
+}
+
+async function downloadAsImage(elementId, fileName) {
+    const element = document.getElementById(elementId);
+    if (!element) {
+        alert('কন্টেন্ট পাওয়া যায়নি!');
+        return;
+    }
+
+    const hiddenEls = [...element.querySelectorAll('.hide-during-capture')];
+    hiddenEls.forEach(el => el.style.display = 'none');
+
+    try {
+        const canvas = await html2canvas(element, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: null
+        });
+
+        await new Promise((resolve, reject) => {
+            canvas.toBlob(blob => {
+                if (!blob) {
+                    reject(new Error('Image blob তৈরি করা যায়নি'));
+                    return;
+                }
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = fileName ? `${fileName}.png` : 'download.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(link.href);
+                resolve();
+            }, 'image/png');
+        });
+    } catch (err) {
+        console.error(err);
+        alert('ইমেজ ডাউনলোডে সমস্যা হয়েছে। অনুগ্রহ করে পুনরায় চেষ্টা করুন।');
+    } finally {
+        hiddenEls.forEach(el => el.style.display = '');
+    }
+}
+
 async function nativeShare(hashPath, title) {
     const baseUrl = window.location.href.split('#')[0];
     const shareUrl = baseUrl + '#' + hashPath;

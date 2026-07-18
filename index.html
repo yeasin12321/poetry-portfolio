@@ -32,8 +32,9 @@
      
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-    <!-- html2pdf library যুক্ত করা হলো -->
+    <!-- html2pdf ও html2canvas লাইব্রেরি যুক্ত করা হলো -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Hind+Siliguri:wght@300;400;600;700&family=Orbitron:wght@500&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
@@ -209,20 +210,19 @@
             <div id="novel-pdf-area">
                 <h2 id="current-chapter-title" style="color:var(--novel-accent); text-align:center; font-family: 'Hind Siliguri';"></h2>
                 <div id="story-content" class="story-text"></div>
-                <div style="display:flex; gap:10px; margin-bottom:30px;">
-                    <button class="sub-btn pdf-btn" style="flex:1; background:var(--novel-accent); color:#fff;" onclick="downloadItemPDF('novel-pdf-area', 'Novel_Chapter')">
-                        <i class="fas fa-file-pdf"></i> PDF ডাউনলোড
-                    </button>
-                    <button class="sub-btn" style="background:transparent; border:1px solid var(--novel-accent); color:var(--novel-accent); padding:12px 20px;" onclick="nativeShare(window.location.hash.substring(1), document.getElementById('current-chapter-title').innerText)">
-                        <i class="fas fa-share-alt"></i>
-                    </button>
+                <div class="action-buttons-group hide-during-capture" style="margin-bottom:30px;">
+                    <button class="sub-btn copy-btn" onclick="copyToClipboard('story-content', 'novel')"><i class="fas fa-copy"></i> কপি করুন</button>
+                    <button class="sub-btn image-btn" onclick="downloadAsImage('novel-pdf-area', 'Novel_Chapter')"><i class="fas fa-image"></i> ইমেজ ডাউনলোড</button>
+                    <button class="sub-btn pdf-btn" onclick="downloadItemPDF('novel-pdf-area', 'Novel_Chapter')"><i class="fas fa-file-pdf"></i> PDF ডাউনলোড</button>
+                    <button class="sub-btn share-btn" onclick="nativeShare(window.location.hash.substring(1), document.getElementById('current-chapter-title').innerText)"><i class="fas fa-share-alt"></i> Share</button>
                 </div>
             </div>
-            <div class="chapter-controls">
-                <button class="ctrl-btn" id="prev-chap" onclick="changeChapter(-1)"><i class="fas fa-chevron-left"></i></button>
-                <span style="color:var(--secondary); font-size:1.2rem; padding-top:5px;"><i class="fas fa-book-open"></i></span>
-                <button class="ctrl-btn" id="next-chap" onclick="changeChapter(1)"><i class="fas fa-chevron-right"></i></button>
-            </div>
+            <button class="nav-arrow-btn nav-arrow-left" onclick="changeChapter(-1)">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="nav-arrow-btn nav-arrow-right" onclick="changeChapter(1)">
+                <i class="fas fa-chevron-right"></i>
+            </button>
         </div>
         
         <!-- Letter Reader View -->
@@ -235,20 +235,19 @@
             <div id="letter-pdf-area">
                 <h2 id="current-letter-title" style="color:#e74c3c; text-align:center; font-family: 'Hind Siliguri';"></h2>
                 <div id="letter-content" class="story-text"></div>
-                <div style="display:flex; gap:10px; margin-bottom:30px;">
-                    <button class="sub-btn pdf-btn" style="flex:1; background:#e74c3c; color:#fff;" onclick="downloadItemPDF('letter-pdf-area', 'Letter_By_Yeasin')">
-                        <i class="fas fa-file-pdf"></i> PDF ডাউনলোড
-                    </button>
-                    <button class="sub-btn" style="background:transparent; border:1px solid #e74c3c; color:#e74c3c; padding:12px 20px;" onclick="nativeShare(window.location.hash.substring(1), document.getElementById('current-letter-title').innerText)">
-                        <i class="fas fa-share-alt"></i>
-                    </button>
+                <div class="action-buttons-group hide-during-capture" style="margin-bottom:30px;">
+                    <button class="sub-btn copy-btn" onclick="copyToClipboard('letter-content', 'letter')"><i class="fas fa-copy"></i> কপি করুন</button>
+                    <button class="sub-btn image-btn" onclick="downloadAsImage('letter-pdf-area', 'Letter_By_Yeasin')"><i class="fas fa-image"></i> ইমেজ ডাউনলোড</button>
+                    <button class="sub-btn pdf-btn" onclick="downloadItemPDF('letter-pdf-area', 'Letter_By_Yeasin')"><i class="fas fa-file-pdf"></i> PDF ডাউনলোড</button>
+                    <button class="sub-btn share-btn" onclick="nativeShare(window.location.hash.substring(1), document.getElementById('current-letter-title').innerText)"><i class="fas fa-share-alt"></i> Share</button>
                 </div>
             </div>
-            <div class="chapter-controls">
-                <button class="ctrl-btn" id="prev-letter-part" onclick="changeLetterPart(-1)"><i class="fas fa-chevron-left"></i></button>
-                <span style="color:var(--secondary); font-size:1.2rem; padding-top:5px;"><i class="fas fa-envelope-open-text"></i></span>
-                <button class="ctrl-btn" id="next-letter-part" onclick="changeLetterPart(1)"><i class="fas fa-chevron-right"></i></button>
-            </div>
+            <button class="nav-arrow-btn nav-arrow-left" onclick="changeLetterPart(-1)">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="nav-arrow-btn nav-arrow-right" onclick="changeLetterPart(1)">
+                <i class="fas fa-chevron-right"></i>
+            </button>
         </div>
 
         <div id="reader-view" class="full-view">
@@ -267,13 +266,11 @@
                 <div id="poem-container-box">
                     <div id="poem-content-display"></div>
                     <div style="text-align:right; font-family:'Great Vibes'; color:var(--secondary); margin-top:25px; font-size:1.5rem;">- ইয়াছিন কবির</div>
-                    <div style="display:flex; gap:10px; margin-top:20px;">
-                        <button class="sub-btn pdf-btn" style="flex:1; background:var(--gold-gradient); color:#000;" onclick="downloadItemPDF('poem-container-box', 'Yeasin_Kabir_Collection')">
-                            <i class="fas fa-file-pdf"></i> PDF ডাউনলোড
-                        </button>
-                        <button class="sub-btn" style="background:transparent; border:1px solid var(--accent); color:var(--primary); padding:12px 20px;" onclick="nativeShare(window.location.hash.substring(1), document.getElementById('poem-title-display').innerText)">
-                            <i class="fas fa-share-alt"></i>
-                        </button>
+                    <div class="action-buttons-group hide-during-capture">
+                        <button class="sub-btn copy-btn" onclick="copyToClipboard('poem-content-display', 'poem')"><i class="fas fa-copy"></i> কপি করুন</button>
+                        <button class="sub-btn image-btn" onclick="downloadAsImage('poem-container-box', 'Yeasin_Kabir_Collection')"><i class="fas fa-image"></i> ইমেজ ডাউনলোড</button>
+                        <button class="sub-btn pdf-btn" onclick="downloadItemPDF('poem-container-box', 'Yeasin_Kabir_Collection')"><i class="fas fa-file-pdf"></i> PDF ডাউনলোড</button>
+                        <button class="sub-btn share-btn" onclick="nativeShare(window.location.hash.substring(1), document.getElementById('poem-title-display').innerText)"><i class="fas fa-share-alt"></i> Share</button>
                     </div>
                 </div>
                 

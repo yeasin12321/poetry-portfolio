@@ -660,6 +660,24 @@ h1 {
     background: #090607; 
     color: #fff; 
 }
+.action-buttons-group {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 18px;
+}
+.action-buttons-group .sub-btn {
+    font-size: 0.95rem;
+    padding: 12px 16px;
+}
+@media (min-width: 720px) {
+    .action-buttons-group {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+.hide-during-capture {
+    transition: none !important;
+}
 .sub-btn {
     background: var(--gold-gradient);
     color: #000;
@@ -761,6 +779,48 @@ h1 {
 
 .vault-social-footer .vault-social-btn:hover span { text-decoration: underline; }
 
+/* ==========================================================
+   Floating Page Flip Arrows
+   ========================================================== */
+.nav-arrow-btn {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    background: rgba(15, 10, 11, 0.6);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 50%;
+    color: var(--primary);
+    font-size: 1.3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 2000;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.nav-arrow-btn:hover {
+    background: var(--novel-accent);
+    color: #fff;
+    border-color: #fff;
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 8px 25px rgba(176, 58, 78, 0.5);
+}
+
+.nav-arrow-left { left: 10px; }
+.nav-arrow-right { right: 10px; }
+
+@media (max-width: 480px) {
+    .nav-arrow-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+    }
+}
 .vintage-letter-bg {
     background: linear-gradient(145deg, rgba(255,243,235,0.12), rgba(255, 255, 255, 0.02));
     border: 1px solid rgba(255,255,255,0.08);
