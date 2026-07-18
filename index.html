@@ -488,10 +488,18 @@
                     </div>
                 </div>
 
-                <div class="scrapbook-controls-dock">
-                    <button class="scrapbook-page-btn" onclick="prevPage()"><i class="fas fa-book-open"></i> Prev</button>
-                    <div class="scrapbook-page-number" id="page-num">1 / 16</div>
-                    <button class="scrapbook-page-btn" onclick="nextPage()">Next <i class="fas fa-book-reader"></i></button>
+                <div class="scrapbook-controls-dock" style="justify-content: center; gap: 15px;">
+                    <button class="scrapbook-page-btn" onclick="prevPage()">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    
+                    <select id="vault-page-select" class="vault-page-dropdown" onchange="jumpToVaultPage(this.value)">
+                        <!-- Options will be populated by JS -->
+                    </select>
+                    
+                    <button class="scrapbook-page-btn" onclick="nextPage()">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
                 </div>
 
             </div>

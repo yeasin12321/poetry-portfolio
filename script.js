@@ -649,6 +649,7 @@ function openSecretVaultInput() {
         window.scrollTo(0,0);
         startPetals();
         currentVaultPage = 1;
+        populateVaultDropdown(); // Add this line
         currentQuiz = 0;
         auraScanned = false;
         document.getElementById('promise-msg').style.display = 'none';
@@ -664,6 +665,31 @@ function openSecretVaultInput() {
 }
 function closeVault() { goBack(); document.getElementById('vault-audio').pause(); stopPetals(); }
 
+function populateVaultDropdown() {
+    const select = document.getElementById('vault-page-select');
+    if(!select) return;
+    select.innerHTML = '';
+    
+    const pageNames = [
+        "১. এক সন্ধ্যেবেলায়", "২. Happy New Year", "৩. তোমার চোখ", "৪. প্রথম দেখা...",
+        "৫. Love Letter", "৬. Open When...", "৭. Our Bucket List", "৮. Why I Love You",
+        "৯. Forever Promise", "১০. Do You Know Me?", "১১. Today's Mood", "১২. Relationship Contract",
+        "১৩. Write to Me", "১৪. Love Calculator", "১৫. Our Memories", "১৬. Aura Scanner"
+    ];
+    
+    for(let i = 1; i <= 16; i++) {
+        let opt = document.createElement('option');
+        opt.value = i;
+        opt.text = pageNames[i-1];
+        select.appendChild(opt);
+    }
+}
+
+function jumpToVaultPage(n) {
+    currentVaultPage = parseInt(n);
+    showPage(currentVaultPage);
+}
+
 function showPage(n) { 
     document.querySelectorAll('.diary-page').forEach(p=>p.classList.remove('active')); 
     const targetPage = document.getElementById(`page-${n}`);
@@ -674,6 +700,8 @@ function showPage(n) {
         targetPage.style.animation = 'pageTurnEffect 0.6s ease-out forwards';
     }
     document.getElementById('page-num').innerText = `${n} / ${totalVaultPages}`; 
+    const select = document.getElementById('vault-page-select');
+    if(select) select.value = n;
     if(n === 10) {
         currentQuiz = currentQuiz || 0;
         loadQuiz();

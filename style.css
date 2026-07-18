@@ -975,6 +975,42 @@ h1 {
 .scrapbook-page-btn { background: transparent; border: 1px solid rgba(255, 180, 195, 0.25); color: #ffccd5; padding: 10px 20px; border-radius: 6px; font-family: 'Cinzel', serif; font-size: 0.85rem; cursor: pointer; }
 .scrapbook-page-btn:hover { background: rgba(230,92,123,0.1); border-color: #e65c7b; color: #fff; }
 
+/* Vault Page Navigation Upgrades */
+.vault-page-dropdown {
+    background: rgba(20, 10, 15, 0.8);
+    color: #ffccd5;
+    border: 1px solid rgba(230, 92, 123, 0.3);
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-family: 'Hind Siliguri', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    outline: none;
+    cursor: pointer;
+    text-align: center;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+    max-width: 200px;
+    appearance: none;
+    -webkit-appearance: none;
+}
+.vault-page-dropdown:focus {
+    border-color: #e65c7b;
+}
+.vault-page-dropdown option {
+    background: #0d090a;
+    color: #ffccd5;
+}
+.scrapbook-controls-dock .scrapbook-page-btn {
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    font-size: 1.1rem;
+}
+
 .aura-scanner-page { display: flex; flex-direction: column; align-items: center; gap: 24px; }
 .aura-field { position: relative; width: 100%; max-width: 320px; height: 320px; border-radius: 50%; background: radial-gradient(circle at 50% 50%, rgba(255, 181, 209, 0.16), rgba(98, 11, 33, 0.18) 40%, transparent 70%); box-shadow: 0 0 50px rgba(230,92,123,0.25), inset 0 0 45px rgba(255, 180, 195, 0.1); border: 1px solid rgba(255,255,255,0.08); cursor: pointer; overflow: hidden; display: flex; align-items: center; justify-content: center; }
 .aura-field::before { content: ''; position: absolute; inset: 8px; border-radius: 50%; background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.18), transparent 52%); filter: blur(4px); }
