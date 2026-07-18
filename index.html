@@ -274,8 +274,19 @@
                     </div>
                 </div>
                 
-                <div id="comment-section">
-                    <h3 style="color:var(--primary); margin-top:0; font-family:'Cinzel'; border-bottom:1px solid rgba(223,197,166,0.1); padding-bottom:8px;">পাঠকের মন্তব্য</h3>
+                <!-- Floating Comment Icon -->
+                <button class="floating-comment-icon" onclick="toggleCommentModal()">
+                    <i class="fas fa-comment-dots"></i>
+                </button>
+
+                <!-- Comment Modal Overlay & Bottom Sheet -->
+                <div id="comment-modal-overlay" onclick="toggleCommentModal()"></div>
+                <div id="comment-section" class="bottom-sheet-modal">
+                    <div class="modal-header">
+                        <h3 style="color:var(--primary); margin:0; font-family:'Cinzel';">পাঠকের মন্তব্য</h3>
+                        <button class="close-comment-btn" onclick="toggleCommentModal()"><i class="fas fa-times"></i></button>
+                    </div>
+
                     <div id="display-comments" style="margin-bottom: 20px; max-height: 250px; overflow-y: auto; padding-right:10px;">
                         <p style="color:#888;">মন্তব্য লোড হচ্ছে...</p>
                     </div>

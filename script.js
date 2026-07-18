@@ -589,6 +589,19 @@ function filterByTag(tag) {
 }
 
 // --- COMMENT MATRIX ---
+// Toggle Comment Bottom Sheet Modal
+function toggleCommentModal() {
+    const overlay = document.getElementById('comment-modal-overlay');
+    const modal = document.getElementById('comment-section');
+    if (overlay && modal) {
+        overlay.classList.toggle('active');
+        modal.classList.toggle('active');
+        if (modal.classList.contains('active')) {
+            loadComments();
+        }
+    }
+}
+
 async function submitComment() {
     const poemId = window.location.hash;
     const name = document.getElementById('user-name').value;
