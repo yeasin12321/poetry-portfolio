@@ -272,7 +272,11 @@ function switchView(viewId) {
     window.location.hash = viewId;
     document.getElementById('home-view').style.display='none'; 
     document.querySelectorAll('.full-view').forEach(el => el.style.display='none'); 
-    document.getElementById(viewId).style.display='block'; 
+    const targetView = document.getElementById(viewId);
+    if (targetView) {
+        targetView.style.display = 'block'; 
+        targetView.scrollTop = 0; // Force scroll to top
+    }
     window.scrollTo(0,0); 
 }
 
@@ -304,7 +308,9 @@ function openPoemDirectly(index) {
     document.getElementById('poem-content-display').innerHTML = allPoems[index].text.replace(/\n/g, '<br>');
     document.getElementById('home-view').style.display='none'; 
     document.querySelectorAll('.full-view').forEach(el => el.style.display='none'); 
-    document.getElementById('reader-view').style.display = 'block';
+    const readerView = document.getElementById('reader-view');
+    readerView.style.display = 'block';
+    readerView.scrollTop = 0; // Force scroll to top
     loadComments();
 }
 

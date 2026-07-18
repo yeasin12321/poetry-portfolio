@@ -821,29 +821,31 @@ h1 {
 /* Bottom Sheet Modal - Fixed Hiding Issue */
 .bottom-sheet-modal {
     position: fixed;
-    bottom: 0;
+    bottom: 20px; /* Slight gap from the bottom for a floating look */
     left: 50%;
-    transform: translate(-50%, 150%); /* Pushes it completely off-screen */
-    width: 100%;
+    width: 95%; /* Looks better on mobile with slight margins */
     max-width: 540px;
     background: rgba(20, 15, 15, 0.98);
-    border-top: 1px solid var(--accent);
-    border-radius: 20px 20px 0 0;
+    border: 1px solid var(--accent);
+    border-radius: 16px;
     padding: 25px;
     z-index: 2600;
-    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), visibility 0.4s ease;
-    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
-    visibility: hidden; /* 100% hidden by default */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+    
+    /* Hiding mechanism without extending scroll height */
+    transform: translate(-50%, 40px) scale(0.95);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 /* When Active */
-#comment-modal-overlay.active {
+.bottom-sheet-modal.active {
+    transform: translate(-50%, 0) scale(1);
     opacity: 1;
     visibility: visible;
-}
-.bottom-sheet-modal.active {
-    transform: translate(-50%, 0); /* Slides up to its original position */
-    visibility: visible;
+    pointer-events: auto;
 }
 
 /* Modal Header */
