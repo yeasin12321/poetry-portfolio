@@ -57,7 +57,7 @@
     </div>
 
     <audio id="bg-music" loop> <source src="music.mp3" type="audio/mpeg"> </audio>
-    <audio id="vault-audio" loop> <source src="music.mp3" type="audio/mpeg"> </audio>
+    <audio id="vault-audio" loop> <source src="rumi.mp3" type="audio/mpeg"> </audio>
 
     <div class="controls-wrapper">
         <div class="ctrl-float-btn music-btn" onclick="toggleMusic()">
@@ -486,6 +486,29 @@
                             <div id="aura-result" class="aura-result"></div>
                         </div>
                     </div>
+
+                    <div id="page-17" class="diary-page">
+                        <h2 class="page-title"><i class="fas fa-headphones-alt"></i> Voice Notes</h2>
+                        <div class="diary-text" style="text-align: center; font-size: 1rem;">না বলা কিছু কথা, আমাদের কণ্ঠস্বরে...</div>
+                        
+                        <!-- Yeasin's Voice -->
+                        <div class="vintage-comment-box" style="text-align: center; border-left: none; border-top: 2px solid var(--secondary);">
+                            <h3 style="color: var(--primary); font-family: 'Cinzel'; margin-bottom: 15px;">Yeasin</h3>
+                            <audio controls style="width: 100%; border-radius: 30px; height: 40px; outline: none;" onplay="pauseVaultMusic()">
+                                <source src="yeasin.mp3" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </div>
+
+                        <!-- Rumi's Voice -->
+                        <div class="vintage-comment-box" style="text-align: center; border-left: none; border-top: 2px solid var(--secondary); margin-top: 20px;">
+                            <h3 style="color: var(--primary); font-family: 'Cinzel'; margin-bottom: 15px;">My Rumi ❤️</h3>
+                            <audio controls style="width: 100%; border-radius: 30px; height: 40px; outline: none;" onplay="pauseVaultMusic()">
+                                <source src="rumi.mp3" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="scrapbook-controls-dock" style="justify-content: center; gap: 15px;">
@@ -517,6 +540,68 @@
     <button id="backToTopBtn" onclick="scrollToTop()" title="Go to top">
         <i class="fas fa-chevron-up"></i>
     </button>
+
+    <!-- Buy Me a Coffee Floating Button -->
+    <button class="support-writer-btn" onclick="togglePaymentModal()">
+        <i class="fas fa-mug-hot"></i> <span>Support</span>
+    </button>
+
+    <!-- Payment Gateway Modal -->
+    <div id="payment-modal-overlay" onclick="closePaymentModal(event)">
+        <div class="payment-modal-box" onclick="event.stopPropagation();">
+            <button class="close-pay-btn" onclick="togglePaymentModal()"><i class="fas fa-times"></i></button>
+            <h3 class="pay-title">Support the Poet ☕</h3>
+            <p class="pay-subtitle">আপনার ভালোবাসা ও সাপোর্ট আমাকে আরও নতুন লেখা তৈরিতে উৎসাহিত করবে।</p>
+            
+            <div class="pay-methods">
+                <button class="pay-tab active" onclick="switchPayMethod('bkash', event)">
+                    <img src="https://freelogopng.com/images/all_img/1656234841bkash-icon-png.png" alt="bKash"> bKash
+                </button>
+                <button class="pay-tab" onclick="switchPayMethod('nagad', event)">
+                    <img src="https://freelogopng.com/images/all_img/1679248787Nagad-Logo.png" alt="Nagad"> Nagad
+                </button>
+                <button class="pay-tab" onclick="switchPayMethod('binance', event)">
+                    <img src="https://freelogopng.com/images/all_img/1655883256binance-icon-png.png" alt="Binance"> Binance
+                </button>
+            </div>
+
+            <div id="pay-bkash" class="pay-panel active">
+                <div class="pay-number-box">
+                    <span>Personal: <strong>01851715713</strong></span>
+                    <button onclick="copyPayText('01851715713')"><i class="fas fa-copy"></i></button>
+                </div>
+                <div class="live-pay-section">
+                    <input type="text" id="bkash-trx" class="c-input" placeholder="Transaction ID (TrxID)">
+                    <button class="sub-btn" style="width:100%; margin-bottom: 10px;" onclick="verifyPayment('bKash')">Verify Payment</button>
+                    <a href="bkash://sendmoney?receiver=01851715713" class="live-app-btn bkash-color">Open bKash App (Live)</a>
+                </div>
+            </div>
+
+            <div id="pay-nagad" class="pay-panel">
+                <div class="pay-number-box">
+                    <span>Personal: <strong>01851715713</strong></span>
+                    <button onclick="copyPayText('01851715713')"><i class="fas fa-copy"></i></button>
+                </div>
+                <div class="live-pay-section">
+                    <input type="text" id="nagad-trx" class="c-input" placeholder="Transaction ID (TrxID)">
+                    <button class="sub-btn" style="width:100%; margin-bottom: 10px;" onclick="verifyPayment('Nagad')">Verify Payment</button>
+                    <a href="nagad://sendmoney?receiver=01851715713" class="live-app-btn nagad-color">Open Nagad App (Live)</a>
+                </div>
+            </div>
+
+            <div id="pay-binance" class="pay-panel">
+                <div class="pay-number-box">
+                    <span>Binance Pay ID</span>
+                    <button onclick="copyPayText('123456789')"><i class="fas fa-copy"></i></button>
+                </div>
+                <div class="live-pay-section">
+                    <div class="binance-note">123456789</div>
+                    <button class="sub-btn" style="width:100%; background:#f3ba2f; color:#000;" onclick="copyPayText('123456789')">Copy Pay ID</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>

@@ -40,7 +40,7 @@ let currentChapterIndex = 0;
 let currentLetterBookIndex = 0;
 let currentLetterPartIndex = 0;
 let currentVaultPage = 1;
-const totalVaultPages = 16;
+const totalVaultPages = 17;
 let isMusicPlaying = false;
 let scanTimer;
 let auraTimer = null;
@@ -649,9 +649,24 @@ function openSecretVaultInput() {
         window.scrollTo(0,0);
         startPetals();
         currentVaultPage = 1;
-        populateVaultDropdown(); // Add this line
+        populateVaultDropdown(); 
         currentQuiz = 0;
         auraScanned = false;
+        
+        // মেইন মিউজিক বন্ধ করা
+        const mainMusic = document.getElementById('bg-music');
+        if(mainMusic) mainMusic.pause();
+        
+        // ভল্টের মিউজিক প্লে করা ও আইকন চেঞ্জ করা
+        const vaultMusic = document.getElementById('vault-audio');
+        if(vaultMusic) {
+            vaultMusic.play().then(() => {
+                isMusicPlaying = true;
+                document.getElementById('music-icon').className = "fas fa-pause";
+                document.querySelector('.ctrl-float-btn.music-btn').classList.add('playing');
+            }).catch(e => console.log(e));
+        }
+
         document.getElementById('promise-msg').style.display = 'none';
         document.getElementById('love-reason').innerText = '';
         document.getElementById('love-result').style.display = 'none';
@@ -663,7 +678,23 @@ function openSecretVaultInput() {
         showPage(1);
     } else { alert("ACCESS DENIED!"); } 
 }
-function closeVault() { goBack(); document.getElementById('vault-audio').pause(); stopPetals(); }
+
+function closeVault() { 
+    goBack(); 
+    
+    // ভল্টের মিউজিক পজ করা
+    const vaultMusic = document.getElementById('vault-audio');
+    if(vaultMusic) vaultMusic.pause(); 
+    
+    // আইকন ও বাটন পজ অবস্থায় রিসেট করা
+    isMusicPlaying = false;
+    const icon = document.getElementById('music-icon');
+    const btn = document.querySelector('.ctrl-float-btn.music-btn');
+    if(icon) icon.className = "fas fa-play";
+    if(btn) btn.classList.remove('playing');
+    
+    stopPetals(); 
+}
 
 function populateVaultDropdown() {
     const select = document.getElementById('vault-page-select');
@@ -674,10 +705,10 @@ function populateVaultDropdown() {
         "১. এক সন্ধ্যেবেলায়", "২. Happy New Year", "৩. তোমার চোখ", "৪. প্রথম দেখা...",
         "৫. Love Letter", "৬. Open When...", "৭. Our Bucket List", "৮. Why I Love You",
         "৯. Forever Promise", "১০. Do You Know Me?", "১১. Today's Mood", "১২. Relationship Contract",
-        "১৩. Write to Me", "১৪. Love Calculator", "১৫. Our Memories", "১৬. Aura Scanner"
+        "১৩. Write to Me", "১৪. Love Calculator", "১৫. Our Memories", "১৬. Aura Scanner", "১৭. Voice Notes"
     ];
     
-    for(let i = 1; i <= 16; i++) {
+    for(let i = 1; i <= 17; i++) {
         let opt = document.createElement('option');
         opt.value = i;
         opt.text = pageNames[i-1];
@@ -953,6 +984,66 @@ function changeFont(dir) { const root = document.documentElement; let current = 
 function backToLibrary() { switchView('novel-library'); }
 function openNovelLibrary() { switchView('novel-library'); }
 
+// Payment Modal Controllers
+function togglePaymentModal() {
+    const overlay = document.getElementById('payment-modal-overlay');
+    if (!overlay) return;
+    overlay.classList.toggle('active');
+}
+
+function closePaymentModal(e) {
+    if (e.target && e.target.id === 'payment-modal-overlay') {
+        togglePaymentModal();
+    }
+}
+
+function switchPayMethod(method, event) {
+    document.querySelectorAll('.pay-tab').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.pay-panel').forEach(panel => panel.classList.remove('active'));
+
+    if (event && event.currentTarget) {
+        event.currentTarget.classList.add('active');
+    }
+    const panel = document.getElementById('pay-' + method);
+    if (panel) panel.classList.add('active');
+}
+
+async function copyPayText(text) {
+    try {
+        await navigator.clipboard.writeText(text);
+        alert('Number Copied: ' + text);
+    } catch (err) {
+        alert('Failed to copy!');
+    }
+}
+
+function verifyPayment(method) {
+    const trxInputId = method.toLowerCase() + '-trx';
+    const trxId = document.getElementById(trxInputId)?.value.trim();
+
+    if (!trxId) {
+        alert('দয়া করে Transaction ID (TrxID) লিখুন।');
+        return;
+    }
+
+    const templateParams = {
+        from_name: 'Coffee Supporter',
+        from_email: 'noreply@yeasinkabir.pro.bd',
+        message: `New "Buy Me a Coffee" Support!\n\nMethod: ${method}\nTransaction ID: ${trxId}\n\nPlease verify this payment.`
+    };
+
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+    .then(() => {
+        alert('আপনার পেমেন্ট ভেরিফিকেশনের জন্য পাঠানো হয়েছে! ভালোবাসার জন্য অনেক ধন্যবাদ ❤️');
+        document.getElementById(trxInputId).value = '';
+        togglePaymentModal();
+    })
+    .catch((error) => {
+        console.error('EmailJS Error:', error);
+        alert('দুঃখিত, রিকোয়েস্টটি পাঠাতে সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।');
+    });
+}
+
 // --- MUSIC CONTROL PLATFORM ---
 function setupMusic() {
     const music = document.getElementById('bg-music');
@@ -964,7 +1055,12 @@ function setupMusic() {
 }
 
 function toggleMusic() {
-    const music = document.getElementById('bg-music');
+    // চেক করি ভল্ট ওপেন আছে কিনা
+    const isVaultOpen = document.getElementById('secret-vault').style.display === 'block';
+    
+    // ভল্ট ওপেন থাকলে vault-audio, না থাকলে bg-music সিলেক্ট হবে
+    const music = isVaultOpen ? document.getElementById('vault-audio') : document.getElementById('bg-music');
+    
     const icon = document.getElementById('music-icon');
     const btn = document.querySelector('.ctrl-float-btn.music-btn');
 
@@ -997,6 +1093,20 @@ function startPetals() {
     }, 300);
 }
 function stopPetals() { if(petalInterval) clearInterval(petalInterval); }
+
+function pauseVaultMusic() {
+    const vaultMusic = document.getElementById('vault-audio');
+    if (vaultMusic && !vaultMusic.paused) {
+        vaultMusic.pause();
+        isMusicPlaying = false;
+        
+        // ফ্লোটিং বাটনের আইকন প্লে-অবস্থায় ফিরিয়ে আনা
+        const icon = document.getElementById('music-icon');
+        const btn = document.querySelector('.ctrl-float-btn.music-btn');
+        if(icon) icon.className = "fas fa-play";
+        if(btn) btn.classList.remove('playing');
+    }
+}
 
 function convertDriveLink() {
     const inputUrl = document.getElementById('drive-input').value.trim();
