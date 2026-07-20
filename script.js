@@ -887,23 +887,48 @@ function renderGallery() {
 
 function renderVideos() {
     const container = document.querySelector('#video-view'); if (!container) return;
-    container.innerHTML = `<button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK</button><h2 class="section-title">Video Gallery</h2><div class="video-grid" style="display:grid; grid-template-columns:1fr; gap:20px; padding:10px;"></div>`;
+    container.innerHTML = `<button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK</button><h2 class="section-title">Video Gallery</h2><div class="video-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:24px; padding:10px;"></div>`;
     const grid = container.querySelector('.video-grid');
     if (allVideos.length === 0) {
         grid.innerHTML = "<p style='color:#888; text-align:center;'>কোনো ভিডিও পাওয়া যায়নি।</p>";
         return;
     }
+
     allVideos.forEach(vid => {
-        const url = vid.video_url.trim();
-        const match = url.match(/\/d\/([a-zA-Z0-9-_]+)/) || url.match(/id=([a-zA-Z0-9-_]+)/);
-        if (match && match[1]) {
-            const embedUrl = `https://drive.google.com/file/d/${match[1]}/preview`;
-            const card = document.createElement('div'); card.className = 'video-card-item vintage-paper-node';
-            card.style.cssText = "background:rgba(25,18,19,0.5); border:1px solid #332426; border-radius:4px; overflow:hidden; padding:10px;";
-            const titleText = vid.title ? `<h3 style="font-size:1rem; margin-top:10px; color:var(--primary); font-family:'Hind Siliguri';">${vid.title}</h3>` : '';
-            card.innerHTML = `<div style="position:relative; width:100%; height:0; padding-bottom:56.25%; border-radius:4px; overflow:hidden;"><iframe src="${embedUrl}" style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;" allow="autoplay"></iframe></div>${titleText}`;
-            grid.appendChild(card);
+        const url = (vid.video_url || '').trim();
+        const card = document.createElement('div');
+        card.className = 'video-card-item vintage-paper-node';
+        card.style.cssText = "background:rgba(25,18,19,0.5); border:1px solid #332426; border-radius:4px; overflow:hidden; padding:10px;";
+        const titleText = vid.title ? `<h3 style="font-size:1rem; margin-top:10px; color:var(--primary); font-family:'Hind Siliguri';">${vid.title}</h3>` : '';
+        let innerHtml = '';
+
+        const iframeMatch = url.match(/<iframe[\s\S]*?<\/iframe>/i);
+        if (iframeMatch) {
+            innerHtml = `<div style="position:relative; width:100%; height:0; padding-bottom:56.25%; border-radius:4px; overflow:hidden;">${iframeMatch[0]}</div>`;
+        } else if (/youtube\.com\/watch|youtu\.be\//i.test(url)) {
+            const videoIdMatch = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/i);
+            const embedUrl = videoIdMatch ? `https://www.youtube.com/embed/${videoIdMatch[1]}` : url;
+            innerHtml = `<div style="position:relative; width:100%; height:0; padding-bottom:56.25%; border-radius:4px; overflow:hidden;"><iframe src="${embedUrl}" style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+        } else if (/instagram\.com\//i.test(url)) {
+            const embedUrl = url.includes('/embed') ? url : `${url.replace(/\/?(\?|$)/, '/embed$1')}`;
+            innerHtml = `<div style="position:relative; width:100%; height:0; padding-bottom:100%; border-radius:4px; overflow:hidden;"><iframe src="${embedUrl}" style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>`;
+        } else if (/facebook\.com|fb\.watch/i.test(url)) {
+            const pluginUrl = url.includes('facebook.com') ? `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false&width=560` : `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false&width=560`;
+            innerHtml = `<div style="position:relative; width:100%; height:0; padding-bottom:56.25%; border-radius:4px; overflow:hidden;"><iframe src="${pluginUrl}" style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen></iframe></div>`;
+        } else {
+            const driveMatch = url.match(/\/d\/([a-zA-Z0-9-_]+)/) || url.match(/id=([a-zA-Z0-9-_]+)/);
+            if (driveMatch && driveMatch[1]) {
+                const embedUrl = `https://drive.google.com/file/d/${driveMatch[1]}/preview`;
+                innerHtml = `<div style="position:relative; width:100%; height:0; padding-bottom:56.25%; border-radius:4px; overflow:hidden;"><iframe src="${embedUrl}" style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;" allow="autoplay"></iframe></div>`;
+            } else if (url) {
+                innerHtml = `<div style="padding:30px 20px; text-align:center;"><a href="${url}" target="_blank" rel="noopener noreferrer" style="display:inline-block; padding:10px 18px; background:rgba(255,255,255,0.08); color:#fff; border:1px solid rgba(255,255,255,0.12); border-radius:6px; text-decoration:none;">Open Video Link</a></div>`;
+            } else {
+                innerHtml = `<div style="padding:30px 20px; text-align:center; color:#ccc;">কোনো ভিডিও লিঙ্ক নেই।</div>`;
+            }
         }
+
+        card.innerHTML = `${innerHtml}${titleText}`;
+        grid.appendChild(card);
     });
 }
 
