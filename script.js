@@ -1,4 +1,4 @@
-// ============================================
+// // ============================================
 // CONFIGURATION & LIVE API CHANNELS
 // ============================================
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz5JmhcT7np70iTpNgP04ZOvnKLdagnDwmci5uN3QsG2t6aAUPpjk_qV5U9B1bhJuSs/exec";
@@ -1393,3 +1393,76 @@ function scrollToTop() {
         }
     });
 }
+// ============================================
+// OPTIONAL LOGIN SYSTEM LOGIC
+// ============================================
+
+// পপ-আপ খোলা এবং বন্ধ করা
+function openAuthModal() {
+    document.getElementById('auth-modal-overlay').classList.add('active');
+}
+
+function closeAuthModal(e) {
+    if (!e || e.target.id === 'auth-modal-overlay' || e.target.closest('.close-auth-btn')) {
+        document.getElementById('auth-modal-overlay').classList.remove('active');
+    }
+}
+
+// ইউজারের প্রোফাইল ড্রপডাউন টগল করা
+function toggleUserDropdown() {
+    document.getElementById('user-dropdown').classList.toggle('active');
+}
+
+// JWT টোকেন ডিকোড করা
+function decodeJwtResponse(token) {
+    let base64Url = token.split('.')[1];
+    let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(jsonPayload);
+}
+
+// লগিন সফল হলে ডেটা সেভ করা
+function handleCredentialResponse(response) {
+    const payload = decodeJwtResponse(response.credential);
+    
+    sessionStorage.setItem('yk_logged_in', 'true');
+    sessionStorage.setItem('yk_user_name', payload.name);
+    sessionStorage.setItem('yk_user_email', payload.email);
+    sessionStorage.setItem('yk_user_pic', payload.picture);
+    
+    closeAuthModal();
+    updateAuthUI();
+}
+
+// লগ-আউট ফাংশন
+function logoutUser() {
+    sessionStorage.removeItem('yk_logged_in');
+    sessionStorage.removeItem('yk_user_name');
+    sessionStorage.removeItem('yk_user_email');
+    sessionStorage.removeItem('yk_user_pic');
+    
+    document.getElementById('user-dropdown').classList.remove('active');
+    updateAuthUI();
+}
+
+// লগিন অবস্থার উপর ভিত্তি করে UI আপডেট করা
+function updateAuthUI() {
+    const isLoggedIn = sessionStorage.getItem('yk_logged_in') === 'true';
+    const loginBtn = document.getElementById('login-btn-corner');
+    const userProfile = document.getElementById('user-profile-corner');
+    
+    if (isLoggedIn) {
+        loginBtn.style.display = 'none';
+        userProfile.style.display = 'block';
+        document.getElementById('user-avatar').src = sessionStorage.getItem('yk_user_pic');
+        document.getElementById('user-name-display').innerText = sessionStorage.getItem('yk_user_name');
+    } else {
+        loginBtn.style.display = 'flex';
+        userProfile.style.display = 'none';
+    }
+}
+
+// পেজ লোড হওয়ার সাথে সাথে UI আপডেট ফাংশন কল করা
+document.addEventListener('DOMContentLoaded', updateAuthUI);

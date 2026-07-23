@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-VHTTLK7XL4"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -55,6 +56,49 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Top Right Account / Login Corner -->
+<div id="auth-corner" class="auth-corner">
+    <!-- লগিন না করা থাকলে এই বাটনটি দেখাবে -->
+    <button id="login-btn-corner" class="auth-btn" onclick="openAuthModal()">
+        <i class="fas fa-user-circle"></i> <span>Login</span>
+    </button>
+    
+    <!-- লগিন করা থাকলে ইউজারের ছবি দেখাবে -->
+    <div id="user-profile-corner" class="user-profile" style="display: none;" onclick="toggleUserDropdown()">
+        <img id="user-avatar" src="" alt="User">
+        <div id="user-dropdown" class="user-dropdown">
+            <p id="user-name-display" style="color: var(--primary); font-family: 'Cinzel'; margin: 0 0 10px 0; font-weight: 600;"></p>
+            <button class="sub-btn" style="width: 100%; padding: 8px; font-size: 0.9rem;" onclick="logoutUser()">Logout</button>
+        </div>
+    </div>
+</div>
+
+<!-- Auth Modal (পপ-আপ লগিন বক্স) -->
+<div id="auth-modal-overlay" class="auth-modal-overlay" onclick="closeAuthModal(event)">
+    <div class="auth-modal-box vintage-paper-node" onclick="event.stopPropagation()">
+        <button class="close-auth-btn" onclick="closeAuthModal()"><i class="fas fa-times"></i></button>
+        <h2 style="font-family:'Cinzel'; color:var(--primary); margin-top:0;">Account</h2>
+        <p style="color:#c4b5a7; margin-bottom: 25px; font-size: 0.95rem;">পাঠক হিসেবে যুক্ত হতে আপনার গুগল একাউন্ট দিয়ে লগিন করুন।</p>
+        
+        <div style="display: flex; justify-content: center;">
+            <div id="g_id_onload"
+                 data-client_id="856144695898-b88nh2ll39t5l0ui6fu7gi13ufj24fdc.apps.googleusercontent.com"
+                 data-context="signin"
+                 data-ux_mode="popup"
+                 data-callback="handleCredentialResponse"
+                 data-auto_prompt="false">
+            </div>
+            <div class="g_id_signin"
+                 data-type="standard"
+                 data-shape="rectangular"
+                 data-theme="filled_black"
+                 data-text="signin_with"
+                 data-size="large"
+                 data-logo_alignment="center">
+            </div>
+        </div>
+    </div>
+</div>
 
     <div class="ambient-glow"></div>
     <div id="leaf-container"></div>

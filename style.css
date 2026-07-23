@@ -1318,3 +1318,106 @@ h1 {
     transform: translateY(-5px);
     box-shadow: 0 10px 25px rgba(212,175,55,0.4);
 }
+/* ==========================================================
+   OPTIONAL LOGIN & AUTH CORNER STYLES
+   ========================================================== */
+.auth-corner {
+    position: fixed;
+    top: 25px;
+    right: 25px;
+    z-index: 2000;
+}
+.auth-btn {
+    background: rgba(22, 15, 17, 0.8);
+    border: 1px solid var(--accent);
+    color: var(--primary);
+    padding: 10px 18px;
+    border-radius: 30px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5), inset 0 0 10px rgba(212,175,55,0.1);
+    font-weight: 600;
+}
+.auth-btn:hover {
+    background: var(--gold-gradient);
+    color: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(212,175,55,0.3);
+}
+.user-profile {
+    position: relative;
+    cursor: pointer;
+}
+.user-profile img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    object-fit: cover;
+}
+.user-dropdown {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background: rgba(15, 10, 11, 0.95);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    padding: 15px;
+    min-width: 180px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    backdrop-filter: blur(10px);
+}
+.user-dropdown.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+.auth-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+.auth-modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+.auth-modal-box {
+    width: 90%;
+    max-width: 420px;
+    text-align: center;
+    position: relative;
+    transform: scale(0.9);
+    transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+.auth-modal-overlay.active .auth-modal-box {
+    transform: scale(1);
+}
+.close-auth-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    color: #ff7675;
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+.close-auth-btn:hover {
+    transform: scale(1.1);
+}
