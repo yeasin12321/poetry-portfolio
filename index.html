@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-VHTTLK7XL4"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -15,19 +14,6 @@
     <meta name="description" content="Welcome to Yeasin Kabir's official portfolio. Explore a beautiful collection of Bengali romantic & sad poems, novels, and readers' diaries by Yeasin.">
     <meta name="keywords" content="yeasin kabir, yeasin poem, yeasin kabir poem, ইয়াছিন এর কবিতা, bengali poem, yeasin novel, romantic poem">
     <meta name="author" content="Yeasin Kabir">
-    <!-- Open Graph / Social Media Meta Tags -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://yeasinkabir.pro.bd/">
-    <meta property="og:title" content="Yeasin Kabir - Poems & Novels | ইয়াছিন এর কবিতা">
-    <meta property="og:description" content="Welcome to Yeasin Kabir's official portfolio. Explore a beautiful collection of Bengali romantic & sad poems, novels, and readers' diaries.">
-    <meta property="og:image" content="https://yeasinkabir.pro.bd/profile.jpg">
-
-    <!-- Twitter / X Meta Tags -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://yeasinkabir.pro.bd/">
-    <meta property="twitter:title" content="Yeasin Kabir - Poems & Novels | ইয়াছিন এর কবিতা">
-    <meta property="twitter:description" content="Welcome to Yeasin Kabir's official portfolio. Explore a beautiful collection of Bengali romantic & sad poems, novels, and readers' diaries.">
-    <meta property="twitter:image" content="https://yeasinkabir.pro.bd/profile.jpg">
     <link rel="icon" type="image/png" href="favicon.png">
     
     <script type="application/ld+json">
@@ -56,49 +42,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Top Right Account / Login Corner -->
-<div id="auth-corner" class="auth-corner">
-    <!-- লগিন না করা থাকলে এই বাটনটি দেখাবে -->
-    <button id="login-btn-corner" class="auth-btn" onclick="window.location.href='login.html'">
-        <i class="fas fa-user-circle"></i> <span>Login</span>
-    </button>
-    
-    <!-- লগিন করা থাকলে ইউজারের ছবি দেখাবে -->
-    <div id="user-profile-corner" class="user-profile" style="display: none;" onclick="toggleUserDropdown()">
-        <img id="user-avatar" src="" alt="User">
-        <div id="user-dropdown" class="user-dropdown">
-            <p id="user-name-display" style="color: var(--primary); font-family: 'Cinzel'; margin: 0 0 10px 0; font-weight: 600;"></p>
-            <button class="sub-btn" style="width: 100%; padding: 8px; font-size: 0.9rem;" onclick="logoutUser()">Logout</button>
-        </div>
-    </div>
-</div>
-
-<!-- Auth Modal (পপ-আপ লগিন বক্স) -->
-<div id="auth-modal-overlay" class="auth-modal-overlay" onclick="closeAuthModal(event)">
-    <div class="auth-modal-box vintage-paper-node" onclick="event.stopPropagation()">
-        <button class="close-auth-btn" onclick="closeAuthModal()"><i class="fas fa-times"></i></button>
-        <h2 style="font-family:'Cinzel'; color:var(--primary); margin-top:0;">Account</h2>
-        <p style="color:#c4b5a7; margin-bottom: 25px; font-size: 0.95rem;">পাঠক হিসেবে যুক্ত হতে আপনার গুগল একাউন্ট দিয়ে লগিন করুন।</p>
-        
-        <div style="display: flex; justify-content: center;">
-            <div id="g_id_onload"
-                 data-client_id="856144695898-b88nh2ll39t5l0ui6fu7gi13ufj24fdc.apps.googleusercontent.com"
-                 data-context="signin"
-                 data-ux_mode="popup"
-                 data-callback="handleCredentialResponse"
-                 data-auto_prompt="false">
-            </div>
-            <div class="g_id_signin"
-                 data-type="standard"
-                 data-shape="rectangular"
-                 data-theme="filled_black"
-                 data-text="signin_with"
-                 data-size="large"
-                 data-logo_alignment="center">
-            </div>
-        </div>
-    </div>
-</div>
 
     <div class="ambient-glow"></div>
     <div id="leaf-container"></div>
@@ -114,7 +57,7 @@
     </div>
 
     <audio id="bg-music" loop> <source src="music.mp3" type="audio/mpeg"> </audio>
-    <audio id="vault-audio" loop> <source src="rumi.mp3" type="audio/mpeg"> </audio>
+    <audio id="vault-audio" loop> <source src="music.mp3" type="audio/mpeg"> </audio>
 
     <div class="controls-wrapper">
         <div class="ctrl-float-btn music-btn" onclick="toggleMusic()">
@@ -543,29 +486,6 @@
                             <div id="aura-result" class="aura-result"></div>
                         </div>
                     </div>
-
-                    <div id="page-17" class="diary-page">
-                        <h2 class="page-title"><i class="fas fa-headphones-alt"></i> Voice Notes</h2>
-                        <div class="diary-text" style="text-align: center; font-size: 1rem;">না বলা কিছু কথা, আমাদের কণ্ঠস্বরে...</div>
-                        
-                        <!-- Yeasin's Voice -->
-                        <div class="vintage-comment-box" style="text-align: center; border-left: none; border-top: 2px solid var(--secondary);">
-                            <h3 style="color: var(--primary); font-family: 'Cinzel'; margin-bottom: 15px;">Yeasin</h3>
-                            <audio controls style="width: 100%; border-radius: 30px; height: 40px; outline: none;" onplay="pauseVaultMusic()">
-                                <source src="yeasin.mp3" type="audio/mpeg">
-                                Your browser does not support the audio element.
-                            </audio>
-                        </div>
-
-                        <!-- Rumi's Voice -->
-                        <div class="vintage-comment-box" style="text-align: center; border-left: none; border-top: 2px solid var(--secondary); margin-top: 20px;">
-                            <h3 style="color: var(--primary); font-family: 'Cinzel'; margin-bottom: 15px;">My Rumi ❤️</h3>
-                            <audio controls style="width: 100%; border-radius: 30px; height: 40px; outline: none;" onplay="pauseVaultMusic()">
-                                <source src="rumi.mp3" type="audio/mpeg">
-                                Your browser does not support the audio element.
-                            </audio>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="scrapbook-controls-dock" style="justify-content: center; gap: 15px;">
@@ -598,62 +518,7 @@
         <i class="fas fa-chevron-up"></i>
     </button>
 
-    <!-- Buy Me a Coffee Floating Button -->
-    <button class="support-writer-btn" onclick="togglePaymentModal()">
-        <i class="fas fa-mug-hot"></i> <span>Support</span>
-    </button>
-
-    <!-- Payment Gateway Modal -->
-    <div id="payment-modal-overlay" onclick="closePaymentModal(event)">
-        <div class="payment-modal-box" onclick="event.stopPropagation();">
-            <button class="close-pay-btn" onclick="togglePaymentModal()"><i class="fas fa-times"></i></button>
-            <h3 class="pay-title">Support the Poet ☕</h3>
-            <p class="pay-subtitle">আপনার ভালোবাসা ও সাপোর্ট আমাকে আরও নতুন লেখা তৈরিতে উৎসাহিত করবে।</p>
-            
-            <div class="pay-methods">
-                <button class="pay-tab active" onclick="switchPayMethod('bkash', event)">
-                    <img src="https://freelogopng.com/images/all_img/1656234841bkash-icon-png.png" alt="bKash"> bKash
-                </button>
-                <button class="pay-tab" onclick="switchPayMethod('nagad', event)">
-                    <img src="https://freelogopng.com/images/all_img/1679248787Nagad-Logo.png" alt="Nagad"> Nagad
-                </button>
-                <button class="pay-tab" onclick="switchPayMethod('binance', event)">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Binance_Logo.png/960px-Binance_Logo.png?_=20201023063027" alt="Binance"> Binance
-                </button>
-            </div>
-
-            <div id="pay-bkash" class="pay-panel active">
-                <div class="pay-number-box">
-                    <span>Personal: <strong>01851715713</strong></span>
-                    <button onclick="copyPayText('01851715713')"><i class="fas fa-copy"></i></button>
-                </div>
-                <div class="live-pay-section">
-                    <input type="text" id="bkash-trx" class="c-input" placeholder="Transaction ID (TrxID)">
-                    <button class="sub-btn" style="width:100%; margin-bottom: 10px;" onclick="verifyPayment('bKash')">Verify Payment</button>
-                    <a href="bkash://sendmoney?receiver=01851715713" class="live-app-btn bkash-color">Open bKash App (Live)</a>
-                </div>
-            </div>
-
-            <div id="pay-nagad" class="pay-panel">
-                <div class="pay-number-box">
-                    <span>Personal: <strong>01851715713</strong></span>
-                    <button onclick="copyPayText('01851715713')"><i class="fas fa-copy"></i></button>
-                </div>
-                <div class="live-pay-section">
-                    <input type="text" id="nagad-trx" class="c-input" placeholder="Transaction ID (TrxID)">
-                    <button class="sub-btn" style="width:100%; margin-bottom: 10px;" onclick="verifyPayment('Nagad')">Verify Payment</button>
-                    <a href="nagad://sendmoney?receiver=01851715713" class="live-app-btn nagad-color">Open Nagad App (Live)</a>
-                </div>
-            </div>
-
-            <div id="pay-binance" class="pay-panel">
-                <div class="pay-number-box">
-                    <span>Binance Pay ID</span>
-                    <button onclick="copyPayText('884525536')"><i class="fas fa-copy"></i></button>
-                </div>
-                <div class="live-pay-section">
-                    <div class="binance-note">884525536</div>
-                            <button class="sub-btn" style="width:100%; background:#f3ba2f; color:#000;" onclick="copyPayText('884525536')">Copy Pay ID</button>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="script.js"></script>
 </body>
