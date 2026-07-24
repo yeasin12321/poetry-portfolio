@@ -1421,3 +1421,9 @@ h1 {
 .close-auth-btn:hover {
     transform: scale(1.1);
 }
+/* শুধুমাত্র মোবাইলে অ্যানিমেশনের কারণে স্ক্রিন জুম আউট হওয়া বন্ধ করতে */
+@media (max-width: 899px) {
+    #app-container {
+        overflow-x: hidden;
+    }
+}
