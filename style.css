@@ -33,16 +33,18 @@
     transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 body { 
     background-color: var(--bg); 
     color: #f5ebe2; 
     font-family: 'Hind Siliguri', sans-serif; 
-    margin: 0; 
-    padding: 0; 
-    display: flex; 
-    justify-content: center; 
     min-height: 100vh; 
-    overflow-x: hidden; 
     background-image: radial-gradient(circle at 50% 30%, #150a0d 0%, #070405 70%);
 }
 
@@ -1420,4 +1422,10 @@ h1 {
 }
 .close-auth-btn:hover {
     transform: scale(1.1);
+}
+/* শুধুমাত্র মোবাইলে অ্যানিমেশনের কারণে স্ক্রিন জুম আউট হওয়া বন্ধ করতে */
+@media (max-width: 899px) {
+    #app-container {
+        overflow-x: hidden;
+    }
 }
