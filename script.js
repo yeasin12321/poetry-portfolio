@@ -1,20 +1,20 @@
-// ============================================
+// // ============================================
 // CONFIGURATION & LIVE API CHANNELS
 // ============================================
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz5JmhcT7np70iTpNgP04ZOvnKLdagnDwmci5uN3QsG2t6aAUPpjk_qV5U9B1bhJuSs/exec";
 
-const POEMS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRlpPAxUAUJ72vJCc4KPLj5hIWWDin37qTHhBKNdYAHsd3N_HpEw5lH0kXE0LbqCjQby8lUDNS6BM0q/pub?gid=763267853&single=true&output=csv";
-const NOVELS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRkgCGhiJDREGrOos0Tea29m73pRCPacWMZQE3pSRSnV5mYhbgjSn8pWvXP1zGdjXR68VEIuCiL2W4U/pub?gid=1311656493&single=true&output=csv";
-const STORIES_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTzfIaDfNtq2rOqIvAuCOkAr0jFP30M7PmdGeEvplZeAGsN9cANbgQOW46CeiwUQeB67IJPPY_Q-JSe/pub?gid=1617707442&single=true&output=csv";
-const MONOLOGUE_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSNcm6SVXNnP_DIMGcxGF9QvZ66geNFaZmt4xI-Yxl0Wbzb1bT6GQCX5-GQ4F3NC9Qi33wfzb5QMwLa/pub?gid=661967226&single=true&output=csv";
-const SAYERI_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS9333MyiMbNlAHqkBnzHP0_G-B_tikgiKB3Hq1Clkhn8xbQIn0YSjAcDXZSpPzIo9J44iATMNM04Bc/pub?gid=1755852887&single=true&output=csv";
-const GALLERY_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTI94hqOgRnLaeyOG-VKW1LoRUmCKWpxzhbFzw9AJB-f0T0X_bMn-Gx4XEJz_1QxuKC4XvjS0DbgR5F/pub?gid=1972328520&single=true&output=csv";
-const VIDEO_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS6PvpAlo7qba5TzP1XA6weZla_3RQ2FPSoKMyc5IUCjhwfUSwaFiE7zdL4BBAK9mjykBnDCbQWSmg8/pub?gid=1072689663&single=true&output=csv";
-const MEMORIES_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQlrBbCJ7fsTrj5LByJWZRgmbOuSJHdhCzmnkVRPzJv8GXEVVpR-MS1kv3RYyN7mNMfSZDRivc-jan-/pub?gid=1726230306&single=true&output=csv";
+const POEMS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxf1QCiDaynQwEoMBnxF7-WEbFNByMoIU3R8G-_5dmaoH2E93fWPahZ_qlTMfQKBWYyjJgVbon78mF/pub?gid=1347099812&single=true&output=csv";
+const NOVELS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxf1QCiDaynQwEoMBnxF7-WEbFNByMoIU3R8G-_5dmaoH2E93fWPahZ_qlTMfQKBWYyjJgVbon78mF/pub?gid=1338092656&single=true&output=csv";
+const STORIES_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxf1QCiDaynQwEoMBnxF7-WEbFNByMoIU3R8G-_5dmaoH2E93fWPahZ_qlTMfQKBWYyjJgVbon78mF/pub?gid=1397846987&single=true&output=csv";
+const MONOLOGUE_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxf1QCiDaynQwEoMBnxF7-WEbFNByMoIU3R8G-_5dmaoH2E93fWPahZ_qlTMfQKBWYyjJgVbon78mF/pub?gid=1282281499&single=true&output=csv";
+const SAYERI_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxf1QCiDaynQwEoMBnxF7-WEbFNByMoIU3R8G-_5dmaoH2E93fWPahZ_qlTMfQKBWYyjJgVbon78mF/pub?gid=1557365021&single=true&output=csv";
+const GALLERY_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxf1QCiDaynQwEoMBnxF7-WEbFNByMoIU3R8G-_5dmaoH2E93fWPahZ_qlTMfQKBWYyjJgVbon78mF/pub?gid=1743997289&single=true&output=csv";
+const VIDEO_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxf1QCiDaynQwEoMBnxF7-WEbFNByMoIU3R8G-_5dmaoH2E93fWPahZ_qlTMfQKBWYyjJgVbon78mF/pub?gid=1263233861&single=true&output=csv";
+const MEMORIES_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxf1QCiDaynQwEoMBnxF7-WEbFNByMoIU3R8G-_5dmaoH2E93fWPahZ_qlTMfQKBWYyjJgVbon78mF/pub?gid=1356343288&single=true&output=csv";
 
 // আপনার 'শেষ চিঠি' গুগল শিটের CSV লিংকটি নিচে বসান
-const LETTERS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR576ug8K6He3n45XG424ZErBt9OJOxWrIGsZNbGKt9LZR3z8oto5F8b_KuCex6574mWKkqxXUomNZg/pub?gid=1296346762&single=true&output=csv"; 
-const PDFS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRnDJ7yjAkNiijjDLP-3jykU8GV3_4-lEvkEAoBaXuoCmNE3Tr0Wtc7tfUgY_xngXwxbJo2Fio2JzJP/pub?gid=0&single=true&output=csv";
+const LETTERS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxf1QCiDaynQwEoMBnxF7-WEbFNByMoIU3R8G-_5dmaoH2E93fWPahZ_qlTMfQKBWYyjJgVbon78mF/pub?gid=249749270&single=true&output=csv"; 
+const PDFS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxf1QCiDaynQwEoMBnxF7-WEbFNByMoIU3R8G-_5dmaoH2E93fWPahZ_qlTMfQKBWYyjJgVbon78mF/pub?gid=1582308394&single=true&output=csv";
 
 const EMAILJS_PUBLIC_KEY = "nrzZqd-KWp06iFnYt"; 
 const EMAILJS_SERVICE_ID = "service_8e409wl"; 
@@ -40,7 +40,7 @@ let currentChapterIndex = 0;
 let currentLetterBookIndex = 0;
 let currentLetterPartIndex = 0;
 let currentVaultPage = 1;
-const totalVaultPages = 16;
+const totalVaultPages = 17;
 let isMusicPlaying = false;
 let scanTimer;
 let auraTimer = null;
@@ -649,9 +649,24 @@ function openSecretVaultInput() {
         window.scrollTo(0,0);
         startPetals();
         currentVaultPage = 1;
-        populateVaultDropdown(); // Add this line
+        populateVaultDropdown(); 
         currentQuiz = 0;
         auraScanned = false;
+        
+        // মেইন মিউজিক বন্ধ করা
+        const mainMusic = document.getElementById('bg-music');
+        if(mainMusic) mainMusic.pause();
+        
+        // ভল্টের মিউজিক প্লে করা ও আইকন চেঞ্জ করা
+        const vaultMusic = document.getElementById('vault-audio');
+        if(vaultMusic) {
+            vaultMusic.play().then(() => {
+                isMusicPlaying = true;
+                document.getElementById('music-icon').className = "fas fa-pause";
+                document.querySelector('.ctrl-float-btn.music-btn').classList.add('playing');
+            }).catch(e => console.log(e));
+        }
+
         document.getElementById('promise-msg').style.display = 'none';
         document.getElementById('love-reason').innerText = '';
         document.getElementById('love-result').style.display = 'none';
@@ -663,7 +678,23 @@ function openSecretVaultInput() {
         showPage(1);
     } else { alert("ACCESS DENIED!"); } 
 }
-function closeVault() { goBack(); document.getElementById('vault-audio').pause(); stopPetals(); }
+
+function closeVault() { 
+    goBack(); 
+    
+    // ভল্টের মিউজিক পজ করা
+    const vaultMusic = document.getElementById('vault-audio');
+    if(vaultMusic) vaultMusic.pause(); 
+    
+    // আইকন ও বাটন পজ অবস্থায় রিসেট করা
+    isMusicPlaying = false;
+    const icon = document.getElementById('music-icon');
+    const btn = document.querySelector('.ctrl-float-btn.music-btn');
+    if(icon) icon.className = "fas fa-play";
+    if(btn) btn.classList.remove('playing');
+    
+    stopPetals(); 
+}
 
 function populateVaultDropdown() {
     const select = document.getElementById('vault-page-select');
@@ -674,10 +705,10 @@ function populateVaultDropdown() {
         "১. এক সন্ধ্যেবেলায়", "২. Happy New Year", "৩. তোমার চোখ", "৪. প্রথম দেখা...",
         "৫. Love Letter", "৬. Open When...", "৭. Our Bucket List", "৮. Why I Love You",
         "৯. Forever Promise", "১০. Do You Know Me?", "১১. Today's Mood", "১২. Relationship Contract",
-        "১৩. Write to Me", "১৪. Love Calculator", "১৫. Our Memories", "১৬. Aura Scanner"
+        "১৩. Write to Me", "১৪. Love Calculator", "১৫. Our Memories", "১৬. Aura Scanner", "১৭. Voice Notes"
     ];
     
-    for(let i = 1; i <= 16; i++) {
+    for(let i = 1; i <= 17; i++) {
         let opt = document.createElement('option');
         opt.value = i;
         opt.text = pageNames[i-1];
@@ -856,23 +887,48 @@ function renderGallery() {
 
 function renderVideos() {
     const container = document.querySelector('#video-view'); if (!container) return;
-    container.innerHTML = `<button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK</button><h2 class="section-title">Video Gallery</h2><div class="video-grid" style="display:grid; grid-template-columns:1fr; gap:20px; padding:10px;"></div>`;
+    container.innerHTML = `<button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK</button><h2 class="section-title">Video Gallery</h2><div class="video-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:24px; padding:10px;"></div>`;
     const grid = container.querySelector('.video-grid');
     if (allVideos.length === 0) {
         grid.innerHTML = "<p style='color:#888; text-align:center;'>কোনো ভিডিও পাওয়া যায়নি।</p>";
         return;
     }
+
     allVideos.forEach(vid => {
-        const url = vid.video_url.trim();
-        const match = url.match(/\/d\/([a-zA-Z0-9-_]+)/) || url.match(/id=([a-zA-Z0-9-_]+)/);
-        if (match && match[1]) {
-            const embedUrl = `https://drive.google.com/file/d/${match[1]}/preview`;
-            const card = document.createElement('div'); card.className = 'video-card-item vintage-paper-node';
-            card.style.cssText = "background:rgba(25,18,19,0.5); border:1px solid #332426; border-radius:4px; overflow:hidden; padding:10px;";
-            const titleText = vid.title ? `<h3 style="font-size:1rem; margin-top:10px; color:var(--primary); font-family:'Hind Siliguri';">${vid.title}</h3>` : '';
-            card.innerHTML = `<div style="position:relative; width:100%; height:0; padding-bottom:56.25%; border-radius:4px; overflow:hidden;"><iframe src="${embedUrl}" style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;" allow="autoplay"></iframe></div>${titleText}`;
-            grid.appendChild(card);
+        const url = (vid.video_url || '').trim();
+        const card = document.createElement('div');
+        card.className = 'video-card-item vintage-paper-node';
+        card.style.cssText = "background:rgba(25,18,19,0.5); border:1px solid #332426; border-radius:4px; overflow:hidden; padding:10px;";
+        const titleText = vid.title ? `<h3 style="font-size:1rem; margin-top:10px; color:var(--primary); font-family:'Hind Siliguri';">${vid.title}</h3>` : '';
+        let innerHtml = '';
+
+        const iframeMatch = url.match(/<iframe[\s\S]*?<\/iframe>/i);
+        if (iframeMatch) {
+            innerHtml = `<div style="position:relative; width:100%; height:0; padding-bottom:56.25%; border-radius:4px; overflow:hidden;">${iframeMatch[0]}</div>`;
+        } else if (/youtube\.com\/watch|youtu\.be\//i.test(url)) {
+            const videoIdMatch = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/i);
+            const embedUrl = videoIdMatch ? `https://www.youtube.com/embed/${videoIdMatch[1]}` : url;
+            innerHtml = `<div style="position:relative; width:100%; height:0; padding-bottom:56.25%; border-radius:4px; overflow:hidden;"><iframe src="${embedUrl}" style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+        } else if (/instagram\.com\//i.test(url)) {
+            const embedUrl = url.includes('/embed') ? url : `${url.replace(/\/?(\?|$)/, '/embed$1')}`;
+            innerHtml = `<div style="position:relative; width:100%; height:0; padding-bottom:100%; border-radius:4px; overflow:hidden;"><iframe src="${embedUrl}" style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>`;
+        } else if (/facebook\.com|fb\.watch/i.test(url)) {
+            const pluginUrl = url.includes('facebook.com') ? `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false&width=560` : `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false&width=560`;
+            innerHtml = `<div style="position:relative; width:100%; height:0; padding-bottom:56.25%; border-radius:4px; overflow:hidden;"><iframe src="${pluginUrl}" style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen></iframe></div>`;
+        } else {
+            const driveMatch = url.match(/\/d\/([a-zA-Z0-9-_]+)/) || url.match(/id=([a-zA-Z0-9-_]+)/);
+            if (driveMatch && driveMatch[1]) {
+                const embedUrl = `https://drive.google.com/file/d/${driveMatch[1]}/preview`;
+                innerHtml = `<div style="position:relative; width:100%; height:0; padding-bottom:56.25%; border-radius:4px; overflow:hidden;"><iframe src="${embedUrl}" style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;" allow="autoplay"></iframe></div>`;
+            } else if (url) {
+                innerHtml = `<div style="padding:30px 20px; text-align:center;"><a href="${url}" target="_blank" rel="noopener noreferrer" style="display:inline-block; padding:10px 18px; background:rgba(255,255,255,0.08); color:#fff; border:1px solid rgba(255,255,255,0.12); border-radius:6px; text-decoration:none;">Open Video Link</a></div>`;
+            } else {
+                innerHtml = `<div style="padding:30px 20px; text-align:center; color:#ccc;">কোনো ভিডিও লিঙ্ক নেই।</div>`;
+            }
         }
+
+        card.innerHTML = `${innerHtml}${titleText}`;
+        grid.appendChild(card);
     });
 }
 
@@ -953,6 +1009,66 @@ function changeFont(dir) { const root = document.documentElement; let current = 
 function backToLibrary() { switchView('novel-library'); }
 function openNovelLibrary() { switchView('novel-library'); }
 
+// Payment Modal Controllers
+function togglePaymentModal() {
+    const overlay = document.getElementById('payment-modal-overlay');
+    if (!overlay) return;
+    overlay.classList.toggle('active');
+}
+
+function closePaymentModal(e) {
+    if (e.target && e.target.id === 'payment-modal-overlay') {
+        togglePaymentModal();
+    }
+}
+
+function switchPayMethod(method, event) {
+    document.querySelectorAll('.pay-tab').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.pay-panel').forEach(panel => panel.classList.remove('active'));
+
+    if (event && event.currentTarget) {
+        event.currentTarget.classList.add('active');
+    }
+    const panel = document.getElementById('pay-' + method);
+    if (panel) panel.classList.add('active');
+}
+
+async function copyPayText(text) {
+    try {
+        await navigator.clipboard.writeText(text);
+        alert('Number Copied: ' + text);
+    } catch (err) {
+        alert('Failed to copy!');
+    }
+}
+
+function verifyPayment(method) {
+    const trxInputId = method.toLowerCase() + '-trx';
+    const trxId = document.getElementById(trxInputId)?.value.trim();
+
+    if (!trxId) {
+        alert('দয়া করে Transaction ID (TrxID) লিখুন।');
+        return;
+    }
+
+    const templateParams = {
+        from_name: 'Coffee Supporter',
+        from_email: 'noreply@yeasinkabir.pro.bd',
+        message: `New "Buy Me a Coffee" Support!\n\nMethod: ${method}\nTransaction ID: ${trxId}\n\nPlease verify this payment.`
+    };
+
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+    .then(() => {
+        alert('আপনার পেমেন্ট ভেরিফিকেশনের জন্য পাঠানো হয়েছে! ভালোবাসার জন্য অনেক ধন্যবাদ ❤️');
+        document.getElementById(trxInputId).value = '';
+        togglePaymentModal();
+    })
+    .catch((error) => {
+        console.error('EmailJS Error:', error);
+        alert('দুঃখিত, রিকোয়েস্টটি পাঠাতে সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।');
+    });
+}
+
 // --- MUSIC CONTROL PLATFORM ---
 function setupMusic() {
     const music = document.getElementById('bg-music');
@@ -964,7 +1080,12 @@ function setupMusic() {
 }
 
 function toggleMusic() {
-    const music = document.getElementById('bg-music');
+    // চেক করি ভল্ট ওপেন আছে কিনা
+    const isVaultOpen = document.getElementById('secret-vault').style.display === 'block';
+    
+    // ভল্ট ওপেন থাকলে vault-audio, না থাকলে bg-music সিলেক্ট হবে
+    const music = isVaultOpen ? document.getElementById('vault-audio') : document.getElementById('bg-music');
+    
     const icon = document.getElementById('music-icon');
     const btn = document.querySelector('.ctrl-float-btn.music-btn');
 
@@ -997,6 +1118,20 @@ function startPetals() {
     }, 300);
 }
 function stopPetals() { if(petalInterval) clearInterval(petalInterval); }
+
+function pauseVaultMusic() {
+    const vaultMusic = document.getElementById('vault-audio');
+    if (vaultMusic && !vaultMusic.paused) {
+        vaultMusic.pause();
+        isMusicPlaying = false;
+        
+        // ফ্লোটিং বাটনের আইকন প্লে-অবস্থায় ফিরিয়ে আনা
+        const icon = document.getElementById('music-icon');
+        const btn = document.querySelector('.ctrl-float-btn.music-btn');
+        if(icon) icon.className = "fas fa-play";
+        if(btn) btn.classList.remove('playing');
+    }
+}
 
 function convertDriveLink() {
     const inputUrl = document.getElementById('drive-input').value.trim();
@@ -1258,3 +1393,86 @@ function scrollToTop() {
         }
     });
 }
+// ============================================
+// OPTIONAL LOGIN SYSTEM LOGIC
+// ============================================
+
+// পপ-আপ খোলা এবং বন্ধ করা
+function openAuthModal() {
+    document.getElementById('auth-modal-overlay').classList.add('active');
+}
+
+function closeAuthModal(e) {
+    if (!e || e.target.id === 'auth-modal-overlay' || e.target.closest('.close-auth-btn')) {
+        document.getElementById('auth-modal-overlay').classList.remove('active');
+    }
+}
+
+// ইউজারের প্রোফাইল ড্রপডাউন টগল করা
+function toggleUserDropdown() {
+    document.getElementById('user-dropdown').classList.toggle('active');
+}
+
+// JWT টোকেন ডিকোড করা
+function decodeJwtResponse(token) {
+    let base64Url = token.split('.')[1];
+    let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(jsonPayload);
+}
+
+// লগিন সফল হলে ডেটা সেভ করা এবং গুগল শিটে ইমেইল পাঠানো
+function handleCredentialResponse(response) {
+    const payload = decodeJwtResponse(response.credential);
+    
+    sessionStorage.setItem('yk_logged_in', 'true');
+    sessionStorage.setItem('yk_user_name', payload.name);
+    sessionStorage.setItem('yk_user_email', payload.email);
+    sessionStorage.setItem('yk_user_pic', payload.picture);
+    
+    closeAuthModal();
+    updateAuthUI();
+
+    // অটোমেটিক ডাটাবেসে (Google Sheet) ইউজারের ইমেইল সেভ করা
+    // নিচে আপনার কপি করা নতুন Web app URL টি বসিয়ে দিন
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx6ht8ks08oDDRyeqL4q8mjYRgijjJWm6HkuROG6ItYIFt_zaKu5W7X1HMjnh2ggbwY/exec"; 
+    
+    fetch(`${WEB_APP_URL}?email=${encodeURIComponent(payload.email)}&name=${encodeURIComponent(payload.name)}`, {
+        mode: 'no-cors'
+    }).then(() => {
+        console.log("User successfully saved to Subscribers list!");
+    }).catch(err => console.error("Error saving user:", err));
+}
+
+// লগ-আউট ফাংশন
+function logoutUser() {
+    sessionStorage.removeItem('yk_logged_in');
+    sessionStorage.removeItem('yk_user_name');
+    sessionStorage.removeItem('yk_user_email');
+    sessionStorage.removeItem('yk_user_pic');
+    
+    document.getElementById('user-dropdown').classList.remove('active');
+    updateAuthUI();
+}
+
+// লগিন অবস্থার উপর ভিত্তি করে UI আপডেট করা
+function updateAuthUI() {
+    const isLoggedIn = sessionStorage.getItem('yk_logged_in') === 'true';
+    const loginBtn = document.getElementById('login-btn-corner');
+    const userProfile = document.getElementById('user-profile-corner');
+    
+    if (isLoggedIn) {
+        loginBtn.style.display = 'none';
+        userProfile.style.display = 'block';
+        document.getElementById('user-avatar').src = sessionStorage.getItem('yk_user_pic');
+        document.getElementById('user-name-display').innerText = sessionStorage.getItem('yk_user_name');
+    } else {
+        loginBtn.style.display = 'flex';
+        userProfile.style.display = 'none';
+    }
+}
+
+// পেজ লোড হওয়ার সাথে সাথে UI আপডেট ফাংশন কল করা
+document.addEventListener('DOMContentLoaded', updateAuthUI);

@@ -341,6 +341,183 @@ h1 {
     margin-bottom: 20px;
 }
 
+.support-writer-btn {
+    position: fixed;
+    bottom: 100px;
+    right: 24px;
+    background: rgba(10, 8, 12, 0.92);
+    color: var(--accent);
+    border: 1px solid rgba(243, 186, 47, 0.8);
+    padding: 12px 18px;
+    border-radius: 30px;
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    z-index: 2000;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 14px 30px rgba(212, 175, 55, 0.28);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transition: all 0.25s ease;
+}
+.support-writer-btn:hover {
+    transform: translateY(-2px);
+    background: var(--gold-gradient);
+    color: #000;
+}
+
+#payment-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.86);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+#payment-modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+.payment-modal-box {
+    width: min(420px, calc(100% - 32px));
+    background: rgba(14, 11, 15, 0.98);
+    border: 1px solid rgba(243, 186, 47, 0.3);
+    border-radius: 22px;
+    padding: 28px 24px 24px;
+    position: relative;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(12px);
+}
+.close-pay-btn {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    background: transparent;
+    border: none;
+    color: #ff7675;
+    font-size: 1.4rem;
+    cursor: pointer;
+}
+.pay-title {
+    margin: 0 0 8px;
+    color: var(--primary);
+    font-family: 'Cinzel', serif;
+    text-align: center;
+    font-size: 1.2rem;
+}
+.pay-subtitle {
+    margin: 0 0 22px;
+    color: #bda67f;
+    font-size: 0.94rem;
+    text-align: center;
+    line-height: 1.6;
+}
+.pay-methods {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 22px;
+}
+.pay-tab {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    color: #f6eee1;
+    padding: 12px 10px;
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.pay-tab img {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+}
+.pay-tab.active {
+    border-color: var(--accent);
+    background: rgba(243, 186, 47, 0.16);
+}
+.pay-panel {
+    display: none;
+    animation: fadeIn 0.35s ease;
+}
+.pay-panel.active {
+    display: block;
+}
+.pay-number-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 1px dashed rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.03);
+    margin-bottom: 18px;
+    color: #f3e5ab;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.95rem;
+}
+.pay-number-box button {
+    background: transparent;
+    border: none;
+    color: var(--accent);
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+.live-pay-section {
+    display: grid;
+    gap: 14px;
+}
+.live-app-btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 13px 12px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: transform 0.2s ease;
+}
+.live-app-btn:hover {
+    transform: translateY(-1px);
+}
+.bkash-color {
+    background: #e2136e;
+    color: #fff;
+}
+.nagad-color {
+    background: #f7941d;
+    color: #000;
+}
+.binance-note {
+    padding: 16px;
+    border-radius: 14px;
+    background: rgba(243, 186, 47, 0.12);
+    border: 1px solid rgba(243, 186, 47, 0.24);
+    color: #f3ba2f;
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 .pdf-library-intro {
     color: #b8f5d0;
     margin-bottom: 18px;
@@ -1141,9 +1318,106 @@ h1 {
     transform: translateY(-5px);
     box-shadow: 0 10px 25px rgba(212,175,55,0.4);
 }
-/* শুধুমাত্র মোবাইলে অ্যানিমেশনের কারণে স্ক্রিন জুম আউট হওয়া বন্ধ করতে */
-@media (max-width: 899px) {
-    #app-container {
-        overflow-x: hidden;
-    }
+/* ==========================================================
+   OPTIONAL LOGIN & AUTH CORNER STYLES
+   ========================================================== */
+.auth-corner {
+    position: fixed;
+    top: 25px;
+    right: 25px;
+    z-index: 2000;
+}
+.auth-btn {
+    background: rgba(22, 15, 17, 0.8);
+    border: 1px solid var(--accent);
+    color: var(--primary);
+    padding: 10px 18px;
+    border-radius: 30px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5), inset 0 0 10px rgba(212,175,55,0.1);
+    font-weight: 600;
+}
+.auth-btn:hover {
+    background: var(--gold-gradient);
+    color: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(212,175,55,0.3);
+}
+.user-profile {
+    position: relative;
+    cursor: pointer;
+}
+.user-profile img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    object-fit: cover;
+}
+.user-dropdown {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background: rgba(15, 10, 11, 0.95);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    padding: 15px;
+    min-width: 180px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    backdrop-filter: blur(10px);
+}
+.user-dropdown.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+.auth-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+.auth-modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+.auth-modal-box {
+    width: 90%;
+    max-width: 420px;
+    text-align: center;
+    position: relative;
+    transform: scale(0.9);
+    transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+.auth-modal-overlay.active .auth-modal-box {
+    transform: scale(1);
+}
+.close-auth-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    color: #ff7675;
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+.close-auth-btn:hover {
+    transform: scale(1.1);
 }
