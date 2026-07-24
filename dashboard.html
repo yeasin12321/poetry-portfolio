@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>My Dashboard | Yeasin Kabir</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Hind+Siliguri:wght@300;400;600;700&family=Orbitron:wght@500&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        /* ড্যাশবোর্ডের নিজস্ব কিছু স্টাইল */
+        .dashboard-wrapper {
+            width: 100%;
+            max-width: 540px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            min-height: 100vh;
+        }
+        .dash-menu-item {
+            display: flex;
+            align-items: center;
+            padding: 18px 0;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            cursor: pointer;
+            color: #eedfd2;
+            transition: all 0.3s ease;
+        }
+        .dash-menu-item:hover {
+            transform: translateX(5px);
+            color: var(--primary);
+        }
+        .dash-menu-icon {
+            width: 35px;
+            font-size: 1.2rem;
+            color: var(--accent);
+        }
+        .dash-menu-text {
+            flex: 1;
+            font-family: 'Hind Siliguri', sans-serif;
+            font-size: 1.05rem;
+        }
+        /* মডাল স্টাইল ফিক্স */
+        .auth-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-glow"></div>
+
+    <div class="dashboard-wrapper">
+        <!-- ব্যাক বাটন -->
+        <button class="back-btn" onclick="window.location.href='index.html'" style="margin-bottom: 30px;">
+            <i class="fas fa-arrow-left"></i> BACK TO HOME
+        </button>
+        
+        <h2 class="section-title">My Dashboard</h2>
+        
+        <!-- প্রোফাইল ইনফো কার্ড -->
+        <div class="vintage-paper-node" style="text-align: center; padding: 30px 20px;">
+            <img id="dash-avatar-img" src="profile.jpg" alt="User Avatar" style="width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--accent); margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); object-fit: cover;">
+            <h3 id="dash-user-name" style="color: var(--primary); font-family: 'Cinzel'; margin: 0 0 5px 0; font-size: 1.5rem;">Loading...</h3>
+            <p id="dash-user-email" style="color: #a18f81; margin: 0; font-size: 0.95rem;">loading...</p>
+        </div>
+
+        <!-- ড্যাশবোর্ড মেনু লিস্ট -->
+        <div class="vintage-paper-node" style="padding: 10px 20px;">
+            <div class="dash-menu-item" onclick="openNameChangeModal()">
+                <div class="dash-menu-icon"><i class="fas fa-user-edit"></i></div>
+                <div class="dash-menu-text">প্রোফাইলের নাম পরিবর্তন</div>
+                <i class="fas fa-chevron-right" style="color:#555;"></i>
+            </div>
+            <div class="dash-menu-item" onclick="alert('আপনার সেভ করা কবিতা ও গল্পগুলো এখানে দেখাবে। (শীঘ্রই আসছে)')">
+                <div class="dash-menu-icon"><i class="fas fa-bookmark"></i></div>
+                <div class="dash-menu-text">সংরক্ষিত লেখা (Saved)</div>
+                <i class="fas fa-chevron-right" style="color:#555;"></i>
+            </div>
+            <div class="dash-menu-item" onclick="alert('পাসওয়ার্ড পরিবর্তনের অপশনটি ফায়ারবেসের সাথে যুক্ত করা হচ্ছে।')">
+                <div class="dash-menu-icon"><i class="fas fa-key"></i></div>
+                <div class="dash-menu-text">পাসওয়ার্ড পরিবর্তন</div>
+                <i class="fas fa-chevron-right" style="color:#555;"></i>
+            </div>
+            <div class="dash-menu-item" onclick="alert('পাঠক হিসেবে আপনার মন্তব্যগুলো এখানে দেখতে পাবেন।')">
+                <div class="dash-menu-icon"><i class="fas fa-comment-dots"></i></div>
+                <div class="dash-menu-text">আমার মন্তব্য সমূহ</div>
+                <i class="fas fa-chevron-right" style="color:#555;"></i>
+            </div>
+            <div class="dash-menu-item" style="border-bottom: none; color: #ff7675;" onclick="logoutUser()">
+                <div class="dash-menu-icon" style="color: #ff7675;"><i class="fas fa-sign-out-alt"></i></div>
+                <div class="dash-menu-text">লগ-আউট (Logout)</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- নাম পরিবর্তনের পপ-আপ মডাল -->
+    <div id="name-change-modal" class="auth-modal-overlay" onclick="closeNameChangeModal(event)">
+        <div class="auth-modal-box vintage-paper-node" onclick="event.stopPropagation()">
+            <h2 style="font-family:'Cinzel'; color:var(--primary); margin-top:0;">Change Name</h2>
+            <p style="color:#c4b5a7; margin-bottom: 20px; font-size: 0.9rem;">আপনার নতুন নামটি নিচে লিখুন:</p>
+            <input type="text" id="new-name-input" class="c-input" placeholder="নতুন নাম">
+            <button class="sub-btn" style="width: 100%;" onclick="saveNewName()">Save Changes</button>
+            <button class="sub-btn" style="width: 100%; background: transparent; border: 1px solid rgba(212,175,55,0.3); color: #aaa; margin-top: 10px;" onclick="closeNameChangeModal('force')">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        // পেজ লোড হওয়ার সাথে সাথে ডেটা ফেচ করা
+        window.onload = function() {
+            // যদি ইউজার লগিন করা না থাকে, তবে লগিন পেজে পাঠিয়ে দিবে
+            if (sessionStorage.getItem('yk_logged_in') !== 'true') {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // সেশন থেকে ইউজারের ডেটা নিয়ে ড্যাশবোর্ডে বসানো
+            document.getElementById('dash-avatar-img').src = sessionStorage.getItem('yk_user_pic') || 'profile.jpg';
+            document.getElementById('dash-user-name').innerText = sessionStorage.getItem('yk_user_name') || 'Reader';
+            document.getElementById('dash-user-email').innerText = sessionStorage.getItem('yk_user_email') || 'No Email provided';
+        };
+
+        // নাম পরিবর্তনের মডাল ওপেন করা
+        function openNameChangeModal() {
+            const currentName = sessionStorage.getItem('yk_user_name');
+            document.getElementById('new-name-input').value = currentName;
+            document.getElementById('name-change-modal').classList.add('active');
+        }
+
+        // নাম পরিবর্তনের মডাল বন্ধ করা
+        function closeNameChangeModal(e) {
+            if (e === 'force' || e.target.id === 'name-change-modal') {
+                document.getElementById('name-change-modal').classList.remove('active');
+            }
+        }
+
+        // নতুন নাম সেভ করা
+        function saveNewName() {
+            const newName = document.getElementById('new-name-input').value.trim();
+            if (!newName) {
+                alert("দয়া করে একটি নাম লিখুন!");
+                return;
+            }
+
+            // সেশনে নতুন নাম সেভ করা
+            sessionStorage.setItem('yk_user_name', newName);
+            
+            // ড্যাশবোর্ডে নামটি আপডেট করা
+            document.getElementById('dash-user-name').innerText = newName;
+            
+            // মডাল বন্ধ করে দেওয়া
+            closeNameChangeModal('force');
+            alert("আপনার প্রোফাইলের নাম সফলভাবে আপডেট করা হয়েছে!");
+        }
+
+        // লগ-আউট ফাংশন
+        function logoutUser() {
+            const confirmLogout = confirm("আপনি কি লগ-আউট করতে চান?");
+            if (confirmLogout) {
+                sessionStorage.removeItem('yk_logged_in');
+                sessionStorage.removeItem('yk_user_name');
+                sessionStorage.removeItem('yk_user_email');
+                sessionStorage.removeItem('yk_user_pic');
+                
+                // লগ-আউট করে মূল ওয়েবসাইটে পাঠানো
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>

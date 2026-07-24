@@ -5,118 +5,327 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Login | Yeasin Kabir - Poems & Novels</title>
     
-    <!-- আপনার ওয়েবসাইটের ফন্ট এবং স্টাইল শিট -->
+    <!-- ফন্ট এবং আইকন -->
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Hind+Siliguri:wght@300;400;600;700&family=Orbitron:wght@500&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    
-    <!-- Google Identity Services Library -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* লগিন পেজকে স্ক্রিনের মাঝখানে রাখার জন্য কাস্টম স্টাইল */
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background-image: radial-gradient(circle at 50% 30%, #150a0d 0%, #070405 70%);
+            background: linear-gradient(135deg, #12080a 0%, #050203 100%);
             margin: 0;
             overflow: hidden;
+            font-family: 'Hind Siliguri', sans-serif;
         }
-        .login-container {
+
+        .bg-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+        }
+        .shape-1, .shape-2 {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: floatShape 10s infinite alternate ease-in-out;
+        }
+        .shape-1 { width: 300px; height: 300px; background: #e65c7b; top: -50px; left: -50px; }
+        .shape-2 { width: 250px; height: 250px; background: #d4af37; bottom: -50px; right: -50px; animation-delay: 2s; }
+        
+        @keyframes floatShape {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 30px) scale(1.1); }
+        }
+
+        .login-glass-box {
             width: 100%;
             max-width: 420px;
-            text-align: center;
-            padding: 45px 30px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            background: rgba(18, 11, 14, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 0 20px rgba(212,175,55,0.05);
             position: relative;
             z-index: 10;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slideUpFade 0.8s ease-out forwards;
         }
+
+        @keyframes slideUpFade {
+            to { transform: translateY(0); opacity: 1; }
+        }
+
         .login-title {
             font-family: 'Cinzel', serif;
-            background: var(--gold-gradient);
+            background: linear-gradient(135deg, #fbf5e6 0%, #d4af37 50%, #aa7c11 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            font-size: 2.8rem;
-            margin-bottom: 15px;
+            font-size: 2.2rem;
+            margin: 0 0 5px 0;
+            text-align: center;
             font-weight: 700;
+            transition: all 0.3s ease;
         }
+
         .login-subtitle {
             color: #c4b5a7;
-            font-family: 'Hind Siliguri', sans-serif;
-            font-size: 1.05rem;
-            margin-bottom: 40px;
+            text-align: center;
+            font-size: 0.95rem;
+            margin-bottom: 30px;
             font-style: italic;
-            line-height: 1.6;
+            transition: all 0.3s ease;
         }
-        .g-btn-wrapper {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
+
+        .input-group { position: relative; margin-bottom: 20px; }
+        .input-group i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #d4af37; font-size: 1.1rem; }
+        
+        .luxury-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 10px;
+            padding: 14px 14px 14px 45px;
+            color: #fff;
+            font-size: 1rem;
+            font-family: 'Hind Siliguri', sans-serif;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
         }
+        .luxury-input:focus { border-color: #d4af37; box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); background: rgba(0, 0, 0, 0.6); outline: none; }
+        .luxury-input::placeholder { color: #887a6f; }
+        
+        .password-toggle { right: 16px; left: auto !important; cursor: pointer; color: #887a6f !important; transition: color 0.3s ease; }
+        .password-toggle:hover { color: #d4af37 !important; }
+
+        .forgot-pass { display: block; text-align: right; color: #e65c7b; font-size: 0.85rem; text-decoration: none; margin-top: -10px; margin-bottom: 25px; transition: color 0.3s ease; }
+        .forgot-pass:hover { color: #ff9a9e; text-decoration: underline; }
+
+        .login-btn-main {
+            width: 100%;
+            background: linear-gradient(135deg, #fbf5e6 0%, #d4af37 50%, #aa7c11 100%);
+            color: #000;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: 'Hind Siliguri', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+        }
+        .login-btn-main:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(212, 175, 55, 0.5); }
+
+        .divider { display: flex; align-items: center; text-align: center; margin: 25px 0; color: #887a6f; font-size: 0.9rem; }
+        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(212, 175, 55, 0.2); }
+        .divider span { padding: 0 10px; }
+
+        .social-login-grid { display: grid; gap: 12px; }
+        .social-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 12px; border-radius: 10px; font-size: 1rem; font-family: 'Hind Siliguri', sans-serif; font-weight: 600; cursor: pointer; transition: all 0.3s ease; text-decoration: none; border: none; }
+        
+        .google-btn { background: #fff; color: #444; border: 1px solid rgba(255,255,255,0.8); }
+        .google-btn:hover { background: #f1f1f1; box-shadow: 0 5px 15px rgba(255,255,255,0.2); }
+        .google-btn img { width: 18px; }
+
+        .fb-btn { background: rgba(24, 119, 242, 0.1); color: #1877F2; border: 1px solid rgba(24, 119, 242, 0.3); }
+        .fb-btn:hover { background: #1877F2; color: #fff; box-shadow: 0 5px 15px rgba(24, 119, 242, 0.4); }
+
+        .signup-link { text-align: center; margin-top: 25px; color: #c4b5a7; font-size: 0.95rem; }
+        .signup-link a { color: #d4af37; text-decoration: none; font-weight: 700; transition: color 0.3s; cursor: pointer; }
+        .signup-link a:hover { color: #fff; text-decoration: underline; }
     </style>
 </head>
 <body>
-    <!-- ব্যাকগ্রাউন্ড গ্লো ইফেক্ট -->
-    <div class="ambient-glow"></div>
-    <div id="leaf-container"></div>
     
-    <!-- লগিন বক্স -->
-    <div class="vintage-paper-node login-container">
-        <h1 class="login-title">Yeasin's World</h1>
-        <p class="login-subtitle">"শব্দেরা যেখানে হারায়, নিস্তব্ধতা সেখানে কথা বলে..." <br><br> ওয়েবসাইটে প্রবেশ করতে আপনার গুগল একাউন্ট দিয়ে লগিন করুন।</p>
+    <div class="bg-shapes">
+        <div class="shape-1"></div>
+        <div class="shape-2"></div>
+    </div>
+    
+    <div class="login-glass-box">
+        <!-- ডায়নামিক টাইটেল ও সাবটাইটেল -->
+        <h1 class="login-title" id="form-title">Welcome Back</h1>
+        <p class="login-subtitle" id="form-subtitle">আপনার প্রিয় গল্পের জগতে পুনরায় স্বাগতম</p>
         
-        <div class="g-btn-wrapper">
-            <!-- Google Login Configuration (এখানে আপনার Client ID বসাবেন) -->
-            <div id="g_id_onload"
-                 data-client_id="856144695898-b88nh2ll39t5l0ui6fu7gi13ufj24fdc.apps.googleusercontent.com"
-                 data-context="signin"
-                 data-ux_mode="popup"
-                 data-callback="handleCredentialResponse"
-                 data-auto_prompt="false">
+        <form id="auth-form">
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="user-email" class="luxury-input" placeholder="ইমেইল এড্রেস" required>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="user-password" class="luxury-input" placeholder="পাসওয়ার্ড" required>
+                <i class="fas fa-eye password-toggle" id="toggle-pass" onclick="togglePassword()"></i>
             </div>
             
-            <!-- Google Login Button -->
-            <div class="g_id_signin"
-                 data-type="standard"
-                 data-shape="rectangular"
-                 data-theme="filled_black"
-                 data-text="signin_with"
-                 data-size="large"
-                 data-logo_alignment="center">
-            </div>
+            <a href="#" class="forgot-pass" id="forgot-pass-btn">পাসওয়ার্ড ভুলে গেছেন?</a>
+            <!-- ডায়নামিক সাবমিট বাটন -->
+            <button type="submit" class="login-btn-main" id="main-submit-btn">লগিন করুন</button>
+        </form>
+
+        <div class="divider"><span>অথবা</span></div>
+
+        <div class="social-login-grid">
+           <button class="social-btn google-btn" id="google-login-btn">
+    <i class="fab fa-google" style="color: #DB4437; font-size: 1.1rem;"></i> Continue with Google
+</button>
+            <button class="social-btn fb-btn" id="facebook-login-btn">
+                <i class="fab fa-facebook-f"></i> Continue with Facebook
+            </button>
+        </div>
+
+        <div class="signup-link">
+            <!-- ডায়নামিক টেক্সট টগল -->
+            <span id="toggle-hint">অ্যাকাউন্ট নেই?</span> <a id="toggle-mode-btn">নতুন অ্যাকাউন্ট খুলুন</a>
         </div>
     </div>
 
-    <script>
-        // JWT Token ডিকোড করার ফাংশন
-        function decodeJwtResponse(token) {
-            let base64Url = token.split('.')[1];
-            let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-            let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            }).join(''));
-            return JSON.parse(jsonPayload);
-        }
+    <!-- Firebase SDK (Modular V9) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
-        // গুগল থেকে লগিন রেসপন্স পাওয়ার পর যা ঘটবে
-        function handleCredentialResponse(response) {
-            const responsePayload = decodeJwtResponse(response.credential);
-            
-            // ইউজারের লগিন স্ট্যাটাস সেশনে সেভ করা হচ্ছে
-            sessionStorage.setItem('yk_logged_in', 'true');
-            sessionStorage.setItem('yk_user_name', responsePayload.name);
-            sessionStorage.setItem('yk_user_email', responsePayload.email);
-            
-            // লগিন সফল হলে সরাসরি মূল ওয়েবসাইটে (index.html) রিডাইরেক্ট করবে
-            window.location.href = 'index.html';
-        }
+        const firebaseConfig = {
+            apiKey: "AIzaSyBbPVsn9PtZnA5x5QeFcKNzpXsnf_Trl-s",
+            authDomain: "yeasin-portfolio-622ec.firebaseapp.com",
+            projectId: "yeasin-portfolio-622ec",
+            storageBucket: "yeasin-portfolio-622ec.firebasestorage.app",
+            messagingSenderId: "158594037945",
+            appId: "1:158594037945:web:4a490be62faed66d4a4368"
+        };
 
-        // ইউজার যদি আগে থেকেই লগিন করা থাকে, তবে তাকে পুনরায় লগিন করতে না দিয়ে সরাসরি ওয়েবসাইটে পাঠিয়ে দিবে
-        window.onload = function() {
-            if (sessionStorage.getItem('yk_logged_in') === 'true') {
-                window.location.href = 'index.html';
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx6ht8ks08oDDRyeqL4q8mjYRgijjJWm6HkuROG6ItYIFt_zaKu5W7X1HMjnh2ggbwY/exec";
+
+        // State for toggle (লগিন মোড নাকি সাইন-আপ মোড)
+        let isLoginMode = true;
+
+        // UI Toggle Function (লগিন ও রেজিস্ট্রেশন পেজ সুইচ করা)
+        document.getElementById('toggle-mode-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            isLoginMode = !isLoginMode; // মোড পরিবর্তন
+            
+            const title = document.getElementById('form-title');
+            const subtitle = document.getElementById('form-subtitle');
+            const submitBtn = document.getElementById('main-submit-btn');
+            const toggleHint = document.getElementById('toggle-hint');
+            const toggleBtn = document.getElementById('toggle-mode-btn');
+            const forgotPassBtn = document.getElementById('forgot-pass-btn');
+
+            if (isLoginMode) {
+                // লগিন ফর্মে রূপান্তর
+                title.innerText = "Welcome Back";
+                subtitle.innerText = "আপনার প্রিয় গল্পের জগতে পুনরায় স্বাগতম";
+                submitBtn.innerText = "লগিন করুন";
+                toggleHint.innerText = "অ্যাকাউন্ট নেই?";
+                toggleBtn.innerText = "নতুন অ্যাকাউন্ট খুলুন";
+                forgotPassBtn.style.display = "block";
+            } else {
+                // রেজিস্ট্রেশন ফর্মে রূপান্তর
+                title.innerText = "Create Account";
+                subtitle.innerText = "নতুন অ্যাকাউন্ট খুলে পাঠক হিসেবে যুক্ত হোন";
+                submitBtn.innerText = "অ্যাকাউন্ট তৈরি করুন";
+                toggleHint.innerText = "আগে থেকেই অ্যাকাউন্ট আছে?";
+                toggleBtn.innerText = "লগিন করুন";
+                forgotPassBtn.style.display = "none";
             }
+        });
+
+        // সফল লগিনের পর ডেটা সেভ করার ফাংশন
+        function saveUserDataAndRedirect(user) {
+            const name = user.displayName || user.email.split('@')[0];
+            const email = user.email;
+            const photoUrl = user.photoURL || "profile.jpg";
+
+            sessionStorage.setItem('yk_logged_in', 'true');
+            sessionStorage.setItem('yk_user_name', name);
+            sessionStorage.setItem('yk_user_email', email);
+            sessionStorage.setItem('yk_user_pic', photoUrl);
+
+            fetch(`${WEB_APP_URL}?email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}`, { mode: 'no-cors' })
+            .then(() => {
+                window.location.href = 'index.html';
+            }).catch(() => {
+                window.location.href = 'index.html';
+            });
+        }
+
+        // ফর্ম সাবমিট ইভেন্ট (লগিন এবং রেজিস্ট্রেশন দুটোই এক জায়গা থেকে হ্যান্ডেল হবে)
+        document.getElementById('auth-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('user-email').value;
+            const password = document.getElementById('user-password').value;
+            
+            if (isLoginMode) {
+                // লগিন করার কোড
+                signInWithEmailAndPassword(auth, email, password)
+                    .then((userCredential) => {
+                        saveUserDataAndRedirect(userCredential.user);
+                    })
+                    .catch((error) => {
+                        alert("লগিন ব্যর্থ হয়েছে। সঠিক ইমেইল ও পাসওয়ার্ড দিন।");
+                    });
+            } else {
+                // নতুন একাউন্ট খোলার কোড
+                createUserWithEmailAndPassword(auth, email, password)
+                    .then((userCredential) => {
+                        alert("একাউন্ট সফলভাবে তৈরি হয়েছে!");
+                        saveUserDataAndRedirect(userCredential.user);
+                    })
+                    .catch((error) => {
+                        alert("একাউন্ট তৈরি করা যায়নি। ইমেইলটি আগে থেকেই ব্যবহৃত হচ্ছে অথবা পাসওয়ার্ড খুব ছোট।");
+                    });
+            }
+        });
+
+        // Google Login
+        document.getElementById('google-login-btn').addEventListener('click', () => {
+            const provider = new GoogleAuthProvider();
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    saveUserDataAndRedirect(result.user);
+                }).catch((error) => {
+                    console.error(error);
+                });
+        });
+
+        // Facebook Login
+        document.getElementById('facebook-login-btn').addEventListener('click', () => {
+            const provider = new FacebookAuthProvider();
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    saveUserDataAndRedirect(result.user);
+                }).catch((error) => {
+                    console.error(error);
+                    alert("Facebook লগিন সেটআপ অসম্পূর্ণ।");
+                });
+        });
+
+        window.togglePassword = function() {
+            const passInput = document.getElementById('user-password');
+            const toggleIcon = document.getElementById('toggle-pass');
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+                toggleIcon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                passInput.type = 'password';
+                toggleIcon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        };
+
+        if (sessionStorage.getItem('yk_logged_in') === 'true') {
+            window.location.href = 'index.html';
         }
     </script>
 </body>

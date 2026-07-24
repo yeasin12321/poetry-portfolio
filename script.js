@@ -1464,13 +1464,20 @@ function updateAuthUI() {
     const userProfile = document.getElementById('user-profile-corner');
     
     if (isLoggedIn) {
-        loginBtn.style.display = 'none';
-        userProfile.style.display = 'block';
-        document.getElementById('user-avatar').src = sessionStorage.getItem('yk_user_pic');
-        document.getElementById('user-name-display').innerText = sessionStorage.getItem('yk_user_name');
+        if (loginBtn) loginBtn.style.display = 'none';
+        if (userProfile) userProfile.style.display = 'block';
+        
+        const avatarImg = document.getElementById('user-avatar');
+        if (avatarImg) avatarImg.src = sessionStorage.getItem('yk_user_pic') || 'profile.jpg';
+        
+        // এই লাইনটিতে আগে এরর আসতো, এখন if কন্ডিশন দেওয়ায় আর আসবে না
+        const nameDisplay = document.getElementById('user-name-display');
+        if (nameDisplay) {
+            nameDisplay.innerText = sessionStorage.getItem('yk_user_name');
+        }
     } else {
-        loginBtn.style.display = 'flex';
-        userProfile.style.display = 'none';
+        if (loginBtn) loginBtn.style.display = 'flex';
+        if (userProfile) userProfile.style.display = 'none';
     }
 }
 
