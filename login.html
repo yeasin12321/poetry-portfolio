@@ -73,7 +73,6 @@
             margin: 0 0 5px 0;
             text-align: center;
             font-weight: 700;
-            transition: all 0.3s ease;
         }
 
         .login-subtitle {
@@ -82,7 +81,6 @@
             font-size: 0.95rem;
             margin-bottom: 30px;
             font-style: italic;
-            transition: all 0.3s ease;
         }
 
         .input-group { position: relative; margin-bottom: 20px; }
@@ -140,7 +138,7 @@
         .fb-btn:hover { background: #1877F2; color: #fff; box-shadow: 0 5px 15px rgba(24, 119, 242, 0.4); }
 
         .signup-link { text-align: center; margin-top: 25px; color: #c4b5a7; font-size: 0.95rem; }
-        .signup-link a { color: #d4af37; text-decoration: none; font-weight: 700; transition: color 0.3s; cursor: pointer; }
+        .signup-link a { color: #d4af37; text-decoration: none; font-weight: 700; transition: color 0.3s; }
         .signup-link a:hover { color: #fff; text-decoration: underline; }
     </style>
 </head>
@@ -152,11 +150,10 @@
     </div>
     
     <div class="login-glass-box">
-        <!-- ডায়নামিক টাইটেল ও সাবটাইটেল -->
-        <h1 class="login-title" id="form-title">Welcome Back</h1>
-        <p class="login-subtitle" id="form-subtitle">আপনার প্রিয় গল্পের জগতে পুনরায় স্বাগতম</p>
+        <h1 class="login-title">Welcome Back</h1>
+        <p class="login-subtitle">আপনার প্রিয় গল্পের জগতে পুনরায় স্বাগতম</p>
         
-        <form id="auth-form">
+        <form id="email-login-form">
             <div class="input-group">
                 <i class="fas fa-envelope"></i>
                 <input type="email" id="user-email" class="luxury-input" placeholder="ইমেইল এড্রেস" required>
@@ -168,24 +165,22 @@
             </div>
             
             <a href="#" class="forgot-pass" id="forgot-pass-btn">পাসওয়ার্ড ভুলে গেছেন?</a>
-            <!-- ডায়নামিক সাবমিট বাটন -->
-            <button type="submit" class="login-btn-main" id="main-submit-btn">লগিন করুন</button>
+            <button type="submit" class="login-btn-main">লগিন করুন</button>
         </form>
 
-        <div class="divider"><span>অথবা</span></div>
+        <div class="divider"><span>অথবা লগিন করুন</span></div>
 
         <div class="social-login-grid">
-           <button class="social-btn google-btn" id="google-login-btn">
-    <i class="fab fa-google" style="color: #DB4437; font-size: 1.1rem;"></i> Continue with Google
-</button>
+            <button class="social-btn google-btn" id="google-login-btn">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google"> Continue with Google
+            </button>
             <button class="social-btn fb-btn" id="facebook-login-btn">
                 <i class="fab fa-facebook-f"></i> Continue with Facebook
             </button>
         </div>
 
         <div class="signup-link">
-            <!-- ডায়নামিক টেক্সট টগল -->
-            <span id="toggle-hint">অ্যাকাউন্ট নেই?</span> <a id="toggle-mode-btn">নতুন অ্যাকাউন্ট খুলুন</a>
+            অ্যাকাউন্ট নেই? <a href="#" id="signup-btn">নতুন অ্যাকাউন্ট খুলুন</a>
         </div>
     </div>
 
@@ -206,41 +201,8 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         
+        // আপনার Google Apps Script URL (Subscriber লিস্টের জন্য)
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx6ht8ks08oDDRyeqL4q8mjYRgijjJWm6HkuROG6ItYIFt_zaKu5W7X1HMjnh2ggbwY/exec";
-
-        // State for toggle (লগিন মোড নাকি সাইন-আপ মোড)
-        let isLoginMode = true;
-
-        // UI Toggle Function (লগিন ও রেজিস্ট্রেশন পেজ সুইচ করা)
-        document.getElementById('toggle-mode-btn').addEventListener('click', (e) => {
-            e.preventDefault();
-            isLoginMode = !isLoginMode; // মোড পরিবর্তন
-            
-            const title = document.getElementById('form-title');
-            const subtitle = document.getElementById('form-subtitle');
-            const submitBtn = document.getElementById('main-submit-btn');
-            const toggleHint = document.getElementById('toggle-hint');
-            const toggleBtn = document.getElementById('toggle-mode-btn');
-            const forgotPassBtn = document.getElementById('forgot-pass-btn');
-
-            if (isLoginMode) {
-                // লগিন ফর্মে রূপান্তর
-                title.innerText = "Welcome Back";
-                subtitle.innerText = "আপনার প্রিয় গল্পের জগতে পুনরায় স্বাগতম";
-                submitBtn.innerText = "লগিন করুন";
-                toggleHint.innerText = "অ্যাকাউন্ট নেই?";
-                toggleBtn.innerText = "নতুন অ্যাকাউন্ট খুলুন";
-                forgotPassBtn.style.display = "block";
-            } else {
-                // রেজিস্ট্রেশন ফর্মে রূপান্তর
-                title.innerText = "Create Account";
-                subtitle.innerText = "নতুন অ্যাকাউন্ট খুলে পাঠক হিসেবে যুক্ত হোন";
-                submitBtn.innerText = "অ্যাকাউন্ট তৈরি করুন";
-                toggleHint.innerText = "আগে থেকেই অ্যাকাউন্ট আছে?";
-                toggleBtn.innerText = "লগিন করুন";
-                forgotPassBtn.style.display = "none";
-            }
-        });
 
         // সফল লগিনের পর ডেটা সেভ করার ফাংশন
         function saveUserDataAndRedirect(user) {
@@ -253,6 +215,7 @@
             sessionStorage.setItem('yk_user_email', email);
             sessionStorage.setItem('yk_user_pic', photoUrl);
 
+            // Google Sheet-এ ডেটা পাঠানো
             fetch(`${WEB_APP_URL}?email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}`, { mode: 'no-cors' })
             .then(() => {
                 window.location.href = 'index.html';
@@ -261,35 +224,23 @@
             });
         }
 
-        // ফর্ম সাবমিট ইভেন্ট (লগিন এবং রেজিস্ট্রেশন দুটোই এক জায়গা থেকে হ্যান্ডেল হবে)
-        document.getElementById('auth-form').addEventListener('submit', (e) => {
+        // 1. Email/Password Login
+        document.getElementById('email-login-form').addEventListener('submit', (e) => {
             e.preventDefault();
             const email = document.getElementById('user-email').value;
             const password = document.getElementById('user-password').value;
             
-            if (isLoginMode) {
-                // লগিন করার কোড
-                signInWithEmailAndPassword(auth, email, password)
-                    .then((userCredential) => {
-                        saveUserDataAndRedirect(userCredential.user);
-                    })
-                    .catch((error) => {
-                        alert("লগিন ব্যর্থ হয়েছে। সঠিক ইমেইল ও পাসওয়ার্ড দিন।");
-                    });
-            } else {
-                // নতুন একাউন্ট খোলার কোড
-                createUserWithEmailAndPassword(auth, email, password)
-                    .then((userCredential) => {
-                        alert("একাউন্ট সফলভাবে তৈরি হয়েছে!");
-                        saveUserDataAndRedirect(userCredential.user);
-                    })
-                    .catch((error) => {
-                        alert("একাউন্ট তৈরি করা যায়নি। ইমেইলটি আগে থেকেই ব্যবহৃত হচ্ছে অথবা পাসওয়ার্ড খুব ছোট।");
-                    });
-            }
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    saveUserDataAndRedirect(userCredential.user);
+                })
+                .catch((error) => {
+                    alert("লগিন ব্যর্থ হয়েছে। সঠিক ইমেইল ও পাসওয়ার্ড দিন অথবা নতুন একাউন্ট খুলুন।");
+                    console.error(error);
+                });
         });
 
-        // Google Login
+        // 2. Google Login
         document.getElementById('google-login-btn').addEventListener('click', () => {
             const provider = new GoogleAuthProvider();
             signInWithPopup(auth, provider)
@@ -297,10 +248,11 @@
                     saveUserDataAndRedirect(result.user);
                 }).catch((error) => {
                     console.error(error);
+                    alert("Google লগিন বাতিল হয়েছে।");
                 });
         });
 
-        // Facebook Login
+        // 3. Facebook Login
         document.getElementById('facebook-login-btn').addEventListener('click', () => {
             const provider = new FacebookAuthProvider();
             signInWithPopup(auth, provider)
@@ -308,10 +260,32 @@
                     saveUserDataAndRedirect(result.user);
                 }).catch((error) => {
                     console.error(error);
-                    alert("Facebook লগিন সেটআপ অসম্পূর্ণ।");
+                    alert("Facebook লগিন বাতিল হয়েছে বা সেটআপ সম্পন্ন হয়নি।");
                 });
         });
 
+        // 4. Sign Up (নতুন একাউন্ট)
+        document.getElementById('signup-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('user-email').value;
+            const password = document.getElementById('user-password').value;
+            
+            if(!email || !password) {
+                alert("নতুন একাউন্ট খুলতে উপরের ফিল্ডে আপনার ইমেইল এবং একটি পাসওয়ার্ড লিখে 'নতুন অ্যাকাউন্ট খুলুন'-এ ক্লিক করুন।");
+                return;
+            }
+            
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    alert("একাউন্ট সফলভাবে তৈরি হয়েছে!");
+                    saveUserDataAndRedirect(userCredential.user);
+                })
+                .catch((error) => {
+                    alert("একাউন্ট তৈরি করা যায়নি: " + error.message);
+                });
+        });
+
+        // পাসওয়ার্ড হাইড/শো ফাংশনটিকে উইন্ডো অবজেক্টে দেওয়া হলো যাতে HTML থেকে কল করা যায়
         window.togglePassword = function() {
             const passInput = document.getElementById('user-password');
             const toggleIcon = document.getElementById('toggle-pass');
@@ -324,6 +298,7 @@
             }
         };
 
+        // চেক করা লগিন আছে কিনা
         if (sessionStorage.getItem('yk_logged_in') === 'true') {
             window.location.href = 'index.html';
         }
