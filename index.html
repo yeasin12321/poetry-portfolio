@@ -78,7 +78,7 @@
     <div class="auth-modal-box vintage-paper-node" onclick="event.stopPropagation()">
         <button class="close-auth-btn" onclick="closeAuthModal()"><i class="fas fa-times"></i></button>
         <h2 style="font-family:'Cinzel'; color:var(--primary); margin-top:0;">Account</h2>
-        <p style="color:#c4b5a7; margin-bottom: 25px; font-size: 0.95rem;">পাঠক হিসেবে যুক্ত হতে আপনার গুগল একাউন্ট দিয়ে লগিন করুন।</p>
+        <p style="color:#c4b5a7; margin-bottom: 25px; font-size: 0.95rem;">পাঠক হিসেবে যুক্ত হতে আপনার গুগল একাউন্ট দিয়ে লগিন করুন。</p>
         
         <div style="display: flex; justify-content: center;">
             <div id="g_id_onload"
@@ -111,6 +111,12 @@
             <span class="welcome-line line-2">এখানেই হয়তো খুঁজে পাবেন আপনার না বলা গল্পগুলো।</span>
             <span class="welcome-main main-title">Yeasin's World</span>
         </div>
+    </div>
+    
+    <!-- Dynamic Section Loader -->
+    <div id="dynamic-section-loader" style="display:none; opacity:0;">
+        <div class="loader-content" id="loader-content"></div>
+        <div class="loader-text" id="loader-text">Loading...</div>
     </div>
 
     <audio id="bg-music" loop> <source src="music.mp3" type="audio/mpeg"> </audio>
@@ -148,18 +154,11 @@
             </div>
 
             <div class="list-container" data-aos="fade-left">
-                <div class="search-container">
-                    <input type="text" id="search-bar" placeholder="🔍 কবিতা খুঁজুন..." onkeyup="filterPoems()">
-                </div>
-                <div class="filter-tags">
-                    <button class="filter-btn active" onclick="filterByTag('all')">সব</button>
-                    <button class="filter-btn" onclick="filterByTag('love')">❤️ প্রেম</button>
-                    <button class="filter-btn" onclick="filterByTag('sad')">💔 বিরহ</button>
-                    <button class="filter-btn" onclick="filterByTag('life')">🌱 জীবন</button>
-                </div>
-
                 <div class="section-title">Explore</div>
                 <div class="menu-button-grid">
+                    <div class="poem-btn" onclick="openPoemLibrary()" style="border-left-color: var(--primary);">
+                        <i class="fas fa-feather"></i> <span>কবিতা সমগ্র</span>
+                    </div>
                     <div class="poem-btn novel-hub-btn" onclick="openNovelLibrary()">
                         <i class="fas fa-book"></i> <span>উপন্যাস সমগ্র</span>
                     </div>
@@ -188,14 +187,31 @@
                         <i class="fas fa-microphone-alt"></i> <span>মোনোলগ</span>
                     </div>
                 </div>
-                <div class="section-title">Poetry Collection</div>
-                <div id="loading-poems" style="text-align:center; color:#888;">কবিতা লোড হচ্ছে...</div>
-                <div id="buttons-list"></div>
                 
                 <div class="visitor-counter">TOTAL READERS: <span id="total-visitors">--</span></div>
             </div>
             
             <div style="text-align:center; color:#555; font-size:0.7rem; margin-top:10px; padding-bottom:20px; grid-column: 1/-1;">WRITTEN WITH LOVE BY YEASIN</div>
+        </div>
+
+        <div id="poem-library" class="full-view">
+            <div class="library-header">
+                <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK TO HOME</button>
+                <h2 style="font-family:'Cinzel'; color:var(--primary);">কবিতা সমগ্র</h2>
+            </div>
+            <div class="list-container" data-aos="fade-up" style="padding: 10px 0;">
+                <div class="search-container">
+                    <input type="text" id="search-bar" placeholder="🔍 কবিতা খুঁজুন..." onkeyup="filterPoems()">
+                </div>
+                <div class="filter-tags" style="margin-bottom: 30px;">
+                    <button class="filter-btn active" onclick="filterByTag('all')">সব</button>
+                    <button class="filter-btn" onclick="filterByTag('love')">❤️ প্রেম</button>
+                    <button class="filter-btn" onclick="filterByTag('sad')">💔 বিরহ</button>
+                    <button class="filter-btn" onclick="filterByTag('life')">🌱 জীবন</button>
+                </div>
+                <div id="loading-poems" style="text-align:center; color:#888;">কবিতা লোড হচ্ছে...</div>
+                <div id="buttons-list"></div>
+            </div>
         </div>
 
         <div id="novel-library" class="full-view">
@@ -419,7 +435,7 @@
                     
                     <div id="page-4" class="diary-page">
                         <h2 class="page-title"><i class="fas fa-heartbeat"></i> প্রথম দেখা...</h2>
-                        <div class="diary-text">মনে পড়ে? ইন্টার ফার্স্ট ইয়ার ভর্তির সেই দিনটা?<br> colleges করিডোরে হাজারো মানুষের ভিড়, কিন্তু আমার চোখ আটকে গিয়েছিল শুধু তোমার দিকে। সেদিনই মনে হয়েছিল, এই মেয়েটাই আমার গল্পের নায়িকা হবে।<br><br><span class="highlight-vault-text">আমরা একসাথে পার করেছি:</span>
+                        <div class="diary-text">মনে পড়ে? ইন্টার ফার্স্ট ইয়ার ভর্তির সেই দিনটা?<br> colleges করিডোরে হাজারো মানুষের ভিড়, কিন্তু আমার চোখ আটকে গিয়েছিল শুধু তোমার দিকে। সেদিনই মনে হয়েছিল, এই মেয়েটাই আমার গল্পের নায়িকা হলিউড হবে।<br><br><span class="highlight-vault-text">আমরা একসাথে পার করেছি:</span>
                             <div id="love-clock">Loading...</div><br>
                             আর আমার প্রিয় ডাকনামটা মনে আছে তো?<br>
                             <h1 class="motu-nickname">মোটু (Motu) ❤️</h1>
@@ -654,6 +670,11 @@
                 <div class="live-pay-section">
                     <div class="binance-note">884525536</div>
                             <button class="sub-btn" style="width:100%; background:#f3ba2f; color:#000;" onclick="copyPayText('884525536')">Copy Pay ID</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="script.js"></script>
 </body>
