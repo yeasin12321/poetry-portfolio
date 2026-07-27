@@ -725,20 +725,55 @@ function stopPetals() {
 }
 
 function openSecretVaultInput() {
-    let enteredCode = "";
-    try {
-        enteredCode = window.prompt ? window.prompt("ENTER ACCESS CODE:") : "";
-    } catch (error) {
-        enteredCode = "3460";
+    // Open the vault password modal instead of directly opening vault
+    const vaultPassModal = document.getElementById('vault-pass-modal-overlay');
+    if (vaultPassModal) {
+        vaultPassModal.classList.add('active');
+        const passwordInput = document.getElementById('vault-pass-input');
+        if (passwordInput) {
+            passwordInput.value = '';
+            passwordInput.focus();
+            // Add Enter key support
+            passwordInput.onkeypress = (e) => {
+                if (e.key === 'Enter') {
+                    verifyVaultPassword();
+                }
+            };
+        }
     }
+}
 
-    if (enteredCode === "3460") {
+function closeVaultPassModal(e) {
+    if (!e || e.target.id === 'vault-pass-modal-overlay' || e.target.closest('.close-auth-btn')) {
+        const vaultPassModal = document.getElementById('vault-pass-modal-overlay');
+        if (vaultPassModal) {
+            vaultPassModal.classList.remove('active');
+        }
+    }
+}
+
+function verifyVaultPassword() {
+    const passwordInput = document.getElementById('vault-pass-input');
+    const enteredPassword = passwordInput ? passwordInput.value : '';
+
+    if (enteredPassword === '3460') {
+        // Close the modal
+        const vaultPassModal = document.getElementById('vault-pass-modal-overlay');
+        if (vaultPassModal) {
+            vaultPassModal.classList.remove('active');
+        }
+
+        // Open the vault with welcome overlay
         playSectionLoader('secret-vault', () => {
             const homeView = document.getElementById('home-view');
             const vaultView = document.getElementById('secret-vault');
+            const welcomeOverlay = document.getElementById('vault-welcome-overlay');
+            
             if(homeView) homeView.style.display='none';
             document.querySelectorAll('.full-view').forEach(el => el.style.display='none');
             if(vaultView) vaultView.style.display='block';
+            if(welcomeOverlay) welcomeOverlay.style.display='flex';
+            
             window.scrollTo(0,0);
             startPetals();
             currentVaultPage = 1;
@@ -772,9 +807,26 @@ function openSecretVaultInput() {
             const auraFieldReset = document.getElementById('aura-field');
             if(auraFieldReset) auraFieldReset.classList.remove('scanning');
             document.querySelectorAll('.open-when-msg').forEach(el => el.style.display = 'none');
-            showPage(1);
         });
-    } else if (enteredCode !== null) { alert("ACCESS DENIED!"); }
+    } else {
+        alert('ভুল পাসওয়ার্ড! আবার চেষ্টা করুন।');
+        if (passwordInput) {
+            passwordInput.value = '';
+            passwordInput.focus();
+        }
+    }
+}
+
+function enterVaultMain() {
+    const welcomeOverlay = document.getElementById('vault-welcome-overlay');
+    if (welcomeOverlay) {
+        welcomeOverlay.classList.add('fade-out');
+        setTimeout(() => {
+            welcomeOverlay.style.display = 'none';
+            welcomeOverlay.classList.remove('fade-out');
+            showPage(1);
+        }, 600);
+    }
 }
 
 function closeVault() { 
