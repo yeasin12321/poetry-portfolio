@@ -48,6 +48,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <!-- html2pdf ও html2canvas লাইব্রেরি যুক্ত করা হলো -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -589,9 +590,13 @@
                         <i class="fas fa-chevron-left"></i>
                     </button>
                     
-                    <select id="vault-page-select" class="vault-page-dropdown" onchange="jumpToVaultPage(this.value)">
-                        <!-- Options will be populated by JS -->
-                    </select>
+                    <div class="vault-dropdown-wrapper">
+                        <button id="vault-page-trigger" class="vault-page-dropdown" type="button" onclick="toggleVaultDropdown()" aria-expanded="false" aria-haspopup="listbox">
+                            <span id="vault-page-trigger-label">১. এক সন্ধ্যেবেলায়</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div id="vault-page-menu" class="vault-page-menu" role="listbox" aria-hidden="true"></div>
+                    </div>
                     
                     <button class="scrapbook-page-btn" onclick="nextPage()">
                         <i class="fas fa-chevron-right"></i>
