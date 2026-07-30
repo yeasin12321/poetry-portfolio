@@ -14,6 +14,8 @@ const MEMORIES_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxf
 const LETTERS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxf1QCiDaynQwEoMBnxF7-WEbFNByMoIU3R8G-_5dmaoH2E93fWPahZ_qlTMfQKBWYyjJgVbon78mF/pub?gid=249749270&single=true&output=csv"; 
 const PDFS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxf1QCiDaynQwEoMBnxF7-WEbFNByMoIU3R8G-_5dmaoH2E93fWPahZ_qlTMfQKBWYyjJgVbon78mF/pub?gid=1582308394&single=true&output=csv";
 
+const CAPTIONS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxf1QCiDaynQwEoMBnxF7-WEbFNByMoIU3R8G-_5dmaoH2E93fWPahZ_qlTMfQKBWYyjJgVbon78mF/pub?gid=1124918655&single=true&output=csv";
+
 const EMAILJS_PUBLIC_KEY = "nrzZqd-KWp06iFnYt"; 
 const EMAILJS_SERVICE_ID = "service_8e409wl"; 
 const EMAILJS_TEMPLATE_ID = "template_uk80jev"; 
@@ -32,6 +34,7 @@ let allStories = [];
 let allSayeri = [];
 let allMonologues = [];
 let allMemories = []; 
+let allCaptions = [];
 let currentFilter = 'all';
 let currentBookIndex = 0;
 let currentChapterIndex = 0;
@@ -81,6 +84,13 @@ function loadAllData() {
             const loader = document.getElementById('loading-sayeri');
             if(loader) loader.style.display = 'none';
             renderSayeri();
+        }
+    });
+    Papa.parse(CAPTIONS_SHEET_URL, {
+        download: true, header: true,
+        complete: function(results) {
+            allCaptions = results.data.filter(item => item.text);
+            renderCaptions();
         }
     });
     Papa.parse(MONOLOGUE_SHEET_URL, {
@@ -365,6 +375,37 @@ function renderSayeri() {
                 <button class="sub-btn image-btn" onclick="downloadAsSvg('sayeri-card-${index}', 'Sayeri_By_Yeasin')"><i class="fas fa-image"></i> IMG ডাউনলোড</button>
                 <button class="sub-btn pdf-btn" onclick="downloadAsPdf('sayeri-card-${index}', 'Sayeri_By_Yeasin')"><i class="fas fa-file-pdf"></i> PDF</button>
                 <button class="sub-btn share-btn" onclick="nativeShare('sayeri-view', 'Sayeri by Yeasin Kabir')"><i class="fas fa-share-alt"></i> Share</button>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function renderCaptions() {
+    const container = document.getElementById('captions-list-container');
+    if(!container) return; 
+    container.innerHTML = '';
+    
+    if (allCaptions.length === 0) {
+        container.innerHTML = "<p style='text-align:center; color:#888; font-style:italic;'>কোনো ক্যাপশন পাওয়া যায়নি।</p>";
+        return;
+    }
+
+    allCaptions.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'sayeri-card vintage-paper-node stagger-anim';
+        card.style.animationDelay = `${Math.min(index * 0.08, 1.5)}s`;
+        card.id = `caption-card-${index}`;
+        
+        const processedText = item.text.replace(/\\n/g, '<br>').replace(/\n/g, '<br>');
+        card.innerHTML = `
+            ${item.title ? `<h3 style="color:var(--primary); font-family:'Cinzel'; margin-bottom:10px; font-size:1.1rem;">${item.title}</h3>` : ''}
+            <div class="sayeri-text">${processedText}</div>
+            <div style="text-align:right; margin-top:15px; font-size:0.8rem; color:#888; font-style:italic;">- ${item.author || 'Yeasin Kabir'}</div>
+            <div class="action-buttons-group hide-during-capture">
+                <button class="sub-btn copy-btn" onclick="copyToClipboard('caption-card-${index}', 'sayeri')"><i class="fas fa-copy"></i> কপি করুন</button>
+                <button class="sub-btn image-btn" onclick="downloadAsSvg('caption-card-${index}', 'Caption_By_Yeasin')"><i class="fas fa-image"></i> IMG</button>
+                <button class="sub-btn pdf-btn" onclick="downloadAsPdf('caption-card-${index}', 'Caption_By_Yeasin')"><i class="fas fa-file-pdf"></i> PDF</button>
             </div>
         `;
         container.appendChild(card);
