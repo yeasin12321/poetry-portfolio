@@ -1570,3 +1570,43 @@ function updateAuthUI() {
     }
 }
 document.addEventListener('DOMContentLoaded', updateAuthUI);
+
+// Detect In-App Browsers (Messenger, Facebook, Instagram, etc.)
+function isInAppBrowser() {
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+    return (ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1) || (ua.indexOf("Instagram") > -1);
+}
+
+// Open link in native Chrome/Safari browser
+function openInExternalBrowser() {
+    const currentUrl = window.location.href;
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+
+    // Android Devices (Intent to launch Chrome)
+    if (/android/i.test(ua)) {
+        const cleanedUrl = currentUrl.replace(/^https?:\/\//, '');
+        window.location.href = `intent://${cleanedUrl}#Intent;scheme=https;package=com.android.chrome;end`;
+    }
+    // iOS / iPhone Devices
+    else if (/iPad|iPhone|iPod/.test(ua)) {
+        // Fallback or copy link action for iOS Messenger limitations
+        navigator.clipboard.writeText(currentUrl).then(() => {
+            alert("Link copied! Please paste it into Safari or Chrome.");
+        }).catch(() => {
+            window.location.href = currentUrl;
+        });
+    } else {
+        window.open(currentUrl, '_blank');
+    }
+}
+
+// Automatically check when page loads
+document.addEventListener("DOMContentLoaded", () => {
+    if (isInAppBrowser()) {
+        const modal = document.getElementById('inapp-modal-overlay');
+        if (modal) {
+            modal.style.display = 'flex';
+            modal.classList.add('active');
+        }
+    }
+});

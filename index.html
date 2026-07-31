@@ -723,5 +723,18 @@
     
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="script.js"></script>
+
+    <!-- In-App Browser Warning Modal -->
+    <div id="inapp-modal-overlay" class="auth-modal-overlay" style="display: none; justify-content: center; align-items: center; z-index: 999999;">
+        <div class="auth-modal-box vintage-paper-node" style="padding: 30px; text-align: center; border: 1px solid var(--accent);">
+            <h2 style="font-family:'Cinzel'; color:var(--primary); margin-top:0;">Notice</h2>
+            <p style="color:#c4b5a7; margin-bottom: 25px; font-size: 1rem; line-height: 1.6;">
+                For a better experience, please open this link in your main browser (Chrome / Safari).
+            </p>
+            <button class="sub-btn" style="width: 100%; font-size: 1rem;" onclick="openInExternalBrowser()">
+                <i class="fas fa-external-link-alt"></i> Open in Browser
+            </button>
+        </div>
+    </div>
 </body>
 </html>
