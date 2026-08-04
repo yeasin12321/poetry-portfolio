@@ -25,6 +25,7 @@ const EMAILJS_TEMPLATE_ID = "template_uk80jev";
 let allPoems = [];
 let allGalleryImages = [];
 let allVideos = [];
+let videosLoaded = false;
 let novelsDB = [];
 let lettersDB = [];
 let pdfCatalog = [];
@@ -67,6 +68,24 @@ window.addEventListener('hashchange', checkUrlHash);
 window.onpopstate = function() { checkUrlHash(); };
 
 // --- DATA FETCH MATRIX ---
+function normalizeDataField(row, keys) {
+    for (const key in row) {
+        if (!Object.prototype.hasOwnProperty.call(row, key)) continue;
+        const normalized = key.trim().toLowerCase();
+        if (keys.includes(normalized)) return row[key];
+    }
+    return '';
+}
+
+function mapVideoRow(row) {
+    const videoUrl = normalizeDataField(row, ['video_url', 'video url', 'video', 'url', 'videourl']);
+    const title = normalizeDataField(row, ['title', 'name', 'video_title', 'video title', 'video_name', 'video name']);
+    return {
+        video_url: videoUrl ? String(videoUrl).trim() : '',
+        title: title ? String(title).trim() : ''
+    };
+}
+
 function loadAllData() {
     Papa.parse(SAYERI_SHEET_URL, {
         download: true, header: true,
@@ -111,7 +130,8 @@ function loadAllData() {
     Papa.parse(VIDEO_SHEET_URL, {
         download: true, header: true,
         complete: function(results) {
-            allVideos = results.data.filter(item => item.video_url);
+            allVideos = results.data.map(mapVideoRow).filter(item => item.video_url);
+            videosLoaded = true;
             renderVideos();
         }
     });
@@ -350,6 +370,7 @@ function executeHashRoute(hash) {
             document.querySelectorAll('.full-view').forEach(el => el.style.display = 'none');
             targetView.style.display = 'block';
             targetView.scrollTop = 0;
+            if (viewId === 'video-view') renderVideos();
         }
     }
 }
@@ -360,6 +381,8 @@ function switchView(viewId) {
 }
 
 function goBack() { 
+    document.querySelectorAll('.full-view').forEach(el => el.style.display = 'none');
+    document.getElementById('home-view').style.display = 'grid';
     window.location.hash = ''; 
 }
 
@@ -587,7 +610,8 @@ function renderVideos() {
     container.innerHTML = `<button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK</button><h2 class="section-title">Video Gallery</h2><div class="video-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:24px; padding:10px;"></div>`;
     const grid = container.querySelector('.video-grid');
     if (allVideos.length === 0) {
-        grid.innerHTML = "<p style='color:#888; text-align:center;'>কোনো ভিডিও পাওয়া যায়নি।</p>";
+        const message = videosLoaded ? 'কোনো ভিডিও পাওয়া যায়নি।' : 'ভিডিও লোড হচ্ছে... অনুগ্রহ করে একটু অপেক্ষা করুন।';
+        grid.innerHTML = `<p style='color:#888; text-align:center;'>${message}</p>`;
         return;
     }
 
@@ -749,35 +773,46 @@ function toggleCommentModal() {
 }
 
 async function submitComment() {
-    const poemId = window.location.hash;
-    const name = document.getElementById('user-name').value;
-    const comment = document.getElementById('user-comment').value;
-    if(!name || !comment) return alert("দয়া করে নাম এবং মন্তব্য লিখুন।");
+    const poemId = window.location.hash || '#unknown';
+    const name = document.getElementById('user-name').value.trim();
+    const comment = document.getElementById('user-comment').value.trim();
+    if (!name || !comment) return alert("দয়া করে নাম এবং মন্তব্য লিখুন।");
     const payload = { type: "comment", poemId: poemId, name: name, comment: comment };
     try {
-        await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) });
+        await fetch(SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "text/plain" },
+            body: JSON.stringify(payload)
+        });
         alert("আপনার মন্তব্যটি জমা হয়েছে!");
         document.getElementById('user-comment').value = "";
         loadComments();
-    } catch(e) { alert("দুঃখিত, মন্তব্যটি পাঠানো যায়নি।"); }
+    } catch (e) {
+        console.error('Comment submit failed:', e);
+        alert("দুঃখিত, মন্তব্যটি পাঠানো যায়নি।");
+    }
 }
 
 async function loadComments() {
     const display = document.getElementById('display-comments');
     const currentId = window.location.hash;
     try {
-        const response = await fetch(SCRIPT_URL);
+        const response = await fetch(`${SCRIPT_URL}?action=get_comments`);
         const data = await response.json();
         display.innerHTML = "";
-        const filtered = data.filter(row => row[0] === currentId);
-        if(filtered.length === 0) {
+        const filtered = Array.isArray(data) ? data.filter(row => row[0] === currentId) : [];
+        if (filtered.length === 0) {
             display.innerHTML = "<p style='color:#666; font-style:italic;'>এখনও কোনো মন্তব্য নেই। প্রথম মন্তব্যটি আপনার হোক!</p>";
         } else {
             filtered.forEach(row => {
                 display.innerHTML += `<div class="vintage-comment-box"><b style="color:var(--primary); font-size:0.9rem;">${row[1]}</b><p style="margin:5px 0 0; font-size:1rem; color:#eee;">${row[2]}</p></div>`;
             });
         }
-    } catch(e) { display.innerHTML = "<p style='color:#e74c3c;'>মন্তব্য লোড করা সম্ভব হয়নি।</p>"; }
+    } catch (e) {
+        console.error('Load comments failed:', e);
+        display.innerHTML = "<p style='color:#e74c3c;'>মন্তব্য লোড করা সম্ভব হয়নি।</p>";
+    }
 }
 
 // --- ROMANTIC SECRET VAULT SYSTEM CONTROLS ---
@@ -790,7 +825,13 @@ function openSecretVaultInput() {
             window.scrollTo(0,0);
             startPetals();
             currentVaultPage = 1;
-            populateVaultDropdown(); 
+            
+            // ভল্ট ওপেন হওয়ার সাথে সাথে অপশন পপুলেট করা
+            setTimeout(() => {
+                populateVaultDropdown(); 
+                showPage(1);
+            }, 50);
+
             currentQuiz = 0;
             auraScanned = false;
             
@@ -813,44 +854,65 @@ function openSecretVaultInput() {
             const auraFieldReset = document.getElementById('aura-field');
             if(auraFieldReset) auraFieldReset.classList.remove('scanning');
             document.querySelectorAll('.open-when-msg').forEach(el => el.style.display = 'none');
-            showPage(1);
         });
     } else { alert("ACCESS DENIED!"); } 
 }
 
 function closeVault() { 
-    goBack(); 
+    // ভল্ট মিউজিক বন্ধ করা
     const vaultMusic = document.getElementById('vault-audio');
     if(vaultMusic) vaultMusic.pause(); 
+
     isMusicPlaying = false;
     const icon = document.getElementById('music-icon');
     const btn = document.querySelector('.ctrl-float-btn.music-btn');
     if(icon) icon.className = "fas fa-play";
     if(btn) btn.classList.remove('playing');
-    stopPetals(); 
+
+    stopPetals();
+
+    // সরাসরি হোম ভিউতে ব্যাক করার স্ট্রং লজিক
+    document.getElementById('secret-vault').style.display = 'none';
+    document.querySelectorAll('.full-view').forEach(el => el.style.display = 'none');
+    document.getElementById('home-view').style.display = 'grid';
+    
+    // ইউআরএল হ্যাশ ক্লিয়ার করা
+    window.location.hash = ''; 
 }
 
 function populateVaultDropdown() {
-    const select = document.getElementById('vault-page-select');
-    if(!select) return;
+    const select = document.getElementById('vault-page-select') || document.querySelector('.vault-page-dropdown');
+    if (!select) return;
+    
+    // অপশন তালিকা পুরোপুরি নতুন করে তৈরি
     select.innerHTML = '';
+
     const pageNames = [
         "১. এক সন্ধ্যেবেলায়", "২. Happy New Year", "৩. তোমার চোখ", "৪. প্রথম দেখা...",
         "৫. Love Letter", "৬. Open When...", "৭. Our Bucket List", "৮. Why I Love You",
         "৯. Forever Promise", "১০. Do You Know Me?", "১১. Today's Mood", "১২. Relationship Contract",
         "১৩. Write to Me", "১৪. Love Calculator", "১৫. Our Memories", "১৬. Aura Scanner", "১৭. Voice Notes"
     ];
-    for(let i = 1; i <= 17; i++) {
-        let opt = document.createElement('option');
-        opt.value = i; opt.text = pageNames[i-1];
+
+    const targetVal = (typeof currentVaultPage !== 'undefined' && currentVaultPage) ? currentVaultPage.toString() : "1";
+
+    pageNames.forEach((name, idx) => {
+        const val = (idx + 1).toString();
+        const opt = document.createElement('option');
+        opt.value = val;
+        opt.text = name;
+        opt.style.color = "#ffccd5";
+        opt.style.backgroundColor = "#180910";
         select.appendChild(opt);
-    }
+    });
+
+    select.value = targetVal;
 }
 
 function jumpToVaultPage(n) { currentVaultPage = parseInt(n); showPage(currentVaultPage); }
 
 function showPage(n) { 
-    document.querySelectorAll('.diary-page').forEach(p=>p.classList.remove('active')); 
+    document.querySelectorAll('.diary-page').forEach(p => p.classList.remove('active')); 
     const targetPage = document.getElementById(`page-${n}`);
     if(targetPage) {
         targetPage.classList.add('active');
@@ -858,9 +920,12 @@ function showPage(n) {
         targetPage.offsetHeight; 
         targetPage.style.animation = 'pageTurnEffect 0.6s ease-out forwards';
     }
-    document.getElementById('page-num').innerText = `${n} / ${totalVaultPages}`; 
+    
+    // ড্রপডাউন সিঙ্ক করা
     const select = document.getElementById('vault-page-select');
-    if(select) select.value = n;
+    if(select) {
+        select.value = n.toString();
+    }
     if(n === 10) { currentQuiz = currentQuiz || 0; loadQuiz(); }
 }
 function nextPage() { if(currentVaultPage < totalVaultPages) { currentVaultPage++; showPage(currentVaultPage); } }
@@ -1614,3 +1679,32 @@ function closeContentPopup() {
 }
 
 window.addEventListener('load', updateBookmarkButtonUI);
+
+// Petals fall animation controller
+let petalsInterval = null;
+
+function startPetals() {
+    const container = document.getElementById('petals-container');
+    if (!container) return;
+    stopPetals();
+    
+    petalsInterval = setInterval(() => {
+        const petal = document.createElement('div');
+        petal.className = 'ambient-leaf';
+        petal.style.left = Math.random() * 100 + "vw";
+        petal.style.animationDuration = Math.random() * 3 + 3 + "s";
+        petal.style.opacity = Math.random() * 0.5 + 0.3;
+        petal.style.backgroundColor = "#e65c7b";
+        container.appendChild(petal);
+        setTimeout(() => petal.remove(), 6000);
+    }, 400);
+}
+
+function stopPetals() {
+    if (petalsInterval) {
+        clearInterval(petalsInterval);
+        petalsInterval = null;
+    }
+    const container = document.getElementById('petals-container');
+    if (container) container.innerHTML = '';
+}

@@ -10,7 +10,7 @@
     --bg: #070405;            
     --card-bg: rgba(22, 15, 17, 0.65); 
     --gold-gradient: linear-gradient(135deg, #fbf5e6 0%, #d4af37 50%, #aa7c11 100%);
-    --rose-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+    --rose-gradient: linear-gradient(135deg, #a72b30 0%, #fecfef 99%, #fecfef 100%);
     --text-size: 1.25rem; 
 }
 
@@ -35,7 +35,7 @@ body {
 @keyframes drift { 0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.6; } 50% { transform: translateY(-15px) rotate(10deg); opacity: 1; } }
 .welcome-text-container { text-align: center; z-index: 10; padding: 0 20px; }
 .welcome-line { display: block; color: var(--primary); font-size: 1.25rem; margin-bottom: 15px; opacity: 0; transform: translateY(20px); animation: cinematicFadeIn 1.6s forwards ease-out; letter-spacing: 1px; }
-.welcome-main { display: block; font-family: 'Cinzel', serif; color: transparent; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 3.2rem; font-weight: 700; opacity: 0; letter-spacing: 4px; animation: mainTitleIn 2.2s forwards cubic-bezier(0.165, 0.84, 0.44, 1); }
+.welcome-main { display: block; font-family: 'Cinzel', serif; color: transparent; background: var(--gold-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; font-size: 3.2rem; font-weight: 700; opacity: 0; letter-spacing: 4px; animation: mainTitleIn 2.2s forwards cubic-bezier(0.165, 0.84, 0.44, 1); }
 .line-1 { animation-delay: 0.3s; } .line-2 { animation-delay: 0.8s; font-size: 1.05rem; color: #a39284; } .main-title { animation-delay: 1.3s; }
 @keyframes cinematicFadeIn { to { opacity: 1; transform: translateY(0); } } 
 @keyframes mainTitleIn { from { transform: scale(0.9); opacity: 0; } to { opacity: 1; transform: scale(1); } }
@@ -51,7 +51,7 @@ body {
 .avatar-frame { display: inline-block; padding: 6px; border: 1px solid transparent; background: linear-gradient(135deg, var(--accent), var(--secondary)) border-box; border-radius: 50%; margin-bottom: 15px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
 .avatar { width: 125px; height: 125px; border-radius: 50%; object-fit: cover; cursor: pointer; transition: transform 0.5s; }
 .avatar:hover { transform: scale(1.05) rotate(5deg); }
-h1 { font-family: 'Cinzel', serif; font-weight: 700; font-size: 2.5rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 12px 0 5px 0; letter-spacing: 2px; }
+h1 { font-family: 'Cinzel', serif; font-weight: 700; font-size: 2.5rem; background: var(--gold-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin: 12px 0 5px 0; letter-spacing: 2px; }
 .typing-text { color: var(--secondary); font-family: 'Orbitron', sans-serif; font-size: 0.8rem; letter-spacing: 2px; font-weight: 600; opacity: 0.9; }
 .poet-vintage-bio { font-size: 0.98rem; color: #c4b5a7; font-style: italic; max-width: 88%; margin: 16px auto 0; line-height: 1.7; font-weight: 300; }
 
@@ -138,7 +138,7 @@ h1 { font-family: 'Cinzel', serif; font-weight: 700; font-size: 2.5rem; backgrou
 .full-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #070405; z-index: 1500; padding: 25px; overflow-y: auto; }
 .back-btn { background: transparent; border: none; color: var(--accent); font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 700; margin-bottom: 25px; font-family: 'Cinzel'; letter-spacing: 1.5px; }
 .back-btn:hover { color: var(--secondary); transform: translateX(-3px); }
-.vintage-poem-title { text-align: center; color: transparent; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Hind Siliguri'; margin-bottom: 30px; font-size: 1.8rem; font-weight: 700; }
+.vintage-poem-title { text-align: center; color: transparent; background: var(--gold-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Hind Siliguri'; margin-bottom: 30px; font-size: 1.8rem; font-weight: 700; }
 #poem-container-box { background: #0d090a; padding: 35px 30px; border-radius: 8px; border: 1px solid rgba(212,175,55,0.1); margin-bottom: 35px; box-shadow: inset 0 0 30px rgba(0,0,0,0.8); }
 #poem-content-display { font-size: var(--text-size); line-height: 2.2; color: #f3e5ab; white-space: pre-line; text-align: center; font-weight: 300; }
 .vintage-paper-node, .novel-card, .sayeri-card, .monologue-card, .memory-item-card { background: rgba(18, 11, 13, 0.8); border: 1px solid rgba(212,175,55,0.08); border-radius: 8px; padding: 25px; margin-bottom: 25px; border-left: 3px solid var(--accent); box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
@@ -206,7 +206,7 @@ h1 { font-family: 'Cinzel', serif; font-weight: 700; font-size: 2.5rem; backgrou
    ========================================================================== */
 #secret-vault { background: linear-gradient(135deg, #18030e 0%, #050003 60%, #000000 100%) !important; padding: 0 !important; overflow: hidden !important; }
 .vault-romantic-wrapper { width: 100%; max-width: 500px; margin: 0 auto; height: 100vh; height: 100dvh; display: flex; flex-direction: column; position: relative; }
-.vault-header { flex-shrink: 0; padding: 25px 25px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed rgba(230, 92, 123, 0.25); background: rgba(7, 4, 5, 0.95); z-index: 100; }
+.vault-header { flex-shrink: 0; padding: 25px 25px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed rgba(230, 92, 123, 0.25); background: rgba(7, 4, 5, 0.95); z-index: 2200; position: relative; }
 .vault-lock-btn { color: #ffa6b7 !important; border: 1px solid rgba(230,92,123,0.3); padding: 8px 18px; border-radius: 30px; font-size: 0.85rem !important; background: rgba(230,92,123,0.05); font-family: 'Cinzel'; font-weight: 700; margin-bottom: 0 !important; }
 .vault-emblem { font-family: 'Great Vibes', cursive; font-size: 2.2rem; color: #e65c7b; text-shadow: 0 0 20px rgba(230, 92, 123, 0.5); margin: 0; }
 
@@ -223,15 +223,45 @@ h1 { font-family: 'Cinzel', serif; font-weight: 700; font-size: 2.5rem; backgrou
 .scrapbook-page-btn { background: transparent; border: 1px solid rgba(255, 180, 195, 0.25); color: #ffccd5; width: 44px; height: 44px; display: flex; justify-content: center; align-items: center; border-radius: 50%; font-size: 1.1rem; cursor: pointer; flex-shrink: 0; }
 .scrapbook-page-btn:hover { background: rgba(230,92,123,0.1); border-color: #e65c7b; color: #fff; }
 
-.vault-page-dropdown { 
-    background: rgba(20, 10, 15, 0.8) url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffccd5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") no-repeat right 12px center;
-    background-size: 16px;
-    color: #ffccd5; border: 1px solid rgba(230, 92, 123, 0.3); padding: 12px 35px 12px 15px; border-radius: 8px; font-family: 'Hind Siliguri', sans-serif; font-size: 1rem; font-weight: 600; outline: none; cursor: pointer; text-align: left; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); flex-grow: 1; margin: 0 15px; appearance: none; -webkit-appearance: none; 
-}
-.vault-page-dropdown:focus { border-color: #e65c7b; }
-.vault-page-dropdown option { background: #0d090a; color: #ffccd5; }
+/* Vault Dropdown Standard & Arrow Fix */
+.vault-page-dropdown,
+#vault-page-select {
+    background-color: #180910 !important;
+    color: #ffccd5 !important;
+    border: 1px solid #e65c7b !important;
+    padding: 8px 30px 8px 12px !important;
+    border-radius: 8px !important;
+    font-family: 'Hind Siliguri', sans-serif !important;
+    font-size: 0.95rem !important;
+    font-weight: 600 !important;
+    outline: none !important;
+    cursor: pointer !important;
+    margin: 0 10px !important;
+    height: 42px !important;
+    min-width: 160px !important;
+    display: inline-block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
 
-/* End of Vault Specific layout fix */
+    /* Custom Dropdown Arrow */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffccd5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 10px center !important;
+    background-size: 16px !important;
+
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+}
+
+/* ড্রপডাউন অপশনের ভেতরে টেক্সট ফন্ট কালার ফিক্স */
+.vault-page-dropdown option,
+#vault-page-select option {
+    background-color: #180910 !important;
+    color: #ffccd5 !important;
+    padding: 10px !important;
+}
+
 
 .vault-social-footer { padding: 30px 20px; background: rgba(12, 6, 10, 0.92); border-top: 1px solid rgba(255,255,255,0.05); }
 .vault-social-inner { max-width: 850px; margin: 0 auto; display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; align-items: center; }
@@ -593,3 +623,8 @@ body.theme-moonlight .vintage-poem-title {
     transform: scale(1.08);
     filter: brightness(1.1);
 }
+
+/* Ensure petals overlay doesn't block interactions and vault controls stay clickable */
+#petals-container { position: absolute; inset: 0; pointer-events: none; z-index: 20; }
+.scrapbook-controls-dock { z-index: 2200; position: relative; }
+
