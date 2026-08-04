@@ -29,6 +29,7 @@
     <meta property="twitter:description" content="Welcome to Yeasin Kabir's official portfolio. Explore a beautiful collection of Bengali romantic & sad poems, novels, and readers' diaries.">
     <meta property="twitter:image" content="https://yeasinkabir.pro.bd/profile.jpg">
     <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="canonical" href="https://yeasinkabir.pro.bd/" />
     
     <script type="application/ld+json">
     {
@@ -48,7 +49,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <!-- html2pdf ও html2canvas লাইব্রেরি যুক্ত করা হলো -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -57,6 +57,8 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<!-- Top Reading Progress Bar -->
+<div id="reading-progress-bar"></div>
     <!-- Top Right Account / Login Corner -->
 <div id="auth-corner" class="auth-corner">
     <!-- লগিন না করা থাকলে এই বাটনটি দেখাবে -->
@@ -101,25 +103,6 @@
     </div>
 </div>
 
-<!-- Vault Password Modal -->
-<div id="vault-pass-modal-overlay" class="auth-modal-overlay" onclick="closeVaultPassModal(event)">
-    <div class="auth-modal-box vintage-paper-node" onclick="event.stopPropagation()">
-        <button class="close-auth-btn" onclick="closeVaultPassModal()"><i class="fas fa-times"></i></button>
-        <h2 style="font-family:'Cinzel'; color:var(--primary); margin-top:0;">🔐 Secret Vault</h2>
-        <p style="color:#c4b5a7; margin-bottom: 25px; font-size: 0.95rem;">এটি একটি সম্পূর্ণ ব্যক্তিগত এবং গোপনীয় স্থান। পাসওয়ার্ড দিয়ে ঢোকান।</p>
-        
-        <input 
-            type="password" 
-            id="vault-pass-input" 
-            class="sub-input" 
-            placeholder="পাসওয়ার্ড এন্টার করুন"
-            style="text-align: center; font-family: 'Courier New', monospace; letter-spacing: 2px;"
-            autocomplete="off"
-        >
-        <button class="sub-btn" style="width: 100%; margin-top: 15px;" onclick="verifyVaultPassword()">আনলক করুন</button>
-    </div>
-</div>
-
     <div class="ambient-glow"></div>
     <div id="leaf-container"></div>
     <canvas id="confetti-canvas" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:9999; display:none;"></canvas>
@@ -145,6 +128,10 @@
     <div class="controls-wrapper">
         <div class="ctrl-float-btn music-btn" onclick="toggleMusic()">
             <i class="fas fa-play" id="music-icon"></i>
+        </div>
+        <!-- নতুন থিম সুইচ বাটন -->
+        <div class="ctrl-float-btn theme-btn" onclick="cycleTheme()" title="Switch Theme">
+            <i class="fas fa-moon" id="theme-icon"></i>
         </div>
     </div>
 
@@ -200,11 +187,11 @@
                     <div class="poem-btn pdf-hub-btn" onclick="openPdfLibrary()">
                         <i class="fas fa-book-reader"></i> <span>পিডিএফ লাইব্রেরি</span>
                     </div>
+                    <div class="poem-btn bookmark-hub-btn" onclick="openBookmarksLibrary()" style="border-left-color: #f1c40f;">
+                        <i class="fas fa-bookmark"></i> <span>সংরক্ষিত তালিকা</span>
+                    </div>
                     <div class="poem-btn sayeri-hub-btn" onclick="switchView('sayeri-view')">
                         <i class="fas fa-heart"></i> <span>শায়রি কালেকশন</span>
-                    </div>
-                    <div class="poem-btn caption-hub-btn" onclick="switchView('captions-view')" style="border-left-color: #f1c40f;">
-                        <i class="fas fa-quote-right"></i> <span>ক্যাপশন ও কোটস</span>
                     </div>
                     <div class="poem-btn monologue-hub-btn" onclick="switchView('monologue-view')">
                         <i class="fas fa-microphone-alt"></i> <span>মোনোলগ</span>
@@ -271,6 +258,14 @@
             <div id="letters-list-container" style="padding: 0 10px;"></div>
         </div>
 
+        <div id="bookmark-library" class="full-view">
+            <div class="library-header">
+                <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK TO HOME</button>
+                <h2 style="font-family:'Cinzel'; color:#f1c40f;">সংরক্ষিত তালিকা</h2>
+            </div>
+            <div id="bookmark-list-container" style="padding: 0 10px;"></div>
+        </div>
+
         <div id="sayeri-view" class="full-view">
             <div class="library-header">
                 <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK TO HOME</button>
@@ -287,14 +282,6 @@
             </div>
             <div id="loading-monologues" style="text-align:center; color:#888;">মোনোলগ লোড হচ্ছে...</div>
             <div id="monologue-list-container" style="padding: 0 20px;"></div>
-        </div>
-
-        <div id="captions-view" class="full-view">
-            <div class="library-header">
-                <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK TO HOME</button>
-                <h2 style="font-family:'Cinzel'; color:#f1c40f; text-align:center;">ক্যাপশন ও কোটস সমগ্র</h2>
-            </div>
-            <div id="captions-list-container" style="padding: 0 20px;"></div>
         </div>
 
         <div id="story-library" class="full-view">
@@ -319,6 +306,8 @@
                     <button class="sub-btn image-btn" onclick="downloadAsImage('novel-pdf-area', 'Novel_Chapter')"><i class="fas fa-image"></i> ইমেজ ডাউনলোড</button>
                     <button class="sub-btn pdf-btn" onclick="downloadItemPDF('novel-pdf-area', 'Novel_Chapter')"><i class="fas fa-file-pdf"></i> PDF ডাউনলোড</button>
                     <button class="sub-btn share-btn" onclick="nativeShare(window.location.hash.substring(1), document.getElementById('current-chapter-title').innerText)"><i class="fas fa-share-alt"></i> Share</button>
+                    <button class="sub-btn speech-btn" onclick="toggleTextToSpeech()"><i class="fas fa-volume-up"></i> শুনুন</button>
+                    <button class="sub-btn bookmark-btn" onclick="toggleCurrentBookmark()"><i class="far fa-bookmark"></i> সংরক্ষণ</button>
                 </div>
             </div>
             <button class="nav-arrow-btn nav-arrow-left" onclick="changeChapter(-1)">
@@ -344,6 +333,8 @@
                     <button class="sub-btn image-btn" onclick="downloadAsImage('letter-pdf-area', 'Letter_By_Yeasin')"><i class="fas fa-image"></i> ইমেজ ডাউনলোড</button>
                     <button class="sub-btn pdf-btn" onclick="downloadItemPDF('letter-pdf-area', 'Letter_By_Yeasin')"><i class="fas fa-file-pdf"></i> PDF ডাউনলোড</button>
                     <button class="sub-btn share-btn" onclick="nativeShare(window.location.hash.substring(1), document.getElementById('current-letter-title').innerText)"><i class="fas fa-share-alt"></i> Share</button>
+                    <button class="sub-btn speech-btn" onclick="toggleTextToSpeech()"><i class="fas fa-volume-up"></i> শুনুন</button>
+                    <button class="sub-btn bookmark-btn" onclick="toggleCurrentBookmark()"><i class="far fa-bookmark"></i> সংরক্ষণ</button>
                 </div>
             </div>
             <button class="nav-arrow-btn nav-arrow-left" onclick="changeLetterPart(-1)">
@@ -357,11 +348,25 @@
         <div id="reader-view" class="full-view">
             <div class="reader-sticky-nav">
                  <button class="back-btn" onclick="goBack()" style="margin:0;"><i class="fas fa-arrow-left"></i> BACK</button>
-                 <button class="back-btn" onclick="toggleSettings()" style="margin:0;"><i class="fas fa-cog"></i></button>
+                 <div>
+                     <button class="back-btn" id="bookmark-toggle-btn" onclick="toggleCurrentBookmark()" style="margin:0; display:inline-block; margin-right:12px;"><i class="far fa-bookmark"></i></button>
+                     <button class="back-btn" onclick="toggleSettings()" style="margin:0; display:inline-block;"><i class="fas fa-cog"></i></button>
+                 </div>
             </div>
-            <div id="settings-panel" style="display:none; position:absolute; top:60px; right:20px; background:rgba(20,15,15,0.98); padding:15px; border-radius:4px; z-index:2000; border:1px solid #332225;">
-                <button onclick="changeFont(1)" style="color:#fff; background:#443335; border:none; width:30px; height:30px; cursor:pointer;">+</button>
-                <button onclick="changeFont(-1)" style="color:#fff; background:#443335; border:none; width:30px; height:30px; cursor:pointer;">-</button>
+            
+            <!-- Upgraded Settings Panel -->
+            <div id="settings-panel" style="display:none; position:fixed; top:60px; right:20px; background:rgba(20,15,15,0.98); padding:18px; border-radius:8px; z-index:2000; border:1px solid var(--accent); box-shadow:0 10px 30px rgba(0,0,0,0.8); min-width:200px;">
+                <div style="color:var(--primary); font-size:0.85rem; margin-bottom:8px; font-weight:600;">টেক্সট সাইজ</div>
+                <div style="display:flex; gap:8px; margin-bottom:15px;">
+                    <button onclick="changeFont(1)" class="sub-btn" style="padding:4px 12px;">+</button>
+                    <button onclick="changeFont(-1)" class="sub-btn" style="padding:4px 12px;">-</button>
+                </div>
+                
+                <div style="color:var(--primary); font-size:0.85rem; margin-bottom:8px; font-weight:600;">লাইন স্পেসিং</div>
+                <div style="display:flex; gap:8px;">
+                    <button onclick="changeLineHeight(0.2)" class="sub-btn" style="padding:4px 12px;">বাড়ান</button>
+                    <button onclick="changeLineHeight(-0.2)" class="sub-btn" style="padding:4px 12px;">কমান</button>
+                </div>
             </div>
             <div style="padding-top: 70px;">
                 <h2 id="poem-title-display" class="vintage-poem-title"></h2>
@@ -375,6 +380,8 @@
                         <button class="sub-btn image-btn" onclick="downloadAsImage('poem-container-box', 'Yeasin_Kabir_Collection')"><i class="fas fa-image"></i> ইমেজ ডাউনলোড</button>
                         <button class="sub-btn pdf-btn" onclick="downloadItemPDF('poem-container-box', 'Yeasin_Kabir_Collection')"><i class="fas fa-file-pdf"></i> PDF ডাউনলোড</button>
                         <button class="sub-btn share-btn" onclick="nativeShare(window.location.hash.substring(1), document.getElementById('poem-title-display').innerText)"><i class="fas fa-share-alt"></i> Share</button>
+                        <button class="sub-btn speech-btn" onclick="toggleTextToSpeech()"><i class="fas fa-volume-up"></i> শুনুন</button>
+                        <button class="sub-btn bookmark-btn" onclick="toggleCurrentBookmark()"><i class="far fa-bookmark"></i> সংরক্ষণ</button>
                     </div>
                 </div>
                 
@@ -405,6 +412,12 @@
         <div id="gallery-view" class="full-view">
              <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK</button>
              <h2 class="section-title">Photo Gallery</h2>
+             <div class="filter-tags" style="margin-bottom: 20px; justify-content: center;">
+                 <button class="filter-btn active" onclick="filterGallery('all', event)">সব</button>
+                 <button class="filter-btn" onclick="filterGallery('nature', event)">🌱 প্রকৃতি</button>
+                 <button class="filter-btn" onclick="filterGallery('portrait', event)">👤 প্রতিকৃতি</button>
+                 <button class="filter-btn" onclick="filterGallery('moments', event)">✨ মুহূর্ত</button>
+             </div>
              <div class="gallery-grid"></div>
         </div>
 
@@ -439,17 +452,6 @@
         <div id="secret-vault" class="full-view">
             <div id="petals-container"></div>
             
-            <!-- Vault Welcome Overlay -->
-            <div id="vault-welcome-overlay" class="vault-welcome-overlay">
-                <div class="vault-welcome-card">
-                    <div class="welcome-heart-icon">💕</div>
-                    <div class="welcome-message">
-                        "শাহজাহান হয়তো তার মমতাজকে ভালোবেসে তাজমহল বানিয়েছিল, কিন্তু আমি তো আর রাজা-বাদশা নই! তাই আমি আমার ওয়েবসাইটে তোমার প্রতি আমার ভালোবাসা প্রকাশ করলাম। হয়তো দামি কোনো কিছু না, কিন্তু শাহজাহানের চেয়েও দামি মন আর ভালোবাসা নিয়ে তিল তিল করে এই ওয়েবসাইটটি বানিয়েছি।"
-                    </div>
-                    <button class="sub-btn" style="margin-top: 30px;" onclick="enterVaultMain()">আমাদের গল্পে প্রবেশ করুন ❤️</button>
-                </div>
-            </div>
-
             <div class="vault-romantic-wrapper">
                 <div class="vault-header">
                     <button class="back-btn vault-lock-btn" onclick="closeVault()"><i class="fas fa-lock"></i> LOCK FOLDER</button>
@@ -631,13 +633,9 @@
                         <i class="fas fa-chevron-left"></i>
                     </button>
                     
-                    <div class="vault-dropdown-wrapper">
-                        <button id="vault-page-trigger" class="vault-page-dropdown" type="button" onclick="toggleVaultDropdown()" aria-expanded="false" aria-haspopup="listbox">
-                            <span id="vault-page-trigger-label">১. এক সন্ধ্যেবেলায়</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <div id="vault-page-menu" class="vault-page-menu" role="listbox" aria-hidden="true"></div>
-                    </div>
+                    <select id="vault-page-select" class="vault-page-dropdown" onchange="jumpToVaultPage(this.value)">
+                        <!-- Options will be populated by JS -->
+                    </select>
                     
                     <button class="scrapbook-page-btn" onclick="nextPage()">
                         <i class="fas fa-chevron-right"></i>
@@ -724,16 +722,11 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="script.js"></script>
 
-    <!-- In-App Browser Warning Modal -->
-    <div id="inapp-modal-overlay" class="auth-modal-overlay" style="display: none; justify-content: center; align-items: center; z-index: 999999;">
-        <div class="auth-modal-box vintage-paper-node" style="padding: 30px; text-align: center; border: 1px solid var(--accent);">
-            <h2 style="font-family:'Cinzel'; color:var(--primary); margin-top:0;">Notice</h2>
-            <p style="color:#c4b5a7; margin-bottom: 25px; font-size: 1rem; line-height: 1.6;">
-                For a better experience, please open this link in your main browser (Chrome / Safari).
-            </p>
-            <button class="sub-btn" style="width: 100%; font-size: 1rem;" onclick="openInExternalBrowser()">
-                <i class="fas fa-external-link-alt"></i> Open in Browser
-            </button>
+    <!-- Single Content Popup Overlay -->
+    <div id="content-popup-overlay" class="auth-modal-overlay" onclick="closeContentPopup()">
+        <div class="auth-modal-box vintage-paper-node" style="max-width: 500px; text-align: left; padding: 30px 20px;" onclick="event.stopPropagation()">
+            <button class="close-auth-btn" onclick="closeContentPopup()"><i class="fas fa-times"></i></button>
+            <div id="popup-content-body"></div>
         </div>
     </div>
 </body>

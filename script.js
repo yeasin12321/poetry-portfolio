@@ -14,8 +14,6 @@ const MEMORIES_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxf
 const LETTERS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxf1QCiDaynQwEoMBnxF7-WEbFNByMoIU3R8G-_5dmaoH2E93fWPahZ_qlTMfQKBWYyjJgVbon78mF/pub?gid=249749270&single=true&output=csv"; 
 const PDFS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxf1QCiDaynQwEoMBnxF7-WEbFNByMoIU3R8G-_5dmaoH2E93fWPahZ_qlTMfQKBWYyjJgVbon78mF/pub?gid=1582308394&single=true&output=csv";
 
-const CAPTIONS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxf1QCiDaynQwEoMBnxF7-WEbFNByMoIU3R8G-_5dmaoH2E93fWPahZ_qlTMfQKBWYyjJgVbon78mF/pub?gid=1124918655&single=true&output=csv";
-
 const EMAILJS_PUBLIC_KEY = "nrzZqd-KWp06iFnYt"; 
 const EMAILJS_SERVICE_ID = "service_8e409wl"; 
 const EMAILJS_TEMPLATE_ID = "template_uk80jev"; 
@@ -34,7 +32,6 @@ let allStories = [];
 let allSayeri = [];
 let allMonologues = [];
 let allMemories = []; 
-let allCaptions = [];
 let currentFilter = 'all';
 let currentBookIndex = 0;
 let currentChapterIndex = 0;
@@ -46,7 +43,7 @@ let isMusicPlaying = false;
 let scanTimer;
 let auraTimer = null;
 let auraScanned = false;
-let currentHashContext = ''; 
+let currentHashContext = ''; // Router Context Tracking
 
 window.onload = () => {
     loadAllData();
@@ -54,7 +51,7 @@ window.onload = () => {
     
     setTimeout(() => {
         document.getElementById('preloader').style.display = 'none';
-        checkUrlHash(); 
+        checkUrlHash(); // Initiate router on first load
     }, 1500);
     
     AOS.init({ duration: 900, once: true });
@@ -68,14 +65,8 @@ window.onload = () => {
 
 window.addEventListener('hashchange', checkUrlHash);
 window.onpopstate = function() { checkUrlHash(); };
-document.addEventListener('click', (event) => {
-    const wrapper = event.target.closest('.vault-dropdown-wrapper');
-    if(!wrapper) closeVaultDropdown();
-});
-document.addEventListener('keydown', (event) => {
-    if(event.key === 'Escape') closeVaultDropdown();
-});
 
+// --- DATA FETCH MATRIX ---
 function loadAllData() {
     Papa.parse(SAYERI_SHEET_URL, {
         download: true, header: true,
@@ -84,13 +75,6 @@ function loadAllData() {
             const loader = document.getElementById('loading-sayeri');
             if(loader) loader.style.display = 'none';
             renderSayeri();
-        }
-    });
-    Papa.parse(CAPTIONS_SHEET_URL, {
-        download: true, header: true,
-        complete: function(results) {
-            allCaptions = results.data.filter(item => item.text);
-            renderCaptions();
         }
     });
     Papa.parse(MONOLOGUE_SHEET_URL, {
@@ -190,6 +174,7 @@ function processLettersData(flatData) {
     lettersDB = Object.values(letterMap);
 }
 
+// --- DYNAMIC SECTION LOADER ---
 function playSectionLoader(viewId, callback) {
     const loader = document.getElementById('dynamic-section-loader');
     if(!loader) { if(callback) callback(); return; }
@@ -201,25 +186,63 @@ function playSectionLoader(viewId, callback) {
     let textMsg = 'Loading...';
 
     switch(viewId) {
-        case 'poem-library': iconHtml = '<i class="fas fa-feather-alt anim-feather"></i>'; textMsg = 'কবিতার পাতা উল্টানো হচ্ছে...'; break;
-        case 'novel-library': iconHtml = '<i class="fas fa-book-open anim-book" style="color: var(--novel-accent);"></i>'; textMsg = 'উপন্যাসের মলাট খোলা হচ্ছে...'; break;
-        case 'letters-library': iconHtml = '<i class="fas fa-envelope-open-text anim-envelope" style="color: #e74c3c;"></i>'; textMsg = 'পুরনো চিঠিগুলো পড়া হচ্ছে...'; break;
-        case 'story-library': iconHtml = '<i class="fas fa-pen-nib anim-diary" style="color: #3498db;"></i>'; textMsg = 'গল্পের খাতা প্রস্তুত হচ্ছে...'; break;
-        case 'gallery-view': iconHtml = '<i class="fas fa-camera-retro anim-camera" style="color: #f1c40f;"></i>'; textMsg = 'স্মৃতিগুলো সাজানো হচ্ছে...'; break;
-        case 'video-view': iconHtml = '<i class="fas fa-film anim-video" style="color: #e67e22;"></i>'; textMsg = 'ভিডিওগুলো লোড হচ্ছে...'; break;
-        case 'pdf-library': iconHtml = '<i class="fas fa-file-pdf anim-pdf" style="color: #2ecc71;"></i>'; textMsg = 'পিডিএফ সংগ্রহশালায় প্রবেশ...'; break;
-        case 'sayeri-view': iconHtml = '<i class="fas fa-heart anim-heart" style="color: #e65c7b;"></i>'; textMsg = 'হৃদয়ের কথাগুলো আনা হচ্ছে...'; break;
-        case 'monologue-view': iconHtml = '<i class="fas fa-microphone-alt anim-mic" style="color: #9b59b6;"></i>'; textMsg = 'মোনোলগ প্রস্তুত করা হচ্ছে...'; break;
-        case 'readers-diary-view': iconHtml = '<i class="fas fa-book-reader anim-diary" style="color: #1abc9c;"></i>'; textMsg = 'পাঠকের ডায়েরি খোলা হচ্ছে...'; break;
-        case 'secret-vault': iconHtml = '<i class="fas fa-key anim-mic" style="color: #ff9a9e;"></i>'; textMsg = 'ভল্ট আনলক করা হচ্ছে...'; break;
-        default: iconHtml = '<i class="fas fa-spinner fa-spin"></i>'; textMsg = 'অপেক্ষা করুন...';
+        case 'poem-library':
+            iconHtml = '<i class="fas fa-feather-alt anim-feather"></i>';
+            textMsg = 'কবিতার পাতা উল্টানো হচ্ছে...';
+            break;
+        case 'novel-library':
+            iconHtml = '<i class="fas fa-book-open anim-book" style="color: var(--novel-accent);"></i>';
+            textMsg = 'উপন্যাসের মলাট খোলা হচ্ছে...';
+            break;
+        case 'letters-library':
+            iconHtml = '<i class="fas fa-envelope-open-text anim-envelope" style="color: #e74c3c;"></i>';
+            textMsg = 'পুরনো চিঠিগুলো পড়া হচ্ছে...';
+            break;
+        case 'story-library':
+            iconHtml = '<i class="fas fa-pen-nib anim-diary" style="color: #3498db;"></i>';
+            textMsg = 'গল্পের খাতা প্রস্তুত হচ্ছে...';
+            break;
+        case 'gallery-view':
+            iconHtml = '<i class="fas fa-camera-retro anim-camera" style="color: #f1c40f;"></i>';
+            textMsg = 'স্মৃতিগুলো সাজানো হচ্ছে...';
+            break;
+        case 'video-view':
+            iconHtml = '<i class="fas fa-film anim-video" style="color: #e67e22;"></i>';
+            textMsg = 'ভিডিওগুলো লোড হচ্ছে...';
+            break;
+        case 'pdf-library':
+            iconHtml = '<i class="fas fa-file-pdf anim-pdf" style="color: #2ecc71;"></i>';
+            textMsg = 'পিডিএফ সংগ্রহশালায় প্রবেশ...';
+            break;
+        case 'sayeri-view':
+            iconHtml = '<i class="fas fa-heart anim-heart" style="color: #e65c7b;"></i>';
+            textMsg = 'হৃদয়ের কথাগুলো আনা হচ্ছে...';
+            break;
+        case 'monologue-view':
+            iconHtml = '<i class="fas fa-microphone-alt anim-mic" style="color: #9b59b6;"></i>';
+            textMsg = 'মোনোলগ প্রস্তুত করা হচ্ছে...';
+            break;
+        case 'readers-diary-view':
+            iconHtml = '<i class="fas fa-book-reader anim-diary" style="color: #1abc9c;"></i>';
+            textMsg = 'পাঠকের ডায়েরি খোলা হচ্ছে...';
+            break;
+        case 'secret-vault':
+            iconHtml = '<i class="fas fa-key anim-mic" style="color: #ff9a9e;"></i>';
+            textMsg = 'ভল্ট আনলক করা হচ্ছে...';
+            break;
+        default:
+            iconHtml = '<i class="fas fa-spinner fa-spin"></i>';
+            textMsg = 'অপেক্ষা করুন...';
     }
 
     loaderIcon.innerHTML = iconHtml;
     loaderText.innerText = textMsg;
     loader.style.display = 'flex';
     
-    setTimeout(() => { loader.style.opacity = '1'; }, 10);
+    setTimeout(() => {
+        loader.style.opacity = '1';
+    }, 10);
+
     setTimeout(() => {
         loader.style.opacity = '0';
         setTimeout(() => {
@@ -229,9 +252,10 @@ function playSectionLoader(viewId, callback) {
     }, 1200); 
 }
 
+// --- ADVANCED ROUTER SYSTEM ---
 function checkUrlHash() { 
     const hash = window.location.hash; 
-    if (hash === currentHashContext) return; 
+    if (hash === currentHashContext) return; // Prevent loop triggering
     
     if (!hash) {
         document.querySelectorAll('.full-view').forEach(el => el.style.display = 'none');
@@ -240,12 +264,16 @@ function checkUrlHash() {
         return;
     }
 
+    // Determine loader type
     let loaderId = hash.substring(1);
     if (hash.includes('#poem=')) loaderId = 'poem-library';
     else if (hash.includes('#story=')) loaderId = 'story-library';
     else if (hash.includes('#novel=')) loaderId = 'novel-library';
     else if (hash.includes('#letter=')) loaderId = 'letters-library';
+    else if (hash.includes('#sayeri=')) loaderId = 'sayeri-view';
+    else if (hash.includes('#monologue=')) loaderId = 'monologue-view';
 
+    // Prevent loaders when merely flipping chapters
     const isChapterChange = (hash.includes('&chap=') || hash.includes('&part=')) && currentHashContext.includes(hash.split('&')[0]);
 
     if (isChapterChange) {
@@ -304,8 +332,16 @@ function executeHashRoute(hash) {
                 loadLetterPart();
             }
         }
+    } else if (hash.includes('#sayeri=')) {
+        const index = parseInt(hash.split('=')[1]);
+        switchView('sayeri-view');
+        setTimeout(() => { if (allSayeri[index]) openSayeriPopup(index); }, 300);
+    } else if (hash.includes('#monologue=')) {
+        const index = parseInt(hash.split('=')[1]);
+        switchView('monologue-view');
+        setTimeout(() => { if (allMonologues[index]) openMonologuePopup(index); }, 300);
     } else if (hash === '#secret-vault') {
-        goBack(); 
+        goBack(); // Vault is protected via JS prompt
     } else {
         const viewId = hash.substring(1);
         const targetView = document.getElementById(viewId);
@@ -318,9 +354,16 @@ function executeHashRoute(hash) {
     }
 }
 
-function switchView(viewId) { window.location.hash = viewId; }
-function goBack() { window.location.hash = ''; }
+// Navigation Helper
+function switchView(viewId) { 
+    window.location.hash = viewId; 
+}
 
+function goBack() { 
+    window.location.hash = ''; 
+}
+
+// --- CORE RENDERING ENGINES ---
 function renderPoems() {
     const listDiv = document.getElementById('buttons-list');
     listDiv.innerHTML = '';
@@ -362,9 +405,12 @@ function renderSayeri() {
 
     allSayeri.forEach((sayeri, index) => {
         const card = document.createElement('div');
+        card.id = `sayeri-card-${index}`;
         card.className = 'sayeri-card vintage-paper-node stagger-anim';
         card.style.animationDelay = `${Math.min(index * 0.08, 1.5)}s`;
-        card.id = `sayeri-card-${index}`;
+        const bookmarkHash = `#sayeri=${index}`;
+        const bookmarkTitle = `শায়রি - ${sayeri.author || 'Yeasin Kabir'}`;
+        const bookmarkIconClass = isBookmarked(bookmarkHash) ? 'fas' : 'far';
         
         const processedText = sayeri.text.replace(/\\n/g, '<br>').replace(/\n/g, '<br>');
         card.innerHTML = `
@@ -372,40 +418,10 @@ function renderSayeri() {
             <div style="text-align:right; margin-top:15px; font-size:0.8rem; color:#888; font-style:italic;">- ${sayeri.author || 'Yeasin Kabir'}</div>
             <div class="action-buttons-group hide-during-capture">
                 <button class="sub-btn copy-btn" onclick="copyToClipboard('sayeri-card-${index}', 'sayeri')"><i class="fas fa-copy"></i> কপি করুন</button>
-                <button class="sub-btn image-btn" onclick="downloadAsSvg('sayeri-card-${index}', 'Sayeri_By_Yeasin')"><i class="fas fa-image"></i> IMG ডাউনলোড</button>
-                <button class="sub-btn pdf-btn" onclick="downloadAsPdf('sayeri-card-${index}', 'Sayeri_By_Yeasin')"><i class="fas fa-file-pdf"></i> PDF</button>
-                <button class="sub-btn share-btn" onclick="nativeShare('sayeri-view', 'Sayeri by Yeasin Kabir')"><i class="fas fa-share-alt"></i> Share</button>
-            </div>
-        `;
-        container.appendChild(card);
-    });
-}
-
-function renderCaptions() {
-    const container = document.getElementById('captions-list-container');
-    if(!container) return; 
-    container.innerHTML = '';
-    
-    if (allCaptions.length === 0) {
-        container.innerHTML = "<p style='text-align:center; color:#888; font-style:italic;'>কোনো ক্যাপশন পাওয়া যায়নি।</p>";
-        return;
-    }
-
-    allCaptions.forEach((item, index) => {
-        const card = document.createElement('div');
-        card.className = 'sayeri-card vintage-paper-node stagger-anim';
-        card.style.animationDelay = `${Math.min(index * 0.08, 1.5)}s`;
-        card.id = `caption-card-${index}`;
-        
-        const processedText = item.text.replace(/\\n/g, '<br>').replace(/\n/g, '<br>');
-        card.innerHTML = `
-            ${item.title ? `<h3 style="color:var(--primary); font-family:'Cinzel'; margin-bottom:10px; font-size:1.1rem;">${item.title}</h3>` : ''}
-            <div class="sayeri-text">${processedText}</div>
-            <div style="text-align:right; margin-top:15px; font-size:0.8rem; color:#888; font-style:italic;">- ${item.author || 'Yeasin Kabir'}</div>
-            <div class="action-buttons-group hide-during-capture">
-                <button class="sub-btn copy-btn" onclick="copyToClipboard('caption-card-${index}', 'sayeri')"><i class="fas fa-copy"></i> কপি করুন</button>
-                <button class="sub-btn image-btn" onclick="downloadAsSvg('caption-card-${index}', 'Caption_By_Yeasin')"><i class="fas fa-image"></i> IMG</button>
-                <button class="sub-btn pdf-btn" onclick="downloadAsPdf('caption-card-${index}', 'Caption_By_Yeasin')"><i class="fas fa-file-pdf"></i> PDF</button>
+                <button class="sub-btn image-btn" onclick="downloadAsImage('sayeri-card-${index}', 'Sayeri_By_Yeasin')"><i class="fas fa-image"></i> ইমেজ ডাউনলোড</button>
+                <button class="sub-btn pdf-btn" onclick="downloadItemPDF('sayeri-card-${index}', 'Sayeri_By_Yeasin')"><i class="fas fa-file-pdf"></i> PDF</button>
+                <button class="sub-btn share-btn" onclick="nativeShare('${bookmarkHash}', '${bookmarkTitle}')"><i class="fas fa-share-alt"></i> Share</button>
+                <button class="sub-btn bookmark-btn" onclick="toggleCustomBookmark('${bookmarkHash}', '${bookmarkTitle}', this)"><i class="${bookmarkIconClass} fa-bookmark"></i> সংরক্ষণ</button>
             </div>
         `;
         container.appendChild(card);
@@ -419,19 +435,19 @@ function renderMonologues() {
     allMonologues.forEach((mono, index) => {
         const card = document.createElement('div');
         card.className = 'monologue-card vintage-paper-node stagger-anim';
-        card.style.animationDelay = `${Math.min(index * 0.08, 1.5)}s`;
         card.id = `monologue-card-${index}`;
-        
+        card.style.animationDelay = `${Math.min(index * 0.08, 1.5)}s`;
         const processedText = mono.text.replace(/\\n/g, '<br>').replace(/\n/g, '<br>');
         card.innerHTML = `
             <div class="monologue-title">${mono.title}</div>
             <div class="monologue-text">${processedText}</div>
             <div style="text-align:right; margin-top:15px; font-size:0.8rem; color:#666;">- ${mono.author || 'Yeasin Kabir'}</div>
             <div class="action-buttons-group hide-during-capture">
-                <button class="sub-btn copy-btn" onclick="copyToClipboard('monologue-card-${index}', 'monologue')"><i class="fas fa-copy"></i> কপি করুন</button>
-                <button class="sub-btn image-btn" onclick="downloadAsSvg('monologue-card-${index}', '${mono.title}')"><i class="fas fa-image"></i> IMG ডাউনলোড</button>
-                <button class="sub-btn pdf-btn" onclick="downloadAsPdf('monologue-card-${index}', '${mono.title}')"><i class="fas fa-file-pdf"></i> PDF</button>
-                <button class="sub-btn share-btn" onclick="nativeShare('monologue-view', '${mono.title}')"><i class="fas fa-share-alt"></i> Share</button>
+                <button class="sub-btn copy-btn" onclick="copyToClipboard('monologue-card-${index}', 'monologue')"><i class="fas fa-copy"></i> কপি</button>
+                <button class="sub-btn image-btn" onclick="downloadAsImage('monologue-card-${index}', '${mono.title}')"><i class="fas fa-image"></i> ইমেজ</button>
+                <button class="sub-btn pdf-btn" onclick="downloadItemPDF('monologue-card-${index}', '${mono.title}')"><i class="fas fa-file-pdf"></i> PDF</button>
+                <button class="sub-btn share-btn" onclick="nativeShare('monologue=${index}', '${mono.title}')"><i class="fas fa-share-alt"></i> Share</button>
+                <button class="sub-btn bookmark-btn" onclick="toggleCustomBookmark('monologue=${index}', '${mono.title}')"><i class="far fa-bookmark"></i> বুকমার্ক</button>
             </div>
         `;
         container.appendChild(card);
@@ -523,7 +539,7 @@ function renderPdfLibrary() {
         const displayTitle = item.title;
 
         card.innerHTML = `
-            <div class="pdf-card-thumb"><img src="${thumbnail}" alt="${displayTitle}"></div>
+            <div class="pdf-card-thumb"><img src="${thumbnail}" loading="lazy" alt="${displayTitle}"></div>
             <div class="pdf-card-info">
                 <div>
                     <h3 class="pdf-card-title">${displayTitle}</h3>
@@ -540,22 +556,30 @@ function renderPdfLibrary() {
     });
 }
 
-function renderGallery() {
+function renderGallery(category = 'all') {
     const container = document.querySelector('.gallery-grid'); if (!container) return;
     container.innerHTML = ''; 
     allGalleryImages.forEach((img, index) => {
-        const item = document.createElement('div'); 
-        item.className = 'gallery-item vintage-gallery-card stagger-anim';
-        item.style.animationDelay = `${Math.min(index * 0.05, 1.5)}s`;
-        const imgSrc = img.img_src; 
-        const rawCaptionText = img.caption ? img.caption.replace(/"/g, '\\"') : '';
-        const escapedCaptionHtml = img.caption ? img.caption.replace(/"/g, '"') : '';
-        
-        item.onclick = () => openImageModal(imgSrc, rawCaptionText);
-        const captionText = img.caption ? `<div class="gallery-caption">${escapedCaptionHtml}</div>` : '';
-        item.innerHTML = `<img src="${imgSrc}" class="gallery-img" alt="Gallery Image" style="cursor: pointer;">${captionText}`;
-        container.appendChild(item);
+        if (category === 'all' || img.category === category) {
+            const item = document.createElement('div'); 
+            item.className = 'gallery-item vintage-gallery-card stagger-anim';
+            item.style.animationDelay = `${Math.min(index * 0.05, 1.5)}s`;
+            const imgSrc = img.img_src; 
+            const rawCaptionText = img.caption ? img.caption.replace(/"/g, '\\"') : '';
+            const escapedCaptionHtml = img.caption ? img.caption.replace(/"/g, '"') : '';
+            
+            item.onclick = () => openImageModal(imgSrc, rawCaptionText);
+            const captionText = img.caption ? `<div class="gallery-caption">${escapedCaptionHtml}</div>` : '';
+            item.innerHTML = `<img src="${imgSrc}" loading="lazy" class="gallery-img" alt="Gallery Image" style="cursor: pointer;">${captionText}`;
+            container.appendChild(item);
+        }
     });
+}
+
+function filterGallery(cat, event) {
+    document.querySelectorAll('#gallery-view .filter-btn').forEach(btn => btn.classList.remove('active'));
+    if (event && event.target) event.target.classList.add('active');
+    renderGallery(cat);
 }
 
 function renderVideos() {
@@ -688,6 +712,7 @@ function openStoryDirectly(index) {
     loadComments();
 }
 
+// --- LIGHTBOX IMAGE POP-UP CONTROLLER ---
 function openImageModal(imgSrc, captionText) {
     const modal = document.getElementById('image-lightbox-modal');
     const modalImg = document.getElementById('expanded-lightbox-image');
@@ -703,6 +728,7 @@ function closeImageModal() {
     if(modal) modal.style.display = "none";
 }
 
+// --- SEARCH FILTER SYSTEM ---
 function filterPoems() { renderPoems(); }
 function filterByTag(tag) {
     currentFilter = tag;
@@ -711,6 +737,7 @@ function filterByTag(tag) {
     renderPoems();
 }
 
+// --- COMMENT MATRIX ---
 function toggleCommentModal() {
     const overlay = document.getElementById('comment-modal-overlay');
     const modal = document.getElementById('comment-section');
@@ -754,71 +781,16 @@ async function loadComments() {
 }
 
 // --- ROMANTIC SECRET VAULT SYSTEM CONTROLS ---
-function startPetals() {
-    const container = document.getElementById('petals-container');
-    if (!container) return;
-    container.innerHTML = '';
-}
-
-function stopPetals() {
-    const container = document.getElementById('petals-container');
-    if (container) container.innerHTML = '';
-}
-
-function openSecretVaultInput() {
-    // Open the vault password modal instead of directly opening vault
-    const vaultPassModal = document.getElementById('vault-pass-modal-overlay');
-    if (vaultPassModal) {
-        vaultPassModal.classList.add('active');
-        const passwordInput = document.getElementById('vault-pass-input');
-        if (passwordInput) {
-            passwordInput.value = '';
-            passwordInput.focus();
-            // Add Enter key support
-            passwordInput.onkeypress = (e) => {
-                if (e.key === 'Enter') {
-                    verifyVaultPassword();
-                }
-            };
-        }
-    }
-}
-
-function closeVaultPassModal(e) {
-    if (!e || e.target.id === 'vault-pass-modal-overlay' || e.target.closest('.close-auth-btn')) {
-        const vaultPassModal = document.getElementById('vault-pass-modal-overlay');
-        if (vaultPassModal) {
-            vaultPassModal.classList.remove('active');
-        }
-    }
-}
-
-function verifyVaultPassword() {
-    const passwordInput = document.getElementById('vault-pass-input');
-    const enteredPassword = passwordInput ? passwordInput.value : '';
-
-    if (enteredPassword === '3460') {
-        // Close the modal
-        const vaultPassModal = document.getElementById('vault-pass-modal-overlay');
-        if (vaultPassModal) {
-            vaultPassModal.classList.remove('active');
-        }
-
-        // Open the vault with welcome overlay
+function openSecretVaultInput() { 
+    if(prompt("ENTER ACCESS CODE:") === "3460") { 
         playSectionLoader('secret-vault', () => {
-            const homeView = document.getElementById('home-view');
-            const vaultView = document.getElementById('secret-vault');
-            const welcomeOverlay = document.getElementById('vault-welcome-overlay');
-            
-            if(homeView) homeView.style.display='none';
-            document.querySelectorAll('.full-view').forEach(el => el.style.display='none');
-            if(vaultView) vaultView.style.display='block';
-            if(welcomeOverlay) welcomeOverlay.style.display='flex';
-            
+            document.getElementById('home-view').style.display='none'; 
+            document.querySelectorAll('.full-view').forEach(el => el.style.display='none'); 
+            document.getElementById('secret-vault').style.display='block';
             window.scrollTo(0,0);
             startPetals();
             currentVaultPage = 1;
-            populateVaultDropdown();
+            populateVaultDropdown(); 
             currentQuiz = 0;
             auraScanned = false;
             
@@ -828,53 +800,26 @@ function verifyVaultPassword() {
             if(vaultMusic) {
                 vaultMusic.play().then(() => {
                     isMusicPlaying = true;
-                    const musicIcon = document.getElementById('music-icon');
-                    const musicBtn = document.querySelector('.ctrl-float-btn.music-btn');
-                    if(musicIcon) musicIcon.className = "fas fa-pause";
-                    if(musicBtn) musicBtn.classList.add('playing');
+                    document.getElementById('music-icon').className = "fas fa-pause";
+                    document.querySelector('.ctrl-float-btn.music-btn').classList.add('playing');
                 }).catch(e => console.log(e));
             }
 
-            const promiseMsg = document.getElementById('promise-msg');
-            const loveReason = document.getElementById('love-reason');
-            const loveResult = document.getElementById('love-result');
-            const loveMsg = document.getElementById('love-msg');
-            const auraResult = document.getElementById('aura-result');
-            if(promiseMsg) promiseMsg.style.display = 'none';
-            if(loveReason) loveReason.innerText = '';
-            if(loveResult) loveResult.style.display = 'none';
-            if(loveMsg) loveMsg.innerText = '';
-            if(auraResult) auraResult.innerText = '';
+            document.getElementById('promise-msg').style.display = 'none';
+            document.getElementById('love-reason').innerText = '';
+            document.getElementById('love-result').style.display = 'none';
+            document.getElementById('love-msg').innerText = '';
+            document.getElementById('aura-result').innerText = '';
             const auraFieldReset = document.getElementById('aura-field');
             if(auraFieldReset) auraFieldReset.classList.remove('scanning');
             document.querySelectorAll('.open-when-msg').forEach(el => el.style.display = 'none');
-        });
-    } else {
-        alert('ভুল পাসওয়ার্ড! আবার চেষ্টা করুন।');
-        if (passwordInput) {
-            passwordInput.value = '';
-            passwordInput.focus();
-        }
-    }
-}
-
-function enterVaultMain() {
-    const welcomeOverlay = document.getElementById('vault-welcome-overlay');
-    if (welcomeOverlay) {
-        welcomeOverlay.classList.add('fade-out');
-        setTimeout(() => {
-            welcomeOverlay.style.display = 'none';
-            welcomeOverlay.classList.remove('fade-out');
             showPage(1);
-        }, 600);
-    }
+        });
+    } else { alert("ACCESS DENIED!"); } 
 }
 
 function closeVault() { 
-    document.getElementById('secret-vault').style.display = 'none';
-    document.getElementById('home-view').style.display = 'grid';
-    window.location.hash = ''; 
-    
+    goBack(); 
     const vaultMusic = document.getElementById('vault-audio');
     if(vaultMusic) vaultMusic.pause(); 
     isMusicPlaying = false;
@@ -885,85 +830,24 @@ function closeVault() {
     stopPetals(); 
 }
 
-function getVaultPageNames() {
-    return [
+function populateVaultDropdown() {
+    const select = document.getElementById('vault-page-select');
+    if(!select) return;
+    select.innerHTML = '';
+    const pageNames = [
         "১. এক সন্ধ্যেবেলায়", "২. Happy New Year", "৩. তোমার চোখ", "৪. প্রথম দেখা...",
         "৫. Love Letter", "৬. Open When...", "৭. Our Bucket List", "৮. Why I Love You",
         "৯. Forever Promise", "১০. Do You Know Me?", "১১. Today's Mood", "১২. Relationship Contract",
         "১৩. Write to Me", "১৪. Love Calculator", "১৫. Our Memories", "১৬. Aura Scanner", "১৭. Voice Notes"
     ];
-}
-
-function populateVaultDropdown() {
-    const menu = document.getElementById('vault-page-menu');
-    const triggerLabel = document.getElementById('vault-page-trigger-label');
-    if(!menu) return;
-
-    menu.innerHTML = '';
-    const pageNames = getVaultPageNames();
-    pageNames.forEach((name, index) => {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'vault-page-option';
-        button.dataset.page = index + 1;
-        button.textContent = name;
-        button.onclick = () => jumpToVaultPage(index + 1);
-        menu.appendChild(button);
-    });
-
-    if(triggerLabel) {
-        const currentName = pageNames[currentVaultPage - 1] || pageNames[0];
-        triggerLabel.textContent = currentName;
-    }
-
-    updateVaultDropdownSelection();
-}
-
-function toggleVaultDropdown() {
-    const menu = document.getElementById('vault-page-menu');
-    const trigger = document.getElementById('vault-page-trigger');
-    if(!menu || !trigger) return;
-
-    const shouldOpen = !menu.classList.contains('active');
-    document.querySelectorAll('.vault-page-menu').forEach(item => item.classList.remove('active'));
-    document.querySelectorAll('#vault-page-trigger').forEach(item => item.setAttribute('aria-expanded', 'false'));
-
-    if(shouldOpen) {
-        menu.classList.add('active');
-        trigger.setAttribute('aria-expanded', 'true');
-        menu.setAttribute('aria-hidden', 'false');
-    } else {
-        menu.setAttribute('aria-hidden', 'true');
+    for(let i = 1; i <= 17; i++) {
+        let opt = document.createElement('option');
+        opt.value = i; opt.text = pageNames[i-1];
+        select.appendChild(opt);
     }
 }
 
-function closeVaultDropdown() {
-    const menu = document.getElementById('vault-page-menu');
-    const trigger = document.getElementById('vault-page-trigger');
-    if(menu) {
-        menu.classList.remove('active');
-        menu.setAttribute('aria-hidden', 'true');
-    }
-    if(trigger) trigger.setAttribute('aria-expanded', 'false');
-}
-
-function updateVaultDropdownSelection() {
-    const menu = document.getElementById('vault-page-menu');
-    const triggerLabel = document.getElementById('vault-page-trigger-label');
-    if(!menu) return;
-
-    menu.querySelectorAll('.vault-page-option').forEach(button => {
-        const isActive = parseInt(button.dataset.page) === currentVaultPage;
-        button.classList.toggle('active', isActive);
-    });
-
-    if(triggerLabel) {
-        const pageNames = getVaultPageNames();
-        triggerLabel.textContent = pageNames[currentVaultPage - 1] || pageNames[0];
-    }
-}
-
-function jumpToVaultPage(n) { currentVaultPage = parseInt(n); showPage(currentVaultPage); closeVaultDropdown(); }
+function jumpToVaultPage(n) { currentVaultPage = parseInt(n); showPage(currentVaultPage); }
 
 function showPage(n) { 
     document.querySelectorAll('.diary-page').forEach(p=>p.classList.remove('active')); 
@@ -974,13 +858,9 @@ function showPage(n) {
         targetPage.offsetHeight; 
         targetPage.style.animation = 'pageTurnEffect 0.6s ease-out forwards';
     }
-    
-    // Check if element exists before setting text to avoid script breaking
-    const pageNumEl = document.getElementById('page-num');
-    if(pageNumEl) pageNumEl.innerText = `${n} / ${totalVaultPages}`; 
-    
-    updateVaultDropdownSelection();
-    
+    document.getElementById('page-num').innerText = `${n} / ${totalVaultPages}`; 
+    const select = document.getElementById('vault-page-select');
+    if(select) select.value = n;
     if(n === 10) { currentQuiz = currentQuiz || 0; loadQuiz(); }
 }
 function nextPage() { if(currentVaultPage < totalVaultPages) { currentVaultPage++; showPage(currentVaultPage); } }
@@ -1113,7 +993,7 @@ function handleRealSubscribe() {
     if (!emailField.value.trim()) return alert("দয়া করে একটি সঠিক ইমেইল আইডি লিখুন।");
     emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, { from_name: "New Website Subscriber", from_email: emailField.value.trim(), message: `নতুন সাবস্ক্রাইবার: ${emailField.value.trim()}` })
     .then(() => { alert("সফলভাবে সাবস্ক্রাইব করা হয়েছে! আপনাকে ধন্যবাদ।"); emailField.value = ""; })
-    .catch(() => alert("দুঃখিত, এই মুহূর্তে সাবস্ক্রিপশন নেওয়া সম্ভব হচ্ছে মজবে না।")); 
+    .catch(() => alert("দুঃখিত, এই মুহূর্তে সাবস্ক্রিপশন নেওয়া সম্ভব হচ্ছে না।")); 
 }
 
 function sendRealEmail() { 
@@ -1158,68 +1038,6 @@ function switchPayMethod(method, event) {
     if (event && event.currentTarget) event.currentTarget.classList.add('active');
     const panel = document.getElementById('pay-' + method);
     if (panel) panel.classList.add('active');
-}
-
-// --- NEW IMPROVED COPY SYSTEM ---
-function copyToClipboard(elementId, type) {
-    const element = document.getElementById(elementId);
-    if (!element) return alert('কন্টেন্ট পাওয়া যায়নি!');
-    
-    let textToCopy = "";
-    
-    if (type === 'sayeri') {
-        const textEl = element.querySelector('.sayeri-text');
-        if(textEl) textToCopy = textEl.innerText.trim();
-    } else if (type === 'monologue') {
-        const titleEl = element.querySelector('.monologue-title');
-        const textEl = element.querySelector('.monologue-text');
-        if(titleEl && textEl) textToCopy = titleEl.innerText + "\n\n" + textEl.innerText;
-    } else if (type === 'poem') {
-        const titleEl = document.getElementById('poem-title-display');
-        const textEl = document.getElementById('poem-content-display');
-        if(titleEl && textEl) textToCopy = titleEl.innerText + "\n\n" + textEl.innerText;
-    } else if (type === 'novel') {
-        const titleEl = document.getElementById('current-chapter-title');
-        const textEl = document.getElementById('story-content');
-        if(titleEl && textEl) textToCopy = titleEl.innerText + "\n\n" + textEl.innerText;
-    } else if (type === 'letter') {
-        const titleEl = document.getElementById('current-letter-title');
-        const textEl = document.getElementById('letter-content');
-        if(titleEl && textEl) textToCopy = titleEl.innerText + "\n\n" + textEl.innerText;
-    }
-    
-    if (!textToCopy) {
-        // Fallback robust copy
-        const clone = element.cloneNode(true);
-        clone.querySelectorAll('button, .action-buttons-group, .hide-during-capture').forEach(n => n.remove());
-        clone.style.position = 'absolute';
-        clone.style.left = '-9999px';
-        document.body.appendChild(clone);
-        textToCopy = clone.innerText.trim();
-        document.body.removeChild(clone);
-    }
-
-    if (!textToCopy) return alert('কোনো টেক্সট পাওয়া যায়নি।');
-    
-    const successMessage = type === 'novel' ? 'উপন্যাস কপি করা হলো!' : type === 'letter' ? 'চিঠি কপি করা হলো!' : 'লেখাটি সফলভাবে কপি করা হয়েছে!';
-    
-    const fallbackCopy = () => {
-        const textarea = document.createElement('textarea'); 
-        textarea.value = textToCopy;
-        textarea.style.position = 'fixed'; 
-        textarea.style.left = '-9999px'; 
-        document.body.appendChild(textarea);
-        textarea.select(); 
-        try { document.execCommand('copy'); alert(successMessage); } 
-        catch (error) { alert('ক্লিপবোর্ডে কপি করা যায়নি।'); } 
-        document.body.removeChild(textarea);
-    };
-    
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(textToCopy).then(() => alert(successMessage)).catch(() => fallbackCopy());
-    } else {
-        fallbackCopy();
-    }
 }
 
 async function copyPayText(text) {
@@ -1326,171 +1144,47 @@ function triggerConfetti() {
     animateConfetti();
 }
 
-function normalizeTextLines(raw) {
-    if (!raw) return ['No content available'];
-    const cleaned = raw.replace(/\r\n|\r/g, '\n').replace(/\u00A0/g, ' ');
-    const rawLines = cleaned.split('\n');
-    const lines = rawLines.map(line => line.replace(/[ \t]+$/, ''));
-    while (lines.length && lines[0] === '') lines.shift();
-    while (lines.length && lines[lines.length - 1] === '') lines.pop();
-    return lines.length ? lines : ['No content available'];
-}
-
-function getExportContent(element, fallbackTitle) {
-    const titleEl = element.querySelector('.monologue-title, .vintage-poem-title, .novel-card h3, #current-chapter-title, #current-letter-title, #poem-title-display');
-    const bodyEl = element.querySelector('.sayeri-text, .monologue-text, .story-text, .memory-desc-text, #poem-content-display, #story-content, #letter-content');
-    const title = (titleEl && titleEl.textContent.trim()) || fallbackTitle || 'Yeasin Kabir';
-    let rawBody = '';
-    if (bodyEl) {
-        rawBody = bodyEl.innerText || bodyEl.textContent || '';
-        const extraLines = [];
-        let sibling = bodyEl.nextElementSibling;
-        while (sibling) {
-            if (sibling.classList.contains('action-buttons-group')) break;
-            const text = (sibling.innerText || sibling.textContent || '').trim();
-            if (text) extraLines.push(text);
-            sibling = sibling.nextElementSibling;
-        }
-        if (extraLines.length) rawBody += '\n' + extraLines.join('\n');
-    } else {
-        const clone = element.cloneNode(true);
-        clone.querySelectorAll('button, .action-buttons-group, .hide-during-capture, .sub-btn, .share-btn').forEach(n => n.remove());
-        rawBody = clone.innerText || clone.textContent || '';
-    }
-    const lines = normalizeTextLines(rawBody);
-    return { title, lines };
-}
-
-function wrapLine(line, maxChars = 80) {
-    if (!line) return [''];
-    const words = line.split(/(\s+)/).filter(Boolean);
-    const wrapped = [];
-    let current = '';
-    words.forEach(word => {
-        if ((current + word).trim().length > maxChars && current) {
-            wrapped.push(current.trim());
-            current = word;
-        } else {
-            current += word;
-        }
-    });
-    if (current.trim()) wrapped.push(current.trim());
-    return wrapped.length ? wrapped : [''];
-}
-
-function preserveLines(lines, maxChars = 80) {
-    const output = [];
-    lines.forEach(line => {
-        const wrapped = wrapLine(line, maxChars);
-        wrapped.forEach(l => output.push(l));
-    });
-    return output;
-}
-
-function createDownloadLink(blob, filename) {
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(link.href);
-}
-
-function downloadAsImage(elementId, fileNameTitle) {
-    return downloadAsPng(elementId, fileNameTitle);
-}
-
-function downloadAsSvg(elementId, fileNameTitle) {
-    return downloadAsPng(elementId, fileNameTitle);
-}
-
 function downloadItemPDF(elementId, fileNameTitle) {
-    return downloadAsPdf(elementId, fileNameTitle);
-}
-
-function createExportCanvas(elementId, fileNameTitle) {
     const element = document.getElementById(elementId);
-    if (!element) return null;
-
-    const { title, lines: rawLines } = getExportContent(element, fileNameTitle);
-    const lines = preserveLines(rawLines, 64);
-    const padding = 50;
-    const width = 1200;
-    const titleFontSize = 42;
-    const bodyFontSize = 28;
-    const lineHeight = 40;
-    const titleHeight = titleFontSize + 40;
-    const bodyHeight = lines.length * lineHeight;
-    const height = Math.max(780, titleHeight + bodyHeight + padding * 2);
-
-    const canvas = document.createElement('canvas');
-    canvas.width = width;
-    canvas.height = height;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return null;
-
-    ctx.fillStyle = '#070405';
-    ctx.fillRect(0, 0, width, height);
-    ctx.fillStyle = '#140b10';
-    ctx.fillRect(padding / 2, padding / 2, width - padding, height - padding);
-    ctx.strokeStyle = '#d4af37';
-    ctx.lineWidth = 4;
-    ctx.strokeRect(padding / 2, padding / 2, width - padding, height - padding);
-
-    ctx.fillStyle = '#f3e5ab';
-    ctx.font = `${titleFontSize}px Georgia`;
-    ctx.fillText(title, padding, 120);
-
-    ctx.fillStyle = '#f7ead2';
-    ctx.font = `${bodyFontSize}px Hind Siliguri, Arial, sans-serif`;
-    let y = 180;
-    lines.forEach(line => {
-        ctx.fillText(line, padding, y);
-        y += lineHeight;
-    });
-
-    return canvas;
+    if (!element) return alert("কন্টেন্ট পাওয়া যায়নি!");
+    const hiddenEls = [...element.querySelectorAll('.hide-during-capture, .pdf-btn')];
+    hiddenEls.forEach(el => el.style.display = 'none');
+    html2pdf().set({ margin: 0.5, filename: fileNameTitle + '.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } }).from(element).save().then(() => hiddenEls.forEach(el => el.style.display = '')).catch(() => hiddenEls.forEach(el => el.style.display = ''));
 }
 
-function downloadAsPng(elementId, fileNameTitle) {
-    const canvas = createExportCanvas(elementId, fileNameTitle);
-    if (!canvas) return alert('কন্টেন্ট তৈরি করা যায়নি!');
-
-    canvas.toBlob(blob => {
-        if (!blob) return alert('PNG তৈরি করা যাচ্ছে না।');
-        createDownloadLink(blob, `${fileNameTitle || 'content'}.png`);
-    }, 'image/png');
-}
-
-function downloadAsPdf(elementId, fileNameTitle) {
-    const canvas = createExportCanvas(elementId, fileNameTitle);
-    if (!canvas) return alert('কন্টেন্ট তৈরি করা যায়নি!');
-
-    const jsPDFClass = window.jsPDF || window.jspdf?.jsPDF || window.jspdf;
-    if (!jsPDFClass) {
-        return alert('PDF export এর জন্য jsPDF লোড করা হয়নি।');
-    }
-
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new jsPDFClass({ unit: 'pt', format: 'a4', orientation: 'portrait' });
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const imgWidth = pageWidth - 40;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-    const margin = 20;
-
-    pdf.addImage(imgData, 'PNG', margin, margin, imgWidth, imgHeight);
-    pdf.save(`${fileNameTitle || 'content'}.pdf`);
-}
-
-function downloadTextFile(elementId, fileNameTitle, extension) {
+function copyToClipboard(elementId, type) {
     const element = document.getElementById(elementId);
     if (!element) return alert('কন্টেন্ট পাওয়া যায়নি!');
+    const clone = element.cloneNode(true);
+    clone.querySelectorAll('button, .action-buttons-group, .hide-during-capture').forEach(node => node.remove());
+    const text = clone.innerText.trim();
+    if (!text) return alert('কোনো টেক্সট পাওয়া যায়নি।');
+    const successMessage = type === 'novel' ? 'উপন্যাস কন্টেন্ট ক্লিপবোর্ডে কপি করা হলো!' : type === 'letter' ? 'চিঠির লেখা কপি করা হলো!' : 'কন্টেন্ট ক্লিপবোর্ডে কপি করা হলো!';
+    const fallbackCopy = () => {
+        const textarea = document.createElement('textarea'); textarea.value = text;
+        textarea.style.position = 'fixed'; textarea.style.left = '-9999px'; document.body.appendChild(textarea);
+        textarea.select(); try { document.execCommand('copy'); alert(successMessage); } catch (error) { alert('ক্লিপবোর্ডে কপি করা যায়নি।'); } document.body.removeChild(textarea);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(() => alert(successMessage)).catch(() => fallbackCopy());
+    else fallbackCopy();
+}
 
-    const { title, lines } = getExportContent(element, fileNameTitle);
-    const text = `# ${title}\n\n${lines.join('\n')}`;
-    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-    createDownloadLink(blob, `${fileNameTitle || 'content'}.${extension}`);
+async function downloadAsImage(elementId, fileName) {
+    const element = document.getElementById(elementId);
+    if (!element) return alert('কন্টেন্ট পাওয়া যায়নি!');
+    const hiddenEls = [...element.querySelectorAll('.hide-during-capture')];
+    hiddenEls.forEach(el => el.style.display = 'none');
+    try {
+        const canvas = await html2canvas(element, { scale: 2, useCORS: true, backgroundColor: null });
+        await new Promise((resolve, reject) => {
+            canvas.toBlob(blob => {
+                if (!blob) return reject(new Error('Image blob তৈরি করা যায়নি'));
+                const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = fileName ? `${fileName}.png` : 'download.png';
+                document.body.appendChild(link); link.click(); document.body.removeChild(link); URL.revokeObjectURL(link.href); resolve();
+            }, 'image/png');
+        });
+    } catch (err) { console.error(err); alert('ইমেজ ডাউনলোডে সমস্যা হয়েছে।'); } 
+    finally { hiddenEls.forEach(el => el.style.display = ''); }
 }
 
 async function nativeShare(hashPath, title) {
@@ -1544,6 +1238,7 @@ function handleCredentialResponse(response) {
     sessionStorage.setItem('yk_user_email', payload.email);
     sessionStorage.setItem('yk_user_pic', payload.picture);
     closeAuthModal(); updateAuthUI();
+    syncBookmarksFromCloud();
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx6ht8ks08oDDRyeqL4q8mjYRgijjJWm6HkuROG6ItYIFt_zaKu5W7X1HMjnh2ggbwY/exec"; 
     fetch(`${WEB_APP_URL}?email=${encodeURIComponent(payload.email)}&name=${encodeURIComponent(payload.name)}`, { mode: 'no-cors' }).then(() => console.log("User logged in")).catch(err => console.error(err));
 }
@@ -1570,43 +1265,352 @@ function updateAuthUI() {
     }
 }
 document.addEventListener('DOMContentLoaded', updateAuthUI);
-
-// Detect In-App Browsers (Messenger, Facebook, Instagram, etc.)
-function isInAppBrowser() {
-    const ua = navigator.userAgent || navigator.vendor || window.opera;
-    return (ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1) || (ua.indexOf("Instagram") > -1);
-}
-
-// Open link in native Chrome/Safari browser
-function openInExternalBrowser() {
-    const currentUrl = window.location.href;
-    const ua = navigator.userAgent || navigator.vendor || window.opera;
-
-    // Android Devices (Intent to launch Chrome)
-    if (/android/i.test(ua)) {
-        const cleanedUrl = currentUrl.replace(/^https?:\/\//, '');
-        window.location.href = `intent://${cleanedUrl}#Intent;scheme=https;package=com.android.chrome;end`;
-    }
-    // iOS / iPhone Devices
-    else if (/iPad|iPhone|iPod/.test(ua)) {
-        // Fallback or copy link action for iOS Messenger limitations
-        navigator.clipboard.writeText(currentUrl).then(() => {
-            alert("Link copied! Please paste it into Safari or Chrome.");
-        }).catch(() => {
-            window.location.href = currentUrl;
-        });
-    } else {
-        window.open(currentUrl, '_blank');
-    }
-}
-
-// Automatically check when page loads
-document.addEventListener("DOMContentLoaded", () => {
-    if (isInAppBrowser()) {
-        const modal = document.getElementById('inapp-modal-overlay');
-        if (modal) {
-            modal.style.display = 'flex';
-            modal.classList.add('active');
-        }
+document.addEventListener('DOMContentLoaded', () => {
+    if (sessionStorage.getItem('yk_logged_in') === 'true') {
+        syncBookmarksFromCloud();
     }
 });
+
+// ============================================
+// UI/UX & ADVANCED FEATURES
+// ============================================
+
+// ১. থিম সুইচিং লজিক (Theme Switcher)
+const themes = ['default', 'theme-sepia', 'theme-moonlight'];
+let currentThemeIndex = 0;
+
+function cycleTheme() {
+    document.body.classList.remove(themes[currentThemeIndex]);
+    currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+    const newTheme = themes[currentThemeIndex];
+    
+    if (newTheme !== 'default') {
+        document.body.classList.add(newTheme);
+    }
+    
+    const icon = document.getElementById('theme-icon');
+    if (icon) {
+        if (newTheme === 'theme-sepia') icon.className = "fas fa-book-open";
+        else if (newTheme === 'theme-moonlight') icon.className = "fas fa-moon";
+        else icon.className = "fas fa-sun";
+    }
+}
+
+// ২. রিডিং প্রোগ্রেস বার লজিক (Reading Progress Bar)
+function updateReadingProgress() {
+    const progressBar = document.getElementById('reading-progress-bar');
+    if (!progressBar) return;
+
+    let scrollTop = window.scrollY || document.documentElement.scrollTop;
+    let scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+
+    const visibleFullView = Array.from(document.querySelectorAll('.full-view')).find(el => el.style.display === 'block');
+    if (visibleFullView) {
+        scrollTop = visibleFullView.scrollTop;
+        scrollHeight = visibleFullView.scrollHeight - visibleFullView.clientHeight;
+    }
+
+    if (scrollHeight > 0) {
+        const progress = (scrollTop / scrollHeight) * 100;
+        progressBar.style.width = Math.min(progress, 100) + '%';
+    } else {
+        progressBar.style.width = '0%';
+    }
+}
+
+window.addEventListener('scroll', updateReadingProgress);
+document.querySelectorAll('.full-view').forEach(el => {
+    el.addEventListener('scroll', updateReadingProgress);
+});
+
+// ৩. টেক্সট-টু-স্পিচ লজিক (Text-to-Speech / Audio Reader)
+let isSpeaking = false;
+let synth = window.speechSynthesis;
+let currentUtterance = null;
+
+function toggleTextToSpeech() {
+    if (isSpeaking) {
+        synth.cancel();
+        isSpeaking = false;
+        updateSpeechBtnText(false);
+        return;
+    }
+
+    let textToRead = "";
+    const activePoem = document.getElementById('poem-content-display');
+    const activeStory = document.getElementById('story-content');
+    const activeLetter = document.getElementById('letter-content');
+
+    if (document.getElementById('reader-view').style.display === 'block' && activePoem) {
+        textToRead = activePoem.innerText;
+    } else if (document.getElementById('novel-reader').style.display === 'block' && activeStory) {
+        textToRead = activeStory.innerText;
+    } else if (document.getElementById('letter-reader').style.display === 'block' && activeLetter) {
+        textToRead = activeLetter.innerText;
+    }
+
+    if (!textToRead.trim()) {
+        alert("পড়ার মতো কোনো লেখা পাওয়া যায়নি!");
+        return;
+    }
+
+    currentUtterance = new SpeechSynthesisUtterance(textToRead);
+    currentUtterance.lang = 'bn-BD';
+    currentUtterance.rate = 0.9;
+
+    currentUtterance.onend = () => {
+        isSpeaking = false;
+        updateSpeechBtnText(false);
+    };
+
+    currentUtterance.onerror = () => {
+        isSpeaking = false;
+        updateSpeechBtnText(false);
+    };
+
+    synth.speak(currentUtterance);
+    isSpeaking = true;
+    updateSpeechBtnText(true);
+}
+
+function updateSpeechBtnText(speaking) {
+    document.querySelectorAll('.speech-btn').forEach(btn => {
+        btn.innerHTML = speaking ? 
+            '<i class="fas fa-stop-circle"></i> থামান' : 
+            '<i class="fas fa-volume-up"></i> শুনুন';
+    });
+}
+
+window.addEventListener('hashchange', () => {
+    if (isSpeaking) {
+        synth.cancel();
+        isSpeaking = false;
+        updateSpeechBtnText(false);
+    }
+    setTimeout(updateBookmarkButtonUI, 200);
+});
+
+// ============================================
+// BOOKMARK SYSTEM & ADVANCED READER CONTROLS
+// ============================================
+
+function getBookmarks() {
+    return JSON.parse(localStorage.getItem('yk_bookmarks') || '[]');
+}
+
+function isBookmarked(hash) {
+    const bookmarks = getBookmarks();
+    return bookmarks.some(b => b.hash === hash);
+}
+
+// ============================================
+// CLOUD SYNCED BOOKMARK LOGIC
+// ============================================
+
+async function syncBookmarksFromCloud() {
+    const userEmail = sessionStorage.getItem('yk_user_email');
+    if (!userEmail) return;
+
+    try {
+        const response = await fetch(`${SCRIPT_URL}?action=get_bookmarks&email=${encodeURIComponent(userEmail)}`);
+        const cloudBookmarks = await response.json();
+
+        if (Array.isArray(cloudBookmarks) && cloudBookmarks.length > 0) {
+            let localBookmarks = getBookmarks();
+            let merged = [...cloudBookmarks];
+
+            localBookmarks.forEach(localItem => {
+                if (!merged.some(cloudItem => cloudItem.hash === localItem.hash)) {
+                    merged.push(localItem);
+                }
+            });
+
+            localStorage.setItem('yk_bookmarks', JSON.stringify(merged));
+            syncBookmarksToCloud(merged);
+        }
+    } catch (error) {
+        console.error("Cloud bookmark sync failed:", error);
+    }
+}
+
+async function syncBookmarksToCloud(bookmarks) {
+    const userEmail = sessionStorage.getItem('yk_user_email');
+    if (!userEmail) return;
+
+    const payload = {
+        type: "save_bookmarks",
+        email: userEmail,
+        bookmarks: bookmarks
+    };
+
+    try {
+        await fetch(SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            body: JSON.stringify(payload)
+        });
+    } catch (e) {
+        console.error("Failed to save bookmarks to cloud:", e);
+    }
+}
+
+function getBookmarkTitleForHash(hash) {
+    if (!hash) return 'শিরোনামহীন';
+    if (hash.includes('#novel=')) return document.getElementById('current-chapter-title')?.innerText || 'উপন্যাস অধ্যায়';
+    if (hash.includes('#letter=')) return document.getElementById('current-letter-title')?.innerText || 'চিঠি';
+    return document.getElementById('poem-title-display')?.innerText || 'শিরোনামহীন';
+}
+
+function toggleBookmarkState(hash, title, btnIcon) {
+    if (!hash) return;
+    let bookmarks = getBookmarks();
+    if (isBookmarked(hash)) {
+        bookmarks = bookmarks.filter(b => b.hash !== hash);
+        localStorage.setItem('yk_bookmarks', JSON.stringify(bookmarks));
+        if (btnIcon) {
+            btnIcon.className = 'far fa-bookmark';
+            btnIcon.style.color = '';
+        }
+        alert('সংরক্ষিত তালিকা থেকে সরানো হয়েছে।');
+    } else {
+        bookmarks.push({ title: title || getBookmarkTitleForHash(hash), hash: hash, date: new Date().toLocaleDateString('bn-BD') });
+        localStorage.setItem('yk_bookmarks', JSON.stringify(bookmarks));
+        if (btnIcon) {
+            btnIcon.className = 'fas fa-bookmark';
+            btnIcon.style.color = '#f1c40f';
+        }
+        alert('সংরক্ষিত তালিকায় যোগ করা হয়েছে! ❤️');
+    }
+    if (document.getElementById('bookmark-library')?.style.display === 'block') renderBookmarks();
+}
+
+function toggleCurrentBookmark() {
+    const currentHash = window.location.hash;
+    if (!currentHash) return;
+    const btnIcon = document.querySelector('#bookmark-toggle-btn i');
+    toggleBookmarkState(currentHash, getBookmarkTitleForHash(currentHash), btnIcon);
+}
+
+function toggleCustomBookmark(hash, title, button) {
+    const btnIcon = button?.querySelector('i');
+    toggleBookmarkState(hash, title, btnIcon);
+    syncBookmarksToCloud(getBookmarks());
+}
+
+function updateBookmarkButtonUI() {
+    const btnIcon = document.querySelector('#bookmark-toggle-btn i');
+    if (btnIcon) {
+        if (isBookmarked(window.location.hash)) {
+            btnIcon.className = "fas fa-bookmark";
+            btnIcon.style.color = "#f1c40f";
+        } else {
+            btnIcon.className = "far fa-bookmark";
+            btnIcon.style.color = "";
+        }
+    }
+}
+
+function openBookmarksLibrary() {
+    switchView('bookmark-library');
+    renderBookmarks();
+}
+
+function renderBookmarks() {
+    const container = document.getElementById('bookmark-list-container');
+    if (!container) return;
+    container.innerHTML = '';
+    const bookmarks = getBookmarks();
+
+    if (bookmarks.length === 0) {
+        container.innerHTML = "<p style='color:#888; text-align:center; padding:20px;'>আপনার সংরক্ষিত তালিকায় কোনো পড়া নেই।</p>";
+        return;
+    }
+
+    bookmarks.forEach((item) => {
+        const card = document.createElement('div');
+        card.className = 'poem-btn vintage-item-node';
+        card.style.borderLeftColor = '#f1c40f';
+        card.innerHTML = `
+            <div>
+                <span style="font-size:1.1rem; font-weight:600;">${item.title}</span>
+                <div style="font-size:0.75rem; color:#888; margin-top:4px;">সেভ করা হয়েছে: ${item.date}</div>
+            </div>
+            <i class="fas fa-chevron-right"></i>
+        `;
+        card.onclick = () => { window.location.hash = item.hash; };
+        container.appendChild(card);
+    });
+}
+
+let currentLineHeight = 2.2;
+function changeLineHeight(dir) {
+    currentLineHeight = Math.max(1.4, Math.min(3.0, currentLineHeight + dir));
+    const display = document.getElementById('poem-content-display');
+    const storyText = document.getElementById('story-content');
+    if (display) display.style.lineHeight = currentLineHeight;
+    if (storyText) storyText.style.lineHeight = currentLineHeight;
+}
+
+// ============================================
+// POPUP VIEW LOGIC FOR SAYERI & MONOLOGUE
+// ============================================
+
+function openSayeriPopup(index) {
+    const sayeri = allSayeri[index];
+    const popupBody = document.getElementById('popup-content-body');
+    const overlay = document.getElementById('content-popup-overlay');
+    if (!sayeri || !popupBody || !overlay) return;
+
+    const processedText = sayeri.text.replace(/\\n/g, '<br>').replace(/\n/g, '<br>');
+    popupBody.innerHTML = `
+        <div class="sayeri-text" style="font-size: 1.35rem; line-height: 2.2;">${processedText}</div>
+        <div style="text-align:right; margin-top:20px; font-size:0.85rem; color:#888; font-style:italic;">- ${sayeri.author || 'Yeasin Kabir'}</div>
+        <div class="action-buttons-group hide-during-capture" style="margin-top:25px;">
+            <button class="sub-btn copy-btn" onclick="copyToClipboard('popup-content-body', 'sayeri')"><i class="fas fa-copy"></i> কপি</button>
+            <button class="sub-btn image-btn" onclick="downloadAsImage('popup-content-body', 'Sayeri_By_Yeasin')"><i class="fas fa-image"></i> ইমেজ</button>
+            <button class="sub-btn pdf-btn" onclick="downloadItemPDF('popup-content-body', 'Sayeri_By_Yeasin')"><i class="fas fa-file-pdf"></i> PDF</button>
+            <button class="sub-btn share-btn" onclick="nativeShare('sayeri=${index}', 'Sayeri by Yeasin Kabir')"><i class="fas fa-share-alt"></i> Share</button>
+        </div>
+    `;
+
+    overlay.classList.add('active');
+}
+
+function openMonologuePopup(index) {
+    const mono = allMonologues[index];
+    const popupBody = document.getElementById('popup-content-body');
+    const overlay = document.getElementById('content-popup-overlay');
+    if (!mono || !popupBody || !overlay) return;
+
+    // ইউআরএল হ্যাশ আপডেট
+    window.location.hash = `monologue=${index}`;
+
+    const processedText = mono.text.replace(/\\n/g, '<br>').replace(/\n/g, '<br>');
+    popupBody.innerHTML = `
+        <div class="monologue-title" style="font-size:1.35rem; color:var(--primary); margin-bottom:15px; text-align:center; font-family:'Hind Siliguri'; font-weight:700;">${mono.title}</div>
+        <div class="monologue-text" style="font-size: 1.15rem; line-height: 2.1; text-align: justify; color: #f3e5ab; font-weight: 300;">${processedText}</div>
+        <div style="text-align:right; margin-top:15px; font-size:0.85rem; color:#a18f81; font-style:italic;">- ${mono.author || 'Yeasin Kabir'}</div>
+        <div class="action-buttons-group hide-during-capture" style="margin-top:20px;">
+            <button class="sub-btn copy-btn" onclick="copyToClipboard('popup-content-body', 'monologue')"><i class="fas fa-copy"></i> কপি</button>
+            <button class="sub-btn image-btn" onclick="downloadAsImage('popup-content-body', '${mono.title}')"><i class="fas fa-image"></i> ইমেজ</button>
+            <button class="sub-btn pdf-btn" onclick="downloadItemPDF('popup-content-body', '${mono.title}')"><i class="fas fa-file-pdf"></i> PDF</button>
+            <button class="sub-btn share-btn" onclick="nativeShare('monologue=${index}', '${mono.title}')"><i class="fas fa-share-alt"></i> Share</button>
+            <button class="sub-btn bookmark-btn" onclick="toggleCustomBookmark('monologue=${index}', '${mono.title}')"><i class="far fa-bookmark"></i> বুকমার্ক</button>
+        </div>
+    `;
+
+    overlay.classList.add('active');
+}
+
+function closeContentPopup() {
+    const overlay = document.getElementById('content-popup-overlay');
+    if (overlay) overlay.classList.remove('active');
+    
+    if (window.location.hash.includes('sayeri=')) {
+        window.location.hash = 'sayeri-view';
+    } else if (window.location.hash.includes('monologue=')) {
+        window.location.hash = 'monologue-view';
+    }
+}
+
+window.addEventListener('load', updateBookmarkButtonUI);
