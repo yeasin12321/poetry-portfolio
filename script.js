@@ -1212,9 +1212,70 @@ function triggerConfetti() {
 function downloadItemPDF(elementId, fileNameTitle) {
     const element = document.getElementById(elementId);
     if (!element) return alert("কন্টেন্ট পাওয়া যায়নি!");
+
     const hiddenEls = [...element.querySelectorAll('.hide-during-capture, .pdf-btn')];
     hiddenEls.forEach(el => el.style.display = 'none');
-    html2pdf().set({ margin: 0.5, filename: fileNameTitle + '.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } }).from(element).save().then(() => hiddenEls.forEach(el => el.style.display = '')).catch(() => hiddenEls.forEach(el => el.style.display = ''));
+
+    const opt = {
+        margin: 0.5,
+        filename: (fileNameTitle || 'Document') + '.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(element).outputPdf('blob').then(function(pdfBlob) {
+        // Handle Blob for Mobile Browsers
+        const blobUrl = URL.createObjectURL(pdfBlob);
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = (fileNameTitle || 'Document') + '.pdf';
+        document.body.appendChild(link);
+        link.click();
+        
+        setTimeout(() => {
+            document.body.removeChild(link);
+            URL.revokeObjectURL(blobUrl);
+        }, 200);
+
+        hiddenEls.forEach(el => el.style.display = '');
+    }).catch(function(err) {
+        console.error(err);
+        hiddenEls.forEach(el => el.style.display = '');
+        alert('PDF ডাউনলোডে সমস্যা হয়েছে।');
+    });
+}
+
+// Mobile and Desktop compatible Image Download Engine
+async function downloadAsImage(elementId, fileName) {
+    const element = document.getElementById(elementId);
+    if (!element) return alert('কন্টেন্ট পাওয়া যায়নি!');
+    
+    const hiddenEls = [...element.querySelectorAll('.hide-during-capture')];
+    hiddenEls.forEach(el => el.style.display = 'none');
+
+    try {
+        const canvas = await html2canvas(element, { 
+            scale: 2, 
+            useCORS: true, 
+            backgroundColor: null 
+        });
+
+        // Convert to Base64 image data for Mobile Support
+        const imageData = canvas.toDataURL("image/png");
+        const link = document.createElement('a');
+        link.href = imageData;
+        link.download = fileName ? `${fileName}.png` : 'download.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+    } catch (err) { 
+        console.error(err); 
+        alert('ইমেজ ডাউনলোডে সমস্যা হয়েছে।'); 
+    } finally { 
+        hiddenEls.forEach(el => el.style.display = ''); 
+    }
 }
 
 function copyToClipboard(elementId, type) {
