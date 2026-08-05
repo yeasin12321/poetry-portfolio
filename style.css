@@ -792,3 +792,100 @@ h1, .section-title, .vintage-poem-title, .menu-button-grid span {
     background: linear-gradient(135deg, var(--accent), var(--novel-accent)) border-box !important;
 }
 
+/* ==========================================
+   UNIFIED CLEAN MIDNIGHT OBSIDIAN THEME
+   ========================================== */
+
+/* ১. সব সেকশনের হেডিং কালার স্কাই-গ্লো বা সিলভার হোয়াইটে রূপান্তর */
+.section-title,
+#novel-library h2,
+#letters-library h2,
+#sayeri-view h2,
+#monologue-view h2 {
+    color: var(--primary) !important;
+    background: var(--gold-gradient) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+}
+
+/* ২. কার্ড বর্ডার ও একসেন্ট কালার সামঞ্জস্য করা */
+.novel-card, 
+.sayeri-card, 
+.monologue-card {
+    border-left: 3px solid var(--accent) !important;
+    border-color: rgba(56, 189, 248, 0.15) !important;
+    background: var(--card-bg) !important;
+}
+
+/* ৩. কার্ডের ভেতরের টেক্সট কালার রিডেবল ও নরম করা */
+.sayeri-text, 
+.monologue-text,
+.story-text,
+#poem-content-display {
+    color: #e2e8f0 !important; /* হালকা সফট সিলভার গ্রে, যা চোখে কম লাগে */
+    text-shadow: none !important;
+}
+
+.monologue-title {
+    color: var(--accent) !important;
+}
+
+/* ৪. বাটনগুলোর লাল/কমলা বর্ডার ও টেক্সটকে প্রাইমারি স্কাই টোনে ম্যাচ করা */
+.read-btn {
+    border-color: var(--accent) !important;
+    color: var(--accent) !important;
+}
+
+.read-btn:hover {
+    background: var(--accent) !important;
+    color: #000 !important;
+}
+
+.letter-hub-btn {
+    border-left-color: var(--accent) !important;
+    color: var(--accent) !important;
+    background: rgba(56, 189, 248, 0.08) !important;
+}
+
+/* ==========================================
+   FULL SCREEN LAYOUT (REMOVE OUTER BACKGROUND)
+   ========================================== */
+
+/* ১. অ্যাপ কনটেইনারকে ১০০% উইডথ দেওয়া ও বাইরের মার্জিন তুলে দেওয়া */
+#app-container {
+    max-width: 100% !important;
+    width: 100vw !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    border-left: none !important;
+    border-right: none !important;
+    box-shadow: none !important;
+}
+
+/* ২. ডেক্সটপ লেআউটে গ্রিডের গ্যাপ ও এলাইনমেন্ট ঠিক রাখা */
+@media (min-width: 900px) {
+    #home-view {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+}
+
+/* ==========================================
+   SECRET VAULT FULL SCREEN FIX
+   ========================================== */
+
+#secret-vault .vault-romantic-wrapper {
+    max-width: 100% !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    margin: 0 !important;
+}
+
+#secret-vault .scrapbook-body {
+    max-width: 900px !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+}
+
