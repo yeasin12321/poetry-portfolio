@@ -1401,27 +1401,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // UI/UX & ADVANCED FEATURES
 // ============================================
 
-// ১. থিম সুইচিং লজিক (Theme Switcher)
-const themes = ['default', 'theme-sepia', 'theme-moonlight'];
-let currentThemeIndex = 0;
-
-function cycleTheme() {
-    document.body.classList.remove(themes[currentThemeIndex]);
-    currentThemeIndex = (currentThemeIndex + 1) % themes.length;
-    const newTheme = themes[currentThemeIndex];
-    
-    if (newTheme !== 'default') {
-        document.body.classList.add(newTheme);
-    }
-    
-    const icon = document.getElementById('theme-icon');
-    if (icon) {
-        if (newTheme === 'theme-sepia') icon.className = "fas fa-book-open";
-        else if (newTheme === 'theme-moonlight') icon.className = "fas fa-moon";
-        else icon.className = "fas fa-sun";
-    }
-}
-
 // ২. রিডিং প্রোগ্রেস বার লজিক (Reading Progress Bar)
 function updateReadingProgress() {
     const progressBar = document.getElementById('reading-progress-bar');
@@ -1769,3 +1748,9 @@ function stopPetals() {
     const container = document.getElementById('petals-container');
     if (container) container.innerHTML = '';
 }
+
+// ওয়েবসাইট লোড হলে সবসময় 'Midnight Obsidian' ডার্ক থিম ওভাররাইড করার লজিক
+(function forceMidnightTheme() {
+    localStorage.removeItem('yk_theme');
+    document.body.className = '';
+})();

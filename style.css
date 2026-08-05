@@ -3,14 +3,14 @@
    ========================================================================== */
 
 :root { 
-    --primary: #f3e5ab;       
-    --secondary: #e65c7b;     
-    --accent: #d4af37;        
-    --novel-accent: #b03a4e;  
-    --bg: #070405;            
-    --card-bg: rgba(22, 15, 17, 0.65); 
-    --gold-gradient: linear-gradient(135deg, #fbf5e6 0%, #d4af37 50%, #aa7c11 100%);
-    --rose-gradient: linear-gradient(135deg, #a72b30 0%, #fecfef 99%, #fecfef 100%);
+    --primary: #f0f4f8;          /* সিলভার হোয়াইট টেক্সট */
+    --secondary: #64748b;        /* সফট মিস্ট গ্রে */
+    --accent: #38bdf8;           /* সফট স্কাই গ্লো */
+    --novel-accent: #818cf8;     /* ইন্ডিগো টোন */
+    --bg: #090d16;               /* ডার্ক মাইনাইট ব্যাকগ্রাউন্ড */
+    --card-bg: rgba(15, 23, 42, 0.85); 
+    --gold-gradient: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
+    --rose-gradient: linear-gradient(135deg, #a5f3fc 0%, #38bdf8 100%);
     --text-size: 1.25rem; 
 }
 
@@ -21,9 +21,12 @@
 * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
 
 body { 
-    background-color: var(--bg); color: #f5ebe2; font-family: 'Hind Siliguri', sans-serif; 
+    background-color: var(--bg) !important; 
+    color: var(--primary) !important; 
+    font-family: 'Hind Siliguri', sans-serif; 
     margin: 0; padding: 0; display: flex; justify-content: center; min-height: 100vh; 
-    overflow-x: hidden; background-image: radial-gradient(circle at 50% 30%, #150a0d 0%, #070405 70%);
+    overflow-x: hidden; 
+    background-image: radial-gradient(circle at 50% 30%, #0d1b2a 0%, #090d16 70%) !important;
 }
 
 .ambient-glow { position: fixed; top: -10%; left: -10%; width: 60%; height: 60%; background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 70%); z-index: -3; pointer-events: none; }
@@ -46,9 +49,30 @@ body {
 .music-btn.playing { animation: spin 8s linear infinite; box-shadow: 0 0 20px rgba(230,92,123,0.4); }
 @keyframes spin { 100% { transform: rotate(360deg); } }
 
-#app-container { width: 100%; max-width: 540px; background: rgba(13, 8, 10, 0.94); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); min-height: 100vh; position: relative; border-left: 1px solid rgba(212, 175, 55, 0.1); border-right: 1px solid rgba(212, 175, 55, 0.1); box-shadow: 0 0 100px rgba(0, 0, 0, 0.8); }
+#app-container { 
+    width: 100%; 
+    max-width: 540px; 
+    background: rgba(11, 17, 32, 0.95) !important; /* ব্লুইশ ডার্ক ব্যাকগ্রাউন্ড */
+    backdrop-filter: blur(20px); 
+    -webkit-backdrop-filter: blur(20px); 
+    min-height: 100vh; 
+    position: relative; 
+    border-left: 1px solid rgba(56, 189, 248, 0.15) !important; 
+    border-right: 1px solid rgba(56, 189, 248, 0.15) !important; 
+    box-shadow: 0 0 100px rgba(0, 0, 0, 0.9); 
+}
 .profile-header { text-align: center; padding: 70px 25px 35px 25px; }
-.avatar-frame { display: inline-block; padding: 6px; border: 1px solid transparent; background: linear-gradient(135deg, var(--accent), var(--secondary)) border-box; border-radius: 50%; margin-bottom: 15px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
+.avatar-frame { 
+    display: inline-block !important; 
+    padding: 6px !important; 
+    border: 1px solid transparent !important; 
+    background: linear-gradient(135deg, var(--accent), var(--novel-accent)) border-box !important; 
+    border-radius: 50% !important; 
+    margin-bottom: 15px !important; 
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5) !important; 
+    width: auto !important; 
+    height: auto !important; 
+}
 .avatar { width: 125px; height: 125px; border-radius: 50%; object-fit: cover; cursor: pointer; transition: transform 0.5s; }
 .avatar:hover { transform: scale(1.05) rotate(5deg); }
 h1 { font-family: 'Cinzel', serif; font-weight: 700; font-size: 2.5rem; background: var(--gold-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin: 12px 0 5px 0; letter-spacing: 2px; }
@@ -72,10 +96,27 @@ h1 { font-family: 'Cinzel', serif; font-weight: 700; font-size: 2.5rem; backgrou
 
 .vintage-item-node, .poem-btn { background: var(--card-bg); padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.03); cursor: pointer; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; color: #f0e2d5; border-left: 3px solid var(--accent); backdrop-filter: blur(10px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
 .vintage-item-node:hover, .poem-btn:hover { border-color: var(--accent); background: rgba(30, 20, 22, 0.8); transform: translateX(5px) scale(1.01); box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
-.novel-hub-btn { border-left-color: var(--novel-accent); color: #ff7675; font-weight: 600; background: rgba(176, 58, 78, 0.05); }
-.novel-hub-btn:hover { border-color: var(--novel-accent); background: rgba(176, 58, 78, 0.1); }
-.letter-hub-btn { border-left-color: #e74c3c; color: #ff9a9e; font-weight: 600; background: rgba(231, 76, 60, 0.05); }
-.letter-hub-btn:hover { border-color: #e74c3c; background: rgba(231, 76, 60, 0.1); }
+.novel-hub-btn { 
+    border-left-color: var(--novel-accent) !important; 
+    color: #a5b4fc !important; 
+    font-weight: 600; 
+    background: rgba(129, 140, 248, 0.08) !important; 
+}
+.novel-hub-btn:hover { 
+    border-color: var(--novel-accent) !important; 
+    background: rgba(129, 140, 248, 0.18) !important; 
+}
+
+.letter-hub-btn { 
+    border-left-color: #38bdf8 !important; 
+    color: #38bdf8 !important; 
+    font-weight: 600; 
+    background: rgba(56, 189, 248, 0.08) !important; 
+}
+.letter-hub-btn:hover { 
+    border-color: #38bdf8 !important; 
+    background: rgba(56, 189, 248, 0.18) !important; 
+}
 .pdf-hub-btn { border-left-color: #2ecc71; color: #2ecc71; font-weight: 600; background: rgba(39, 174, 96, 0.05); }
 .pdf-hub-btn:hover { border-color: #2ecc71; background: rgba(39, 174, 96, 0.12); }
 .menu-button-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: 20px; }
@@ -135,11 +176,11 @@ h1 { font-family: 'Cinzel', serif; font-weight: 700; font-size: 2.5rem; backgrou
 @media (max-width: 720px) { .menu-button-grid { grid-template-columns: 1fr; } #app-container { padding: 20px; } }
 @media (max-width: 480px) { .pdf-card { grid-template-columns: 1fr; } .pdf-card-thumb { min-height: 180px; } .pdf-card-action { justify-content: center; } .library-header { flex-direction: column; align-items: flex-start; gap: 12px; } }
 
-.full-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #070405; z-index: 1500; padding: 25px; overflow-y: auto; }
+.full-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #090d16 !important; z-index: 1500; padding: 25px; overflow-y: auto; }
 .back-btn { background: transparent; border: none; color: var(--accent); font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 700; margin-bottom: 25px; font-family: 'Cinzel'; letter-spacing: 1.5px; }
 .back-btn:hover { color: var(--secondary); transform: translateX(-3px); }
 .vintage-poem-title { text-align: center; color: transparent; background: var(--gold-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Hind Siliguri'; margin-bottom: 30px; font-size: 1.8rem; font-weight: 700; }
-#poem-container-box { background: #0d090a; padding: 35px 30px; border-radius: 8px; border: 1px solid rgba(212,175,55,0.1); margin-bottom: 35px; box-shadow: inset 0 0 30px rgba(0,0,0,0.8); }
+#poem-container-box { background: #0f172a !important; padding: 35px 30px; border-radius: 8px; border: 1px solid rgba(56, 189, 248, 0.15) !important; margin-bottom: 35px; box-shadow: inset 0 0 30px rgba(0,0,0,0.8); }
 #poem-content-display { font-size: var(--text-size); line-height: 2.2; color: #f3e5ab; white-space: pre-line; text-align: center; font-weight: 300; }
 .vintage-paper-node, .novel-card, .sayeri-card, .monologue-card, .memory-item-card { background: rgba(18, 11, 13, 0.8); border: 1px solid rgba(212,175,55,0.08); border-radius: 8px; padding: 25px; margin-bottom: 25px; border-left: 3px solid var(--accent); box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
 .novel-card h3, .monologue-title { margin: 0 0 12px 0; font-family: 'Hind Siliguri'; color: var(--primary); font-size: 1.5rem; font-weight: 600; }
@@ -158,7 +199,7 @@ h1 { font-family: 'Cinzel', serif; font-weight: 700; font-size: 2.5rem; backgrou
 .vintage-comment-box { background: rgba(255,255,255,0.02); padding: 15px; border-radius: 6px; margin-bottom: 12px; border-left: 2px solid var(--secondary); }
 .c-input { width: 100%; background: #090607; border: 1px solid rgba(212,175,55,0.1); color: #fff; padding: 14px; margin-bottom: 16px; border-radius: 6px; font-family: 'Hind Siliguri'; }
 .c-input:focus { border-color: var(--accent); }
-.sub-box { background: rgba(212,175,55,0.02); padding: 25px; border-radius: 8px; border: 1px solid rgba(212,175,55,0.1); margin-top: 25px; text-align: center; }
+.sub-box { background: rgba(15, 23, 42, 0.6) !important; border: 1px solid rgba(56, 189, 248, 0.15) !important; padding: 25px; border-radius: 8px; margin-top: 25px; text-align: center; }
 .sub-input { padding: 12px; border-radius: 6px; width: 65%; border: 1px solid rgba(212,175,55,0.15); background: #090607; color: #fff; }
 /* ==========================================================================
    5-BUTTON SINGLE LINE RESPONSIVE LAYOUT
@@ -392,7 +433,7 @@ h1 { font-family: 'Cinzel', serif; font-weight: 700; font-size: 2.5rem; backgrou
 .gallery-img { width: 100%; height: 230px; object-fit: cover; display: block; }
 .vintage-gallery-card:hover .gallery-img { transform: scale(1.06); }
 .gallery-caption { padding: 12px; font-size: 0.95rem; color: #f3e5ab; text-align: center; background: rgba(7, 4, 5, 0.9); font-weight: 300; }
-.vintage-form-wrapper { background: #0b0708; padding: 25px; border-radius: 8px; border: 1px solid rgba(212,175,55,0.1); box-shadow: inset 0 0 20px rgba(0,0,0,0.6); }
+.vintage-form-wrapper { background: rgba(15, 23, 42, 0.6) !important; border: 1px solid rgba(56, 189, 248, 0.15) !important; padding: 25px; border-radius: 8px; box-shadow: inset 0 0 20px rgba(0,0,0,0.6); }
 .visitor-counter { text-align: center; margin-top: 35px; font-size: 0.85rem; color: #9c8a7b; font-family: 'Cinzel', serif; letter-spacing: 1.5px; }
 
 .lightbox-modal-wrapper { display: none; position: fixed; z-index: 99999; padding: 20px; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(4, 2, 3, 0.97); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); align-items: center; justify-content: center; flex-direction: column; }
@@ -495,6 +536,50 @@ body.theme-moonlight .monologue-text,
 body.theme-moonlight .vintage-poem-title {
     color: #e0f0ff !important;
     -webkit-text-fill-color: #e0f0ff !important;
+}
+
+body.theme-midnight-obsidian {
+    --primary: #f0f4f8;
+    --secondary: #64748b;
+    --accent: #38bdf8;
+    --novel-accent: #818cf8;
+    --bg: #090d16;
+    --card-bg: rgba(15, 23, 42, 0.85);
+    --gold-gradient: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
+    --rose-gradient: linear-gradient(135deg, #a5f3fc 0%, #38bdf8 100%);
+}
+
+body.theme-dark-emerald {
+    --primary: #f1f5f9;
+    --secondary: #34d399;
+    --accent: #059669;
+    --novel-accent: #0d9488;
+    --bg: #040d0a;
+    --card-bg: rgba(10, 26, 20, 0.85);
+    --gold-gradient: linear-gradient(135deg, #34d399 0%, #059669 50%, #047857 100%);
+    --rose-gradient: linear-gradient(135deg, #a7f3d0 0%, #34d399 100%);
+}
+
+body.theme-royal-lavender {
+    --primary: #f5f3ff;
+    --secondary: #c084fc;
+    --accent: #9333ea;
+    --novel-accent: #7e22ce;
+    --bg: #0b0612;
+    --card-bg: rgba(22, 12, 38, 0.85);
+    --gold-gradient: linear-gradient(135deg, #c084fc 0%, #9333ea 50%, #6b21a8 100%);
+    --rose-gradient: linear-gradient(135deg, #e9d5ff 0%, #c084fc 100%);
+}
+
+body.theme-vintage-sepia {
+    --primary: #f7ede2;
+    --secondary: #e76f51;
+    --accent: #b5838d;
+    --novel-accent: #d4a373;
+    --bg: #0f0c0b;
+    --card-bg: rgba(28, 22, 20, 0.85);
+    --gold-gradient: linear-gradient(135deg, #e76f51 0%, #b5838d 50%, #6b705c 100%);
+    --rose-gradient: linear-gradient(135deg, #f7ede2 0%, #d4a373 100%);
 }
 
 /* ২. রিডিং প্রোগ্রেস বার (Reading Progress Bar) */
@@ -685,4 +770,25 @@ body.theme-moonlight .vintage-poem-title {
 /* Ensure petals overlay doesn't block interactions and vault controls stay clickable */
 #petals-container { position: absolute; inset: 0; pointer-events: none; z-index: 20; }
 .scrapbook-controls-dock { z-index: 2200; position: relative; }
+
+/* Force Midnight Obsidian Colors Everywhere */
+h1, .section-title, .vintage-poem-title, .menu-button-grid span {
+    color: var(--primary) !important;
+}
+
+.poem-btn {
+    background: var(--card-bg) !important;
+    border-color: rgba(56, 189, 248, 0.2) !important;
+    color: var(--primary) !important;
+}
+
+.poem-btn:hover {
+    border-color: var(--accent) !important;
+    background: rgba(30, 41, 59, 0.9) !important;
+}
+
+/* Avatar Border Fix */
+.avatar-frame {
+    background: linear-gradient(135deg, var(--accent), var(--novel-accent)) border-box !important;
+}
 
