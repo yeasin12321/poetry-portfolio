@@ -558,6 +558,64 @@ body.theme-moonlight .vintage-poem-title {
     .memory-img-wrap img { height: 100%; min-height: 190px; }
 }
 
+/* ==========================================
+   MOBILE RESPONSIVE FIX (FULL SITE & VAULT)
+   ========================================== */
+@media (max-width: 600px) {
+    /* 1. অ্যাপ ও ভল্ট কনটেনার মোবাইল ফিট */
+    #app-container, 
+    .vault-romantic-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 12px !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    /* 2. ফুল ভিউ পেজগুলোর উইডথ ও মার্জিন ঠিক করা */
+    .full-view {
+        padding: 15px 12px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    /* 3. কবিতা ও কনটেন্ট কার্ড স্ক্রিন থেকে কেটে যাওয়া রোধ */
+    #poem-container-box, 
+    .vintage-paper-node, 
+    .novel-card, 
+    .sayeri-card, 
+    .monologue-card, 
+    .diary-text,
+    .memory-item-card {
+        padding: 16px 12px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        font-size: 1rem !important;
+        line-height: 1.8 !important;
+    }
+
+    /* 4. সোশ্যাল লিঙ্ক ও বাটন পারফেক্ট গ্রিড */
+    .social-links {
+        gap: 10px !important;
+        flex-wrap: wrap !important;
+    }
+
+    /* 5. বটম ডক এবং ড্রপডাউন রেসপনসিভ */
+    .scrapbook-controls-dock {
+        padding: 10px 8px !important;
+        gap: 6px !important;
+    }
+
+    #vault-page-select, 
+    .vault-page-dropdown {
+        min-width: 110px !important;
+        font-size: 0.82rem !important;
+        padding: 6px 20px 6px 8px !important;
+    }
+}
+
 #backToTopBtn { position: fixed; bottom: -60px; right: 25px; width: 48px; height: 48px; background: rgba(22, 15, 17, 0.8); border: 1px solid var(--accent); border-radius: 50%; color: var(--primary); font-size: 1.2rem; cursor: pointer; z-index: 2500; display: flex; justify-content: center; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.6), inset 0 0 10px rgba(212,175,55,0.2); transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); opacity: 0; pointer-events: none; }
 #backToTopBtn.show { bottom: 25px; opacity: 1; pointer-events: auto; }
 #backToTopBtn:hover { background: var(--gold-gradient); color: #000; transform: translateY(-5px); box-shadow: 0 10px 25px rgba(212,175,55,0.4); }
