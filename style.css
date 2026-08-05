@@ -954,3 +954,26 @@ h1, .section-title, .vintage-poem-title, .menu-button-grid span {
     padding-bottom: 80px !important;
 }
 
+/* ==========================================
+   FIX ALL RED SMALL TEXTS & BUTTON TEXT
+   ========================================== */
+
+/* উপন্যাসের সামারি, মেটা তথ্য এবং সব প্যারাগ্রাফের টেক্সট কালার ক্লিন করা */
+.novel-summary, 
+.novel-meta, 
+p, 
+span {
+    color: #cbd5e1 !important; /* পরিষ্কার রিডেবল সফট গ্রে/সিলভার টেক্সট */
+}
+
+/* বাটনের টেক্সট এবং বর্ডার কালার ফিক্স */
+.read-btn {
+    border-color: var(--accent) !important;
+    color: #38bdf8 !important; /* হালকা স্কাই ব্লু */
+    background: rgba(56, 189, 248, 0.05) !important;
+}
+
+.read-btn:hover {
+    background: var(--accent) !important;
+    color: #000000 !important;
+}
