@@ -889,3 +889,68 @@ h1, .section-title, .vintage-poem-title, .menu-button-grid span {
     width: 100% !important;
 }
 
+/* ==========================================
+   READABILITY & FLOATING BUTTONS FIX
+   ========================================== */
+
+/* ১. উপন্যাসের অ্যারো বাটন দুটি লেখার বাইরে ও নিচে নিয়ে যাওয়া */
+.nav-arrow-btn {
+    position: static !important;
+    transform: none !important;
+    display: inline-flex !important;
+    margin: 15px 10px !important;
+}
+
+#novel-reader, #letter-reader {
+    text-align: center;
+}
+
+/* ২. ফ্লোটিং সাপোর্ট বাটনকে স্ক্রলিং পেজে পজিশন ঠিক করা */
+.support-writer-btn {
+    bottom: 20px !important;
+    right: 15px !important;
+    padding: 8px 14px !important;
+    font-size: 0.8rem !important;
+    opacity: 0.85;
+}
+
+.support-writer-btn:hover {
+    opacity: 1;
+}
+
+/* ৩. অ্যাকশন বাটন গ্রিডকে মোবাইলে স্ক্রোলযোগ্য ও এক লাইনে করা */
+.action-buttons-group {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    gap: 8px !important;
+    padding-bottom: 10px !important;
+    scrollbar-width: none;
+}
+
+.action-buttons-group::-webkit-scrollbar {
+    display: none;
+}
+
+.action-buttons-group .sub-btn {
+    flex: 0 0 auto !important;
+    font-size: 0.78rem !important;
+    padding: 8px 12px !important;
+}
+
+/* ৪. রিডিং মোডে উপরের লগইন বাটন ছোট ও ফিক্স করা */
+.auth-corner {
+    top: 10px !important;
+    right: 10px !important;
+}
+
+.auth-btn {
+    padding: 6px 12px !important;
+    font-size: 0.8rem !important;
+}
+
+/* ৫. লেখার নিচে পর্যাপ্ত জায়গা রাখা যেন বাটন কাভার না করে */
+#poem-container-box, .story-text {
+    padding-bottom: 80px !important;
+}
+
