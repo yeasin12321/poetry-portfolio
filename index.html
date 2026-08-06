@@ -250,6 +250,16 @@
 
             <div class="list-container" data-aos="fade-left">
                 <div class="section-title">Explore</div>
+                <!-- dynamic notice board section -->
+                <div id="notice-board" class="notice-container" style="display: none;" data-aos="fade-down">
+                    <div class="notice-header">
+                        <i class="fas fa-bullhorn notice-icon"></i>
+                        <span class="notice-title">বিশেষ বিজ্ঞপ্তি</span>
+                    </div>
+                    <div id="notice-content" class="notice-content">
+                        বিজ্ঞপ্তি লোড হচ্ছে...
+                    </div>
+                </div>
                 <div class="menu-button-grid">
                     <div class="poem-btn" onclick="openPoemLibrary()" style="border-left-color: var(--primary);">
                         <i class="fas fa-feather"></i> <span>কবিতা সমগ্র</span>
@@ -271,6 +281,9 @@
                     </div>
                     <div class="poem-btn video-menu-btn" onclick="switchView('video-view')">
                         <i class="fas fa-video"></i> <span>ভিডিও গ্যালারি</span>
+                    </div>
+                    <div class="poem-btn preorder-hub-btn" onclick="openPreorderModal()" style="border-left-color: #22c55e;">
+                        <i class="fas fa-shopping-cart"></i> <span>বই প্রি-অর্ডার করুন</span>
                     </div>
                     <div class="poem-btn pdf-hub-btn" onclick="openPdfLibrary()">
                         <i class="fas fa-book-reader"></i> <span>পিডিএফ লাইব্রেরি</span>
@@ -825,6 +838,44 @@
     
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="script.js"></script>
+
+    <!-- Pre-Order Modal Overlay -->
+    <div id="preorder-modal-overlay" class="auth-modal-overlay" onclick="closePreorderModal(event)">
+        <div class="auth-modal-box vintage-paper-node" onclick="event.stopPropagation()" style="max-width: 480px; text-align: left;">
+            <button class="close-auth-btn" onclick="closePreorderModal()"><i class="fas fa-times"></i></button>
+            <h2 style="font-family:'Cinzel'; color:var(--accent); margin-top:0; text-align:center;">📖 বই প্রি-অর্ডার ফরম</h2>
+            <p style="color:#c4b5a7; margin-bottom: 20px; font-size: 0.9rem; text-align:center;">আপনার তথ্য পূরণ করে বইটি অগ্রিম অর্ডার করুন।</p>
+            
+            <div class="vintage-form-wrapper" style="padding: 10px 0 0 0; background: transparent; border: none; box-shadow: none;">
+                <label style="color:var(--primary); font-size:0.85rem; margin-bottom:5px; display:block;">আপনার নাম *</label>
+                <input type="text" id="preorder-name" class="c-input" placeholder="আপনার পূর্ণ নাম">
+                
+                <label style="color:var(--primary); font-size:0.85rem; margin-bottom:5px; display:block;">মোবাইল নম্বর *</label>
+                <input type="tel" id="preorder-phone" class="c-input" placeholder="০17xxxxxxxx">
+                
+                <label style="color:var(--primary); font-size:0.85rem; margin-bottom:5px; display:block;">বইয়ের নাম নির্বাচন করুন *</label>
+                <select id="preorder-book-select" class="c-input" style="background:#090607; color:#fff;">
+                    <option value="">বই বাছাই করুন...</option>
+                    <!-- গুগল শীট থেকে বইয়ের নামগুলো অটোমেটিক লোড হবে -->
+                </select>
+                
+                <label style="color:var(--primary); font-size:0.85rem; margin-bottom:5px; display:block;">কপি সংখ্যা</label>
+                <input type="number" id="preorder-quantity" class="c-input" value="1" min="1" max="10">
+                
+                <label style="color:var(--primary); font-size:0.85rem; margin-bottom:5px; display:block;">ডেলিভারি ঠিকানা *</label>
+                <textarea id="preorder-address" class="c-input" placeholder="আপনার পূর্ণ ঠিকানা (জেলা, থানা/উপজেলাসহ)..." style="height:70px;"></textarea>
+
+                <!-- পেমেন্ট তথ্য ফিল্ডসমূহ -->
+                <label style="color:var(--accent); font-size:0.85rem; margin-bottom:5px; display:block; font-weight:600;">Transaction ID (TrxID) *</label>
+                <input type="text" id="preorder-trxid" class="c-input" placeholder="যেমন: B7X9KL0P">
+
+                <label style="color:var(--accent); font-size:0.85rem; margin-bottom:5px; display:block; font-weight:600;">পেমেন্ট স্ক্রিনশট যুক্ত করুন *</label>
+                <input type="file" id="preorder-screenshot" accept="image/*" class="c-input" style="padding: 8px;">
+                
+                <button class="sub-btn" id="preorder-submit-btn" style="width:100%; margin-top:10px;" onclick="submitPreorder()">অর্ডার কনফার্ম করুন</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Single Content Popup Overlay -->
     <div id="content-popup-overlay" class="auth-modal-overlay" onclick="closeContentPopup()">

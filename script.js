@@ -13,6 +13,8 @@ const VIDEO_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxf1QC
 const MEMORIES_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxf1QCiDaynQwEoMBnxF7-WEbFNByMoIU3R8G-_5dmaoH2E93fWPahZ_qlTMfQKBWYyjJgVbon78mF/pub?gid=1356343288&single=true&output=csv";
 const LETTERS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxf1QCiDaynQwEoMBnxF7-WEbFNByMoIU3R8G-_5dmaoH2E93fWPahZ_qlTMfQKBWYyjJgVbon78mF/pub?gid=249749270&single=true&output=csv"; 
 const PDFS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxf1QCiDaynQwEoMBnxF7-WEbFNByMoIU3R8G-_5dmaoH2E93fWPahZ_qlTMfQKBWYyjJgVbon78mF/pub?gid=1582308394&single=true&output=csv";
+const NOTICE_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxf1QCiDaynQwEoMBnxF7-WEbFNByMoIU3R8G-_5dmaoH2E93fWPahZ_qlTMfQKBWYyjJgVbon78mF/pub?gid=0&single=true&output=csv";
+const PREORDER_BOOKS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxf1QCiDaynQwEoMBnxF7-WEbFNByMoIU3R8G-_5dmaoH2E93fWPahZ_qlTMfQKBWYyjJgVbon78mF/pub?gid=140120923&single=true&output=csv";
 
 const EMAILJS_PUBLIC_KEY = "nrzZqd-KWp06iFnYt"; 
 const EMAILJS_SERVICE_ID = "service_8e409wl"; 
@@ -159,6 +161,12 @@ function loadAllData() {
             renderPdfLibrary();
         }
     });
+    Papa.parse(PREORDER_BOOKS_SHEET_URL, {
+        download: true, header: true,
+        complete: function(results) {
+            populatePreorderBooks(results.data);
+        }
+    });
     Papa.parse(LETTERS_SHEET_URL, {
         download: true, header: true,
         complete: function(results) {
@@ -168,6 +176,142 @@ function loadAllData() {
             renderLettersLibrary();
         }
     });
+    Papa.parse(NOTICE_SHEET_URL, {
+        download: true, header: true,
+        complete: function(results) {
+            renderNoticeBoard(results.data);
+        }
+    });
+}
+
+function renderNoticeBoard(data) {
+    const noticeBoard = document.getElementById('notice-board');
+    const noticeContent = document.getElementById('notice-content');
+    if (!noticeBoard || !noticeContent || !data || data.length === 0) return;
+
+    const activeNotice = data.find(item => item.text && item.text.trim() !== "");
+    if (!activeNotice) {
+        noticeBoard.style.display = 'none';
+        return;
+    }
+
+    let noticeHTML = `<p class="notice-text">${activeNotice.text}</p>`;
+    if (activeNotice.link && activeNotice.link.trim() !== "") {
+        noticeHTML += `<a href="${activeNotice.link.trim()}" target="_blank" rel="noopener noreferrer" class="notice-btn"><i class="fas fa-external-link-alt"></i> বিস্তারিত দেখুন</a>`;
+    }
+
+    noticeContent.innerHTML = noticeHTML;
+    noticeBoard.style.display = 'block';
+}
+
+function populatePreorderBooks(data) {
+    const select = document.getElementById('preorder-book-select');
+    if (!select || !data) return;
+    select.innerHTML = '<option value="">বই বাছাই করুন...</option>';
+    data.forEach(item => {
+        if (item.book_name) {
+            const opt = document.createElement('option');
+            opt.value = item.book_name.trim();
+            opt.text = item.book_name.trim() + (item.price ? ` (${item.price} ৳)` : '');
+            select.appendChild(opt);
+        }
+    });
+}
+
+function openPreorderModal() {
+    const modal = document.getElementById('preorder-modal-overlay');
+    if (modal) modal.classList.add('active');
+}
+
+function closePreorderModal(e) {
+    if (!e || e.target.id === 'preorder-modal-overlay' || e.target.closest('.close-auth-btn')) {
+        document.getElementById('preorder-modal-overlay').classList.remove('active');
+    }
+}
+
+// ছবিকে কম্প্রেস করে ৫০KB এর নিচে আনার হেল্পার ফাংশন
+function compressAndGetBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const maxWidth = 500;
+                const scaleSize = maxWidth / img.width;
+                canvas.width = maxWidth;
+                canvas.height = img.height * scaleSize;
+
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                const compressedBase64 = canvas.toDataURL('image/jpeg', 0.4);
+                resolve(compressedBase64);
+            };
+            img.onerror = error => reject(error);
+        };
+        reader.onerror = error => reject(error);
+    });
+}
+
+async function submitPreorder() {
+    const name = document.getElementById('preorder-name').value.trim();
+    const phone = document.getElementById('preorder-phone').value.trim();
+    const book = document.getElementById('preorder-book-select').value;
+    const qty = document.getElementById('preorder-quantity').value || 1;
+    const address = document.getElementById('preorder-address').value.trim();
+    const trxId = document.getElementById('preorder-trxid').value.trim();
+    const fileInput = document.getElementById('preorder-screenshot');
+    const submitBtn = document.getElementById('preorder-submit-btn');
+
+    if (!name || !phone || !book || !address || !trxId) {
+        return alert("দয়া করে নাম, মোবাইল, বই, ঠিকানা এবং Transaction ID সঠিকভাবে লিখুন।");
+    }
+
+    if (!fileInput.files || fileInput.files.length === 0) {
+        return alert("দয়া করে পেমেন্টের স্ক্রিনশট ছবিটি যুক্ত করুন।");
+    }
+
+    submitBtn.innerText = "ছবি প্রসেস হচ্ছে...";
+    submitBtn.disabled = true;
+
+    try {
+        const compressedBase64 = await compressAndGetBase64(fileInput.files[0]);
+
+        submitBtn.innerText = "অর্ডার পাঠানো হচ্ছে...";
+
+        const orderDetails = `📦 নতুন বই প্রি-অর্ডার এসেছে!\n\n` +
+                             `👤 নাম: ${name}\n` +
+                             `📞 ফোন: ${phone}\n` +
+                             `📚 বইয়ের নাম: ${book}\n` +
+                             `🔢 সংখ্যা: ${qty} টি\n` +
+                             `🏠 ঠিকানা: ${address}\n` +
+                             `💳 TrxID: ${trxId}`;
+
+        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+            from_name: `Pre-Order: ${name}`,
+            from_email: "noreply@yeasinkabir.pro.bd",
+            message: orderDetails,
+            screenshot_image: compressedBase64
+        });
+
+        alert("ধন্যবাদ! আপনার পেমেন্ট স্ক্রিনশট সহ বইয়ের প্রি-অর্ডারটি সফলভাবে জমা হয়েছে। ❤️");
+        document.getElementById('preorder-name').value = '';
+        document.getElementById('preorder-phone').value = '';
+        document.getElementById('preorder-address').value = '';
+        document.getElementById('preorder-trxid').value = '';
+        fileInput.value = '';
+        closePreorderModal();
+
+    } catch (error) {
+        console.error("Order submit error:", error);
+        alert("দুঃখিত, অর্ডারটি পাঠানো যায়নি। আবার চেষ্টা করুন।");
+    } finally {
+        submitBtn.innerText = "অর্ডার কনফার্ম করুন";
+        submitBtn.disabled = false;
+    }
 }
 
 function processNovelsData(flatData) {
@@ -1221,32 +1365,19 @@ function downloadItemPDF(elementId, fileNameTitle) {
     hiddenEls.forEach(el => el.style.display = 'none');
 
     const opt = {
-        margin: 0.5,
+        margin: 0.3,
         filename: (fileNameTitle || 'Document') + '.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
+        image: { type: 'jpeg', quality: 0.95 },
+        html2canvas: { scale: 1.5, useCORS: true, logging: false },
         jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
     };
 
-    html2pdf().set(opt).from(element).outputPdf('blob').then(function(pdfBlob) {
-        // Handle Blob for Mobile Browsers
-        const blobUrl = URL.createObjectURL(pdfBlob);
-        const link = document.createElement('a');
-        link.href = blobUrl;
-        link.download = (fileNameTitle || 'Document') + '.pdf';
-        document.body.appendChild(link);
-        link.click();
-        
-        setTimeout(() => {
-            document.body.removeChild(link);
-            URL.revokeObjectURL(blobUrl);
-        }, 200);
-
+    html2pdf().set(opt).from(element).save().then(() => {
         hiddenEls.forEach(el => el.style.display = '');
-    }).catch(function(err) {
+    }).catch(err => {
         console.error(err);
         hiddenEls.forEach(el => el.style.display = '');
-        alert('PDF ডাউনলোডে সমস্যা হয়েছে।');
+        alert('পিডিএফ ডাউনলোডে সমস্যা হয়েছে।');
     });
 }
 
@@ -1254,18 +1385,18 @@ function downloadItemPDF(elementId, fileNameTitle) {
 async function downloadAsImage(elementId, fileName) {
     const element = document.getElementById(elementId);
     if (!element) return alert('কন্টেন্ট পাওয়া যায়নি!');
-    
+
     const hiddenEls = [...element.querySelectorAll('.hide-during-capture')];
     hiddenEls.forEach(el => el.style.display = 'none');
 
     try {
         const canvas = await html2canvas(element, { 
-            scale: 2, 
+            scale: 1.5, 
             useCORS: true, 
-            backgroundColor: null 
+            backgroundColor: '#090d16',
+            logging: false
         });
 
-        // Convert to Base64 image data for Mobile Support
         const imageData = canvas.toDataURL("image/png");
         const link = document.createElement('a');
         link.href = imageData;
@@ -1297,24 +1428,6 @@ function copyToClipboard(elementId, type) {
     };
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(() => alert(successMessage)).catch(() => fallbackCopy());
     else fallbackCopy();
-}
-
-async function downloadAsImage(elementId, fileName) {
-    const element = document.getElementById(elementId);
-    if (!element) return alert('কন্টেন্ট পাওয়া যায়নি!');
-    const hiddenEls = [...element.querySelectorAll('.hide-during-capture')];
-    hiddenEls.forEach(el => el.style.display = 'none');
-    try {
-        const canvas = await html2canvas(element, { scale: 2, useCORS: true, backgroundColor: null });
-        await new Promise((resolve, reject) => {
-            canvas.toBlob(blob => {
-                if (!blob) return reject(new Error('Image blob তৈরি করা যায়নি'));
-                const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = fileName ? `${fileName}.png` : 'download.png';
-                document.body.appendChild(link); link.click(); document.body.removeChild(link); URL.revokeObjectURL(link.href); resolve();
-            }, 'image/png');
-        });
-    } catch (err) { console.error(err); alert('ইমেজ ডাউনলোডে সমস্যা হয়েছে।'); } 
-    finally { hiddenEls.forEach(el => el.style.display = ''); }
 }
 
 async function nativeShare(hashPath, title) {
