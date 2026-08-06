@@ -409,6 +409,8 @@ function renderPoems() {
 function openPoemDirectly(index) {
     document.getElementById('poem-title-display').innerText = allPoems[index].title;
     document.getElementById('poem-content-display').innerHTML = allPoems[index].text.replace(/\n/g, '<br>');
+    document.title = `${allPoems[index].title} - ইয়াছিন কবির`;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", `${allPoems[index].title} - ইয়াছিন কবির`);
     document.getElementById('home-view').style.display='none'; 
     document.querySelectorAll('.full-view').forEach(el => el.style.display='none'); 
     const readerView = document.getElementById('reader-view');
@@ -660,6 +662,8 @@ function loadChapter() {
     const ch = novelsDB[currentBookIndex].chapters[currentChapterIndex];
     document.getElementById('current-chapter-title').innerText = ch.title;
     document.getElementById('story-content').innerHTML = ch.text.replace(/\n/g, '<br>');
+    document.title = `${novelsDB[currentBookIndex].title} - ${ch.title} - ইয়াছিন কবির`;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", `${novelsDB[currentBookIndex].title} - ${ch.title} - ইয়াছিন কবির`);
     document.getElementById('chapter-dropdown').value = currentChapterIndex;
     document.getElementById('novel-reader').scrollTop = 0;
 }

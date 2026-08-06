@@ -1,2 +1,4 @@
 User-agent: *
 Disallow: /eye.jpg
+
+Sitemap: https://yeasinkabir.pro.bd/sitemap.xml
