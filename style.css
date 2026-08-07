@@ -173,6 +173,67 @@ h1 { font-family: 'Cinzel', serif; font-weight: 700; font-size: 2.5rem; backgrou
 .pdf-card-action .sub-btn { width: auto; background: #2ecc71; color: #041203; border: none; padding: 10px 18px; border-radius: 8px; font-size: 0.95rem; }
 .pdf-card-action .sub-btn:hover { box-shadow: 0 10px 25px rgba(46, 204, 113, 0.25); }
 
+/* PDF Library Grid & Background Overflow Fix */
+#pdf-library {
+    background-color: #090d16 !important;
+    min-height: 100vh !important;
+    padding-bottom: 80px !important;
+}
+
+.pdf-grid-layout {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+    gap: 20px !important;
+    padding: 20px 10px 60px 10px !important;
+    width: 100% !important;
+}
+
+.pdf-card {
+    display: flex !important;
+    flex-direction: column !important;
+    background: rgba(15, 23, 42, 0.85) !important;
+    border: 1px solid rgba(56, 189, 248, 0.2) !important;
+    border-radius: 12px !important;
+    padding: 16px !important;
+    height: 100% !important;
+}
+
+/* PDF Library Cover Box Seamless Fit & Clickable Lightbox */
+.pdf-card-thumb {
+    width: 100% !important;
+    height: 280px !important;
+    margin-bottom: 15px !important;
+    background: #000 !important;
+    border-radius: 8px !important;
+    display: block !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    border: 1px solid rgba(56, 189, 248, 0.2) !important;
+    cursor: pointer !important;
+    position: relative !important;
+}
+
+.pdf-card-thumb img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    display: block !important;
+    transition: transform 0.3s ease;
+}
+
+.pdf-card-thumb:hover img {
+    transform: scale(1.04);
+}
+
+.pdf-card-desc {
+    min-height: auto !important;
+    font-size: 0.9rem !important;
+    line-height: 1.6 !important;
+    color: #cbd5e1 !important;
+    margin-bottom: 15px !important;
+}
+
 @media (max-width: 720px) { .menu-button-grid { grid-template-columns: 1fr; } #app-container { padding: 20px; } }
 @media (max-width: 480px) { .pdf-card { grid-template-columns: 1fr; } .pdf-card-thumb { min-height: 180px; } .pdf-card-action { justify-content: center; } .library-header { flex-direction: column; align-items: flex-start; gap: 12px; } }
 
@@ -1083,4 +1144,54 @@ span {
 .read-btn:hover {
     background: var(--accent) !important;
     color: #000000 !important;
+}
+
+/* Full Cover Visible Fix (No Crop) */
+.pdf-card-thumb {
+    width: 100% !important;
+    height: auto !important; /* ফিক্সড হাইট বাদ */
+    aspect-ratio: 1 / 1.4 !important; /* বইয়ের কভারের স্ট্যান্ডার্ড অনুপাত */
+    margin-bottom: 15px !important;
+    background: #0f172a !important;
+    border-radius: 8px !important;
+    display: block !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    border: 1px solid rgba(56, 189, 248, 0.2) !important;
+    cursor: pointer !important;
+}
+
+.pdf-card-thumb img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important; /* কোনো অংশ না কেটে সম্পূর্ণ ছবি দেখাবে */
+    display: block !important;
+}
+/* Preorder Header & Subtitle Centering Alignment */
+#preorder-view .library-header {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    margin-bottom: 15px !important;
+}
+
+#preorder-view .library-header h2 {
+    text-align: center !important;
+    margin-top: 10px !important;
+    font-size: 1.8rem !important;
+}
+
+#preorder-view .pdf-library-intro {
+    text-align: center !important;
+    width: 100% !important;
+    max-width: 600px !important;
+    margin: 0 auto 30px auto !important;
+}
+
+#preorder-view .pdf-library-intro p {
+    text-align: center !important;
+    color: #94a3b8 !important;
+    font-size: 0.95rem !important;
 }

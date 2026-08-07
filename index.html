@@ -282,7 +282,7 @@
                     <div class="poem-btn video-menu-btn" onclick="switchView('video-view')">
                         <i class="fas fa-video"></i> <span>ভিডিও গ্যালারি</span>
                     </div>
-                    <div class="poem-btn preorder-hub-btn" onclick="openPreorderModal()" style="border-left-color: #22c55e;">
+                    <div class="poem-btn preorder-hub-btn" onclick="switchView('preorder-view')" style="border-left-color: #22c55e;">
                         <i class="fas fa-shopping-cart"></i> <span>বই প্রি-অর্ডার করুন</span>
                     </div>
                     <div class="poem-btn pdf-hub-btn" onclick="openPdfLibrary()">
@@ -840,6 +840,24 @@
     <script src="script.js"></script>
 
     <!-- Pre-Order Modal Overlay -->
+    <!-- Book Pre-Order Showcase View -->
+    <div id="preorder-view" class="full-view">
+        <div class="library-header">
+            <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> BACK TO HOME</button>
+            <h2 style="font-family:'Cinzel'; color:#22c55e;">বই প্রি-অর্ডার ও ক্যাটালগ</h2>
+        </div>
+        <div class="pdf-library-intro">
+            <p>নিচের তালিকা থেকে আপনার পছন্দের বইটি নির্বাচন করে সরাসরি প্রি-অর্ডার করুন।</p>
+        </div>
+        
+        <div id="preorder-loading-message" class="pdf-loading-message">
+            <div class="spinner" style="border-top-color:#22c55e;"></div>
+            <span>বইয়ের তালিকা লোড হচ্ছে...</span>
+        </div>
+
+        <div id="preorder-books-grid" class="pdf-grid-layout"></div>
+    </div>
+
     <div id="preorder-modal-overlay" class="auth-modal-overlay" onclick="closePreorderModal(event)">
         <div class="auth-modal-box vintage-paper-node" onclick="event.stopPropagation()" style="max-width: 480px; text-align: left;">
             <button class="close-auth-btn" onclick="closePreorderModal()"><i class="fas fa-times"></i></button>

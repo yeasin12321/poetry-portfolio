@@ -165,6 +165,9 @@ function loadAllData() {
         download: true, header: true,
         complete: function(results) {
             populatePreorderBooks(results.data);
+            renderPreorderBooksGrid(results.data);
+            const loader = document.getElementById('preorder-loading-message');
+            if(loader) loader.style.display = 'none';
         }
     });
     Papa.parse(LETTERS_SHEET_URL, {
@@ -221,6 +224,58 @@ function populatePreorderBooks(data) {
             select.appendChild(opt);
         }
     });
+}
+
+function renderPreorderBooksGrid(data) {
+    const container = document.getElementById('preorder-books-grid');
+    if (!container) return;
+    container.innerHTML = '';
+
+    const validBooks = data.filter(item => item.book_name && item.book_name.trim() !== "");
+
+    if (validBooks.length === 0) {
+        container.innerHTML = '<p style="color:#888; text-align:center; width:100%;">কোনো বই পাওয়া যায়নি।</p>';
+        return;
+    }
+
+    validBooks.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'pdf-card stagger-anim';
+        card.style.animationDelay = `${Math.min(index * 0.08, 1.5)}s`;
+
+        const bookName = item.book_name.trim();
+        const price = item.price ? `${item.price} ৳` : 'মূল্য নির্ধারিত নয়';
+        const coverImg = item.cover_url && item.cover_url.trim() ? item.cover_url.trim() : 'https://via.placeholder.com/240x320.png?text=Book+Cover';
+        const desc = item.description ? item.description : 'নতুন প্রকাশিত কাব্যগ্রন্থ ও উপন্যাস।';
+        const rawNameForJs = bookName.replace(/"/g, '\\"');
+
+        card.innerHTML = `
+            <div class="pdf-card-thumb" onclick="openImageModal('${coverImg}', '${rawNameForJs}')" title="কভার দেখতে ক্লিক করুন">
+                <img src="${coverImg}" loading="lazy" alt="${bookName}">
+            </div>
+            <div class="pdf-card-info">
+                <div>
+                    <h3 class="pdf-card-title">${bookName}</h3>
+                    <p class="pdf-card-author" style="color:#4ade80; font-weight:700; margin-top:5px;">মূল্য: ${price}</p>
+                </div>
+                <p class="pdf-card-desc">${desc}</p>
+                <div class="pdf-card-action">
+                    <button class="sub-btn" onclick="openPreorderModalWithBook('${rawNameForJs}')" style="width:100%; background:linear-gradient(135deg, #22c55e, #16a34a); color:#fff;">
+                        <i class="fas fa-shopping-cart"></i> Order Now
+                    </button>
+                </div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function openPreorderModalWithBook(bookName) {
+    const select = document.getElementById('preorder-book-select');
+    if (select && bookName) {
+        select.value = bookName;
+    }
+    openPreorderModal();
 }
 
 function openPreorderModal() {
@@ -708,12 +763,21 @@ function renderPdfLibrary() {
         card.style.animationDelay = `${Math.min(index * 0.08, 1.5)}s`;
         const thumbnail = item.thumbnail_url && item.thumbnail_url.trim() ? item.thumbnail_url.trim() : 'https://via.placeholder.com/240x320.png?text=PDF+Cover';
         const author = item.author ? item.author : 'Yeasin Kabir';
-        const description = item.description ? item.description : 'এই পিডিএফটি আপনার কাছে এক নিকট আত্মীয় গল্প ও কবিতার আকারে।';
-        const pdfUrl = item.pdf_url.trim();
+
+        let description = item.description ? item.description : 'এই পিডিএফটি আপনার জন্য পড়ার প্রস্তুত।';
+        description = description
+            .replace(/\[[^\]]*\]/g, '')
+            .replace(/`/g, '')
+            .trim();
+
+        const pdfUrl = item.pdf_url && item.pdf_url.trim() ? item.pdf_url.trim() : '#';
         const displayTitle = item.title;
+        const rawTitleForJs = displayTitle.replace(/"/g, '\\"');
 
         card.innerHTML = `
-            <div class="pdf-card-thumb"><img src="${thumbnail}" loading="lazy" alt="${displayTitle}"></div>
+            <div class="pdf-card-thumb" onclick="openImageModal('${thumbnail}', '${rawTitleForJs}')" title="কভারটি বড় করে দেখতে ক্লিক করুন">
+                <img src="${thumbnail}" loading="lazy" alt="${displayTitle}">
+            </div>
             <div class="pdf-card-info">
                 <div>
                     <h3 class="pdf-card-title">${displayTitle}</h3>
@@ -722,7 +786,7 @@ function renderPdfLibrary() {
                 </div>
                 <p class="pdf-card-desc">${description}</p>
                 <div class="pdf-card-action">
-                    <a class="sub-btn" href="${pdfUrl}" target="_blank" rel="noopener noreferrer"><i class="fas fa-download"></i> ডাউনলোড / পড়ুন</a>
+                    <a class="sub-btn" href="${pdfUrl}" target="_blank" rel="noopener noreferrer" style="width:100%; text-align:center;"><i class="fas fa-download"></i> ডাউনলোড / পড়ুন</a>
                 </div>
             </div>
         `;
