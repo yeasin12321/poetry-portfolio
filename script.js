@@ -195,7 +195,12 @@ function renderNoticeBoard(data) {
         return;
     }
 
-    let noticeHTML = `<p class="notice-text">${activeNotice.text}</p>`;
+    // নিউলাইন ঠিক রাখার জন্য লিঙ্ক ছাড়া বা লিঙ্কসহ ফরম্যাট
+    let noticeHTML = `<div class="notice-text" style="white-space: pre-line; line-height: 1.8;">${activeNotice.text}</div>`;
+    
+    // প্রি-অর্ডার ফরম খোলার Order Now বাটন
+    noticeHTML += `<button onclick="openPreorderModal()" class="notice-btn"><i class="fas fa-shopping-cart"></i> Order Now</button>`;
+
     if (activeNotice.link && activeNotice.link.trim() !== "") {
         noticeHTML += `<a href="${activeNotice.link.trim()}" target="_blank" rel="noopener noreferrer" class="notice-btn"><i class="fas fa-external-link-alt"></i> বিস্তারিত দেখুন</a>`;
     }
