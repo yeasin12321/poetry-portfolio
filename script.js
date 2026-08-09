@@ -48,7 +48,32 @@ let auraTimer = null;
 let auraScanned = false;
 let currentHashContext = ''; // Router Context Tracking
 
+function isInAppBrowser() {
+    const ua = navigator.userAgent || navigator.vendor || window.opera || '';
+    const appMarkers = [
+        'FBAN', 'FBAV', 'Instagram', 'Messenger', 'Twitter for iPhone',
+        'Line/', 'WhatsApp', 'Puffin', 'SamsungBrowser', 'TikTok', 'Snapchat'
+    ];
+    return appMarkers.some(marker => ua.toLowerCase().includes(marker.toLowerCase()));
+}
+
+function showInAppBrowserWarning() {
+    const warning = document.getElementById('inapp-browser-warning');
+    if (!warning || !isInAppBrowser()) return;
+
+    warning.style.display = 'block';
+
+    if (document.body) {
+        const bodyPaddingTop = window.getComputedStyle(document.body).paddingTop || '0px';
+        const currentPadding = parseFloat(bodyPaddingTop) || 0;
+        if (currentPadding < 40) {
+            document.body.style.paddingTop = '42px';
+        }
+    }
+}
+
 window.onload = () => {
+    showInAppBrowserWarning();
     loadAllData();
     createPoeticLeaves();
     
@@ -1426,19 +1451,21 @@ function triggerConfetti() {
     animateConfetti();
 }
 
+// ১. আপডেট করা PDF ডাউনলোড ফাংশন
 function downloadItemPDF(elementId, fileNameTitle) {
     const element = document.getElementById(elementId);
     if (!element) return alert("কন্টেন্ট পাওয়া যায়নি!");
 
+    // ক্যাপচারের সময় বোতামগুলো লুকিয়ে ফেলা
     const hiddenEls = [...element.querySelectorAll('.hide-during-capture, .pdf-btn')];
     hiddenEls.forEach(el => el.style.display = 'none');
 
     const opt = {
-        margin: 0.3,
-        filename: (fileNameTitle || 'Document') + '.pdf',
-        image: { type: 'jpeg', quality: 0.95 },
-        html2canvas: { scale: 1.5, useCORS: true, logging: false },
-        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        margin:       0.3,
+        filename:     (fileNameTitle || 'Document') + '.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true, logging: false },
+        jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
     };
 
     html2pdf().set(opt).from(element).save().then(() => {
@@ -1450,7 +1477,7 @@ function downloadItemPDF(elementId, fileNameTitle) {
     });
 }
 
-// Mobile and Desktop compatible Image Download Engine
+// ২. আপডেট করা Image (PNG) ডাউনলোড ফাংশন
 async function downloadAsImage(elementId, fileName) {
     const element = document.getElementById(elementId);
     if (!element) return alert('কন্টেন্ট পাওয়া যায়নি!');
@@ -1459,12 +1486,10 @@ async function downloadAsImage(elementId, fileName) {
     hiddenEls.forEach(el => el.style.display = 'none');
 
     try {
-        const canvas = await html2canvas(element, { 
-            scale: 1.5, 
-            useCORS: true, 
-            backgroundColor: '#090d16',
-            logging: false
-        });
+        // html2pdf-এর ভেতরের html2canvas ক্যানভাস জেনারেট করবে
+        const canvas = await html2pdf().from(element).set({
+            html2canvas: { scale: 2, useCORS: true, backgroundColor: '#090d16' }
+        }).toContainer().toCanvas().get('canvas');
 
         const imageData = canvas.toDataURL("image/png");
         const link = document.createElement('a');
