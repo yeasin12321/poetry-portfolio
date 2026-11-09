@@ -59,17 +59,15 @@ function isInAppBrowser() {
 
 function showInAppBrowserWarning() {
     const warning = document.getElementById('inapp-browser-warning');
-    if (!warning || !isInAppBrowser()) return;
+    if (!warning || sessionStorage.getItem('inapp_dismissed') === 'true' || !isInAppBrowser()) return;
 
-    warning.style.display = 'block';
+    warning.style.display = 'flex';
+}
 
-    if (document.body) {
-        const bodyPaddingTop = window.getComputedStyle(document.body).paddingTop || '0px';
-        const currentPadding = parseFloat(bodyPaddingTop) || 0;
-        if (currentPadding < 40) {
-            document.body.style.paddingTop = '42px';
-        }
-    }
+function dismissInAppWarning() {
+    const warning = document.getElementById('inapp-browser-warning');
+    if (warning) warning.style.display = 'none';
+    sessionStorage.setItem('inapp_dismissed', 'true');
 }
 
 window.onload = () => {
@@ -2103,3 +2101,48 @@ function stopPetals() {
     localStorage.removeItem('yk_theme');
     document.body.className = '';
 })();
+
+const sitePolicies = {
+    privacy: {
+        title: "Privacy Policy",
+        body: "<p>আপনার গোপনীয়তা আমাদের কাছে অত্যন্ত গুরুত্বপূর্ণ।</p><p>১. <b>সংগৃহীত তথ্য:</b> আপনি সাবস্ক্রাইব বা মন্তব্য করার সময় যে নাম, ইমেইল প্রদান করেন তা সম্পূর্ণ সুরক্ষিত থাকে এবং তৃতীয় কোনো পক্ষের সাথে বিনিময় করা হয় না।<br>২. <b>বুকমার্ক ও লোকাল স্টোরেজ:</b> আপনার সংরক্ষিত পছন্দের তালিকা ও সেটিংস আপনার ব্রাউজারের লোকাল স্টোরেজে নিরাপদে সংরক্ষিত থাকে।</p>"
+    },
+    terms: {
+        title: "Terms & Conditions",
+        body: "<p>১. <b>ব্যক্তিগত পাঠের অধিকার:</b> এই ওয়েবসাইটের সকল সাহিত্যকর্ম (কবিতা, গল্প, উপন্যাস, শায়রি) কেবল ব্যক্তিগত পাঠ ও উপভোগের জন্য উন্মুক্ত।<br>২. <b>নীতিমালা:</b> ওয়েবসাইটে কোনো প্রকার অশ্লীল, অনৈতিক বা আক্রমণাত্মক মন্তব্য করা সম্পূর্ণ নিষিদ্ধ।</p>"
+    },
+    copyright: {
+        title: "Copyright Policy",
+        body: "<p>© 2026 Yeasin Kabir. All rights reserved.</p><p>এই পোর্টালে প্রকাশিত সকল কবিতা, উপন্যাস, চিঠি এবং চিত্রকর্মের স্বত্ব রচয়িতা ইয়াছিন কবিরের। অনুমতি ও লেখকের নাম উল্লেখ ব্যতিরেকে বাণিজ্যিক উদ্দেশ্যে কোনো লেখা মুদ্রণ বা প্রকাশ করা কপিরাইট আইনের লঙ্ঘন।</p>"
+    },
+    disclaimer: {
+        title: "Disclaimer",
+        body: "<p>এই ওয়েবসাইটের সমস্ত চরিত্র, গল্প ও কবিতা লেখকের কল্পনা ও অনুভূতির বহিঃপ্রকাশ। কোনো জীবিত বা মৃত ব্যক্তির জীবনের সাথে সাদৃশ্য সম্পূর্ণ অনিচ্ছাকৃত কাকতালীয় মাত্র।</p>"
+    },
+    about: {
+        title: "About Yeasin Kabir",
+        body: "<p><b>ইয়াছিন কবির</b> — কবি, কথাসাহিত্যিক ও ওয়েব ডেভেলপার। বাড়ি সাতক্ষীরা, বাংলাদেশ।</p><p>শব্দ ও কল্পনার মেলবন্ধনে মানবিক অনুভূতি, প্রেম ও বিরহের কাব্যিক প্রকাশই তার সাহিত্যকর্মের মূল প্রেরণা।</p>"
+    }
+};
+
+function openPolicyModal(type) {
+    const data = sitePolicies[type];
+    if (!data) return;
+
+    const title = document.getElementById('policy-modal-title');
+    const body = document.getElementById('policy-modal-body');
+    const overlay = document.getElementById('policy-modal-overlay');
+    if (!title || !body || !overlay) return;
+
+    title.innerText = data.title;
+    body.innerHTML = data.body;
+    overlay.classList.add('active');
+}
+
+function closePolicyModal(event) {
+    const overlay = document.getElementById('policy-modal-overlay');
+    if (!overlay) return;
+    if (!event || event.target.id === 'policy-modal-overlay' || event.target.closest('.close-auth-btn')) {
+        overlay.classList.remove('active');
+    }
+}

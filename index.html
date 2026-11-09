@@ -148,9 +148,14 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div id="inapp-browser-warning" class="inapp-browser-warning" role="alert" aria-live="assertive">
-    <div class="inapp-warning-inner">
-        <span>⚠️ আপনি সোশ্যাল মিডিয়া ব্রাউজারে আছেন। পূর্ণ অভিজ্ঞতার জন্য উপরের <b>⋮</b> (তিনটি ডট) এ ক্লিক করে <b>Open in Browser</b> / <b>Open in Chrome</b> বেছে নিন।</span>
+<div id="inapp-browser-warning" class="inapp-browser-overlay" role="alertdialog" aria-modal="true" style="display: none;">
+    <div class="inapp-warning-card">
+        <div class="inapp-warning-icon">⚠️</div>
+        <h3>সোশ্যাল মিডিয়া ব্রাউজার নোটিশ</h3>
+        <p>পূর্ণাঙ্গ পড়ার অভিজ্ঞতা, মিউজিক ও ফন্টের জন্য উপরের <b>⋮</b> (তিনটি ডট) থেকে <b>Open in Chrome / Browser</b> বেছে নেওয়া ভালো।</p>
+        <div class="inapp-warning-actions">
+            <button type="button" class="inapp-continue-btn" onclick="dismissInAppWarning()">এখানেই পড়ুন (Continue)</button>
+        </div>
     </div>
 </div>
 
@@ -307,7 +312,53 @@
                 <div class="visitor-counter">TOTAL READERS: <span id="total-visitors">--</span></div>
             </div>
             
-            <div style="text-align:center; color:#555; font-size:0.7rem; margin-top:10px; padding-bottom:20px; grid-column: 1/-1;">WRITTEN WITH LOVE BY YEASIN</div>
+            <footer class="site-editorial-footer">
+                <div class="footer-content-grid">
+                    <!-- Col 1: Author Info -->
+                    <div class="footer-col brand-col">
+                        <h4 class="footer-heading">Yeasin Kabir</h4>
+                        <p class="footer-bio-text">হৃদয়ের ক্যানভাসে শব্দের আল্পনা। মৌলিক কবিতা, উপন্যাস ও ছোটগল্পের ডিজিটাল সাহিত্য সংকলন।</p>
+                        <div class="footer-loc-tag"><i class="fas fa-map-marker-alt"></i> Satkhira, Bangladesh</div>
+                    </div>
+
+                    <!-- Col 2: Legal & Policies -->
+                    <div class="footer-col">
+                        <h4 class="footer-heading">আইনি ও নীতিমালা</h4>
+                        <ul class="footer-links-list">
+                            <li><a href="javascript:void(0)" onclick="openPolicyModal('privacy')">Privacy Policy</a></li>
+                            <li><a href="javascript:void(0)" onclick="openPolicyModal('terms')">Terms &amp; Conditions</a></li>
+                            <li><a href="javascript:void(0)" onclick="openPolicyModal('copyright')">Copyright Policy</a></li>
+                            <li><a href="javascript:void(0)" onclick="openPolicyModal('disclaimer')">Disclaimer</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Col 3: Author & Connect -->
+                    <div class="footer-col">
+                        <h4 class="footer-heading">পরিচিতি ও যোগাযোগ</h4>
+                        <ul class="footer-links-list">
+                            <li><a href="javascript:void(0)" onclick="openPolicyModal('about')">About the Poet</a></li>
+                            <li><a href="javascript:void(0)" onclick="switchView('contact-view')">বার্তা পাঠান (Contact)</a></li>
+                            <li><a href="javascript:void(0)" onclick="togglePaymentModal()">Support (কফি উপহার)</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Col 4: Social Channels -->
+                    <div class="footer-col">
+                        <h4 class="footer-heading">সোশ্যাল নেটওয়ার্ক</h4>
+                        <ul class="footer-links-list">
+                            <li><a href="https://www.facebook.com/share/14LP9NJQ2KQ/" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i> Facebook</a></li>
+                            <li><a href="https://www.instagram.com/yeasinxmi/" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i> Instagram</a></li>
+                            <li><a href="https://t.me/yeaxmi" target="_blank" rel="noopener noreferrer"><i class="fab fa-telegram"></i> Telegram</a></li>
+                            <li><a href="https://wa.me/8801851715713" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="footer-bottom-bar">
+                    <span>© 2026 Yeasin Kabir · সর্বস্বত্ব সংরক্ষিত</span>
+                    <span class="footer-signature">Crafted with words &amp; love by Yeasin</span>
+                </div>
+            </footer>
         </div>
 
         <div id="poem-library" class="full-view">
@@ -905,6 +956,15 @@
         <div class="auth-modal-box vintage-paper-node" style="max-width: 500px; text-align: left; padding: 30px 20px;" onclick="event.stopPropagation()">
             <button class="close-auth-btn" onclick="closeContentPopup()"><i class="fas fa-times"></i></button>
             <div id="popup-content-body"></div>
+        </div>
+    </div>
+
+    <!-- Policy Dialog Modal Container -->
+    <div id="policy-modal-overlay" class="auth-modal-overlay" onclick="closePolicyModal(event)">
+        <div class="auth-modal-box vintage-paper-node" onclick="event.stopPropagation()" style="max-width: 580px; text-align: left;">
+            <button class="close-auth-btn" onclick="closePolicyModal()"><i class="fas fa-times"></i></button>
+            <h3 id="policy-modal-title" style="color:var(--accent); font-family:'Cinzel'; margin-top:0;"></h3>
+            <div id="policy-modal-body" style="color:#d8d0c5; font-size:0.95rem; line-height:1.8; max-height:60vh; overflow-y:auto; padding-right:10px;"></div>
         </div>
     </div>
 </body>
