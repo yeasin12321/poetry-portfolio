@@ -648,12 +648,148 @@ function openPoemDirectly(index) {
     loadComments();
 }
 
+// ============================================
+// SAYERI সূচিপত্র (Table of Contents)
+// ============================================
+
+function getSayeriTitle(s) {
+    if (s && s.title && String(s.title).trim()) return String(s.title).trim();
+    const lines = String((s && s.text) || '')
+        .replace(/<br\s*\/?>/gi, '\n')
+        .replace(/\\n/g, '\n')
+        .split(/\r?\n/)
+        .map(l => l.trim())
+        .filter(Boolean);
+    return lines[0] || 'শিরোনামহীন';
+}
+
+function normalizeSayeriSearch(str) {
+    return String(str || '')
+        .normalize('NFC')
+        .toLowerCase()
+        .replace(/\\n/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+function toBnNumber(n) {
+    try { return Number(n).toLocaleString('bn-BD'); } catch (e) { return String(n); }
+}
+
+function buildSayeriIndex() {
+    const list = document.getElementById('sayeri-toc-list');
+    const bar = document.getElementById('sayeri-toc-bar');
+    if (!list) return;
+
+    list.innerHTML = '';
+    if (bar) bar.hidden = allSayeri.length === 0;
+
+    const frag = document.createDocumentFragment();
+    allSayeri.forEach((s, index) => {
+        const title = getSayeriTitle(s);
+
+        const li = document.createElement('li');
+        li.className = 'toc-item';
+        li.dataset.search = normalizeSayeriSearch(title + ' ' + (s.text || ''));
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'toc-link';
+        btn.addEventListener('click', () => jumpToSayeri(index));
+
+        const num = document.createElement('span');
+        num.className = 'toc-num';
+        num.textContent = toBnNumber(index + 1);
+
+        const name = document.createElement('span');
+        name.className = 'toc-title';
+        name.textContent = title;
+
+        const leader = document.createElement('span');
+        leader.className = 'toc-leader';
+        leader.setAttribute('aria-hidden', 'true');
+
+        btn.append(num, name, leader);
+        li.appendChild(btn);
+        frag.appendChild(li);
+    });
+    list.appendChild(frag);
+
+    const input = document.getElementById('sayeri-toc-search');
+    if (input) input.value = '';
+    filterSayeriIndex();
+}
+
+function filterSayeriIndex() {
+    const input = document.getElementById('sayeri-toc-search');
+    const q = normalizeSayeriSearch(input ? input.value : '');
+    const items = document.querySelectorAll('#sayeri-toc-list .toc-item');
+    let shown = 0;
+
+    items.forEach(li => {
+        const match = !q || li.dataset.search.includes(q);
+        li.hidden = !match;
+        if (match) shown++;
+    });
+
+    const empty = document.getElementById('sayeri-toc-empty');
+    if (empty) empty.hidden = shown !== 0 || items.length === 0;
+
+    const total = items.length;
+    const countText = q ? `${toBnNumber(shown)} / ${toBnNumber(total)}` : `মোট ${toBnNumber(total)}টি`;
+    const meta = document.getElementById('sayeri-toc-meta');
+    if (meta) meta.textContent = countText;
+    const badge = document.getElementById('sayeri-toc-count');
+    if (badge) badge.textContent = total ? toBnNumber(total) : '';
+}
+
+function openSayeriIndex() {
+    const overlay = document.getElementById('sayeri-toc-overlay');
+    if (!overlay) return;
+    overlay.classList.add('open');
+    overlay.setAttribute('aria-hidden', 'false');
+    if (!window.matchMedia('(pointer: coarse)').matches) {
+        setTimeout(() => {
+            const input = document.getElementById('sayeri-toc-search');
+            if (input) input.focus();
+        }, 250);
+    }
+}
+
+function closeSayeriIndex() {
+    const overlay = document.getElementById('sayeri-toc-overlay');
+    if (!overlay) return;
+    overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden', 'true');
+}
+
+function jumpToSayeri(index) {
+    closeSayeriIndex();
+    const card = document.getElementById(`sayeri-card-${index}`);
+    if (!card) return;
+
+    setTimeout(() => {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        card.classList.remove('sayeri-flash');
+        void card.offsetWidth;
+        card.classList.add('sayeri-flash');
+        setTimeout(() => card.classList.remove('sayeri-flash'), 2200);
+    }, 120);
+}
+
+document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    const overlay = document.getElementById('sayeri-toc-overlay');
+    if (overlay && overlay.classList.contains('open')) closeSayeriIndex();
+});
+
 function renderSayeri() {
     const container = document.getElementById('sayeri-list-container');
     if(!container) return; container.innerHTML = '';
     
     if (allSayeri.length === 0) {
         container.innerHTML = "<p style='text-align:center; color:#888; font-style:italic;'>শায়রি লোড হচ্ছে...</p>";
+        buildSayeriIndex();
         return;
     }
 
@@ -680,6 +816,8 @@ function renderSayeri() {
         `;
         container.appendChild(card);
     });
+
+    buildSayeriIndex();
 }
 
 function renderMonologues() {
