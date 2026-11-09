@@ -250,12 +250,6 @@
                     <a href="https://www.facebook.com/share/14LP9NJQ2KQ/" class="social-btn" target="_blank"><i class="fab fa-facebook-f"></i></a>
                     <a href="mailto:yeasinkabir0000@gmail.com" class="social-btn"><i class="fas fa-envelope"></i></a>
                 </div>
-                
-                <div class="sub-box" data-aos="fade-up">
-                    <h3 style="margin-top:0; font-size:1rem; color:var(--accent);">🔔 Get New Poem Updates</h3>
-                    <input type="email" placeholder="your_email@gmail.com" class="sub-input" id="sub-email">
-                    <button class="sub-btn" onclick="handleRealSubscribe()">Join</button>
-                </div>
             </div>
 
             <div class="list-container" data-aos="fade-left">
@@ -272,46 +266,46 @@
                 </div>
                 <div class="menu-button-grid">
                     <div class="poem-btn" onclick="openPoemLibrary()" style="border-left-color: var(--primary);">
-                        <i class="fas fa-feather"></i> <span>কবিতা সমগ্র</span>
+                        <img src="icons/poetry.png" alt="" class="menu-sketch-icon"> <span>কবিতা সমগ্র</span>
                     </div>
                     <div class="poem-btn novel-hub-btn" onclick="openNovelLibrary()">
-                        <i class="fas fa-book"></i> <span>উপন্যাস সমগ্র</span>
+                        <img src="icons/novel.png" alt="" class="menu-sketch-icon"> <span>উপন্যাস সমগ্র</span>
                     </div>
                     <div class="poem-btn letter-hub-btn" onclick="openLettersLibrary()">
-                        <i class="fas fa-envelope-open-text"></i> <span>শেষ চিঠি</span>
+                        <img src="icons/letter.png" alt="" class="menu-sketch-icon"> <span>শেষ চিঠি</span>
                     </div>
                     <div class="poem-btn story-hub-btn" onclick="switchView('story-library')">
-                        <i class="fas fa-feather-alt"></i> <span>ছোটগল্প</span>
+                        <img src="icons/story.png" alt="" class="menu-sketch-icon"> <span>ছোটগল্প</span>
                     </div>
                     <div class="poem-btn diary-hub-btn" onclick="switchView('readers-diary-view')">
-                        <i class="fas fa-pen-nib"></i> <span>পাঠকের ডায়েরি</span>
+                        <img src="icons/diary.png" alt="" class="menu-sketch-icon"> <span>পাঠকের ডায়েরি</span>
                     </div>
                     <div class="poem-btn photo-hub-btn" onclick="switchView('gallery-view')">
-                        <i class="fas fa-images"></i> <span>ফটো গ্যালারি</span>
+                        <img src="icons/gallery.png" alt="" class="menu-sketch-icon"> <span>ফটো গ্যালারি</span>
                     </div>
                     <div class="poem-btn video-menu-btn" onclick="switchView('video-view')">
-                        <i class="fas fa-video"></i> <span>ভিডিও গ্যালারি</span>
+                        <img src="icons/video.png" alt="" class="menu-sketch-icon"> <span>ভিডিও গ্যালারি</span>
                     </div>
                     <div class="poem-btn preorder-hub-btn" onclick="switchView('preorder-view')" style="border-left-color: #22c55e;">
-                        <i class="fas fa-shopping-cart"></i> <span>বই প্রি-অর্ডার করুন</span>
+                        <img src="icons/preorder.png" alt="" class="menu-sketch-icon"> <span>বই প্রি-অর্ডার করুন</span>
                     </div>
                     <div class="poem-btn pdf-hub-btn" onclick="openPdfLibrary()">
-                        <i class="fas fa-book-reader"></i> <span>পিডিএফ লাইব্রেরি</span>
+                        <img src="icons/pdf.png" alt="" class="menu-sketch-icon"> <span>পিডিএফ লাইব্রেরি</span>
                     </div>
                     <div class="poem-btn bookmark-hub-btn" onclick="openBookmarksLibrary()" style="border-left-color: #f1c40f;">
-                        <i class="fas fa-bookmark"></i> <span>সংরক্ষিত তালিকা</span>
+                        <img src="icons/bookmark.png" alt="" class="menu-sketch-icon"> <span>সংরক্ষিত তালিকা</span>
                     </div>
                     <div class="poem-btn sayeri-hub-btn" onclick="switchView('sayeri-view')">
-                        <i class="fas fa-heart"></i> <span>শায়রি কালেকশন</span>
+                        <img src="icons/sayeri.png" alt="" class="menu-sketch-icon"> <span>শায়রি কালেকশন</span>
                     </div>
                     <div class="poem-btn monologue-hub-btn" onclick="switchView('monologue-view')">
-                        <i class="fas fa-microphone-alt"></i> <span>মোনোলগ</span>
+                        <img src="icons/monologue.png" alt="" class="menu-sketch-icon"> <span>মোনোলগ</span>
                     </div>
                 </div>
                 
                 <div class="visitor-counter">TOTAL READERS: <span id="total-visitors">--</span></div>
             </div>
-            
+
             <footer class="site-editorial-footer">
                 <div class="footer-content-grid">
                     <!-- Col 1: Author Info -->
@@ -339,6 +333,7 @@
                             <li><a href="javascript:void(0)" onclick="openPolicyModal('about')">About the Poet</a></li>
                             <li><a href="javascript:void(0)" onclick="switchView('contact-view')">বার্তা পাঠান (Contact)</a></li>
                             <li><a href="javascript:void(0)" onclick="togglePaymentModal()">Support (কফি উপহার)</a></li>
+                            <li><a href="javascript:void(0)" onclick="openSubscribeModal()"><i class="fas fa-bell"></i> Subscribe (নতুন লেখার আপডেট)</a></li>
                         </ul>
                     </div>
 
@@ -965,6 +960,21 @@
             <button class="close-auth-btn" onclick="closePolicyModal()"><i class="fas fa-times"></i></button>
             <h3 id="policy-modal-title" style="color:var(--accent); font-family:'Cinzel'; margin-top:0;"></h3>
             <div id="policy-modal-body" style="color:#d8d0c5; font-size:0.95rem; line-height:1.8; max-height:60vh; overflow-y:auto; padding-right:10px;"></div>
+        </div>
+    </div>
+
+    <!-- Clean Subscribe Modal -->
+    <div id="subscribe-modal-overlay" class="auth-modal-overlay" onclick="closeSubscribeModal(event)">
+        <div class="auth-modal-box vintage-paper-node" onclick="event.stopPropagation()" style="max-width: 420px; text-align: center; padding: 30px 24px;">
+            <button class="close-auth-btn" onclick="closeSubscribeModal()"><i class="fas fa-times"></i></button>
+            <div style="font-size: 2rem; color: #d6b285; margin-bottom: 12px;">🔔</div>
+            <h3 style="font-family:'Cinzel', serif; color:#d6b285; margin: 0 0 8px 0; font-size: 1.25rem;">Stay Connected</h3>
+            <p style="color:#9e9589; font-size: 0.9rem; line-height: 1.6; margin: 0 0 20px 0;">নতুন কোনো কবিতা, উপন্যাস বা চিঠি প্রকাশিত হলে সরাসরি আপনার ইমেইলে নোটিফিকেশন পৌঁছে যাবে।</p>
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <input type="email" id="sub-email" placeholder="your_email@gmail.com" class="c-input" style="margin: 0; background: #0d0a0b; border: 1px solid rgba(255,255,255,0.12); color: #e6dfd5; padding: 12px; border-radius: 8px;">
+                <button class="sub-btn" onclick="handleRealSubscribe()" style="background: #b8996e; color: #110f10; padding: 12px; border-radius: 8px; font-weight: 700; border: none; cursor: pointer; font-family: 'Hind Siliguri';">যুক্ত হোন</button>
+            </div>
         </div>
     </div>
 </body>

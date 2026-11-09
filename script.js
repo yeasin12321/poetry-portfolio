@@ -47,6 +47,34 @@ let scanTimer;
 let auraTimer = null;
 let auraScanned = false;
 let currentHashContext = ''; // Router Context Tracking
+let readingSubscribeTimer = null;
+
+function isReadingHash(hash) {
+    return /^#(?:poem|story|novel|letter)=/.test(hash);
+}
+
+function startReadingSubscribeTimer() {
+    if (sessionStorage.getItem('sub_popup_shown') === 'true') return;
+
+    clearReadingSubscribeTimer();
+    readingSubscribeTimer = setTimeout(() => {
+        readingSubscribeTimer = null;
+        const isReading = ['reader-view', 'novel-reader', 'letter-reader'].some(id => {
+            const el = document.getElementById(id);
+            return el && el.style.display === 'block';
+        });
+
+        if (isReading && sessionStorage.getItem('sub_popup_shown') !== 'true') {
+            sessionStorage.setItem('sub_popup_shown', 'true');
+            openSubscribeModal();
+        }
+    }, 20000);
+}
+
+function clearReadingSubscribeTimer() {
+    clearTimeout(readingSubscribeTimer);
+    readingSubscribeTimer = null;
+}
 
 function isInAppBrowser() {
     const ua = navigator.userAgent || navigator.vendor || window.opera || '';
@@ -434,51 +462,51 @@ function playSectionLoader(viewId, callback) {
 
     switch(viewId) {
         case 'poem-library':
-            iconHtml = '<i class="fas fa-feather-alt anim-feather"></i>';
+            iconHtml = '<img src="icons/poetry.png" class="loader-sketch-img" alt="">';
             textMsg = 'কবিতার পাতা উল্টানো হচ্ছে...';
             break;
         case 'novel-library':
-            iconHtml = '<i class="fas fa-book-open anim-book" style="color: var(--novel-accent);"></i>';
+            iconHtml = '<img src="icons/novel.png" class="loader-sketch-img" alt="">';
             textMsg = 'উপন্যাসের মলাট খোলা হচ্ছে...';
             break;
         case 'letters-library':
-            iconHtml = '<i class="fas fa-envelope-open-text anim-envelope" style="color: #e74c3c;"></i>';
+            iconHtml = '<img src="icons/letter.png" class="loader-sketch-img" alt="">';
             textMsg = 'পুরনো চিঠিগুলো পড়া হচ্ছে...';
             break;
         case 'story-library':
-            iconHtml = '<i class="fas fa-pen-nib anim-diary" style="color: #3498db;"></i>';
+            iconHtml = '<img src="icons/story.png" class="loader-sketch-img" alt="">';
             textMsg = 'গল্পের খাতা প্রস্তুত হচ্ছে...';
             break;
         case 'gallery-view':
-            iconHtml = '<i class="fas fa-camera-retro anim-camera" style="color: #f1c40f;"></i>';
+            iconHtml = '<img src="icons/gallery.png" class="loader-sketch-img" alt="">';
             textMsg = 'স্মৃতিগুলো সাজানো হচ্ছে...';
             break;
         case 'video-view':
-            iconHtml = '<i class="fas fa-film anim-video" style="color: #e67e22;"></i>';
+            iconHtml = '<img src="icons/video.png" class="loader-sketch-img" alt="">';
             textMsg = 'ভিডিওগুলো লোড হচ্ছে...';
             break;
         case 'pdf-library':
-            iconHtml = '<i class="fas fa-file-pdf anim-pdf" style="color: #2ecc71;"></i>';
+            iconHtml = '<img src="icons/pdf.png" class="loader-sketch-img" alt="">';
             textMsg = 'পিডিএফ সংগ্রহশালায় প্রবেশ...';
             break;
         case 'sayeri-view':
-            iconHtml = '<i class="fas fa-heart anim-heart" style="color: #e65c7b;"></i>';
+            iconHtml = '<img src="icons/sayeri.png" class="loader-sketch-img" alt="">';
             textMsg = 'হৃদয়ের কথাগুলো আনা হচ্ছে...';
             break;
         case 'monologue-view':
-            iconHtml = '<i class="fas fa-microphone-alt anim-mic" style="color: #9b59b6;"></i>';
+            iconHtml = '<img src="icons/monologue.png" class="loader-sketch-img" alt="">';
             textMsg = 'মোনোলগ প্রস্তুত করা হচ্ছে...';
             break;
         case 'readers-diary-view':
-            iconHtml = '<i class="fas fa-book-reader anim-diary" style="color: #1abc9c;"></i>';
+            iconHtml = '<img src="icons/diary.png" class="loader-sketch-img" alt="">';
             textMsg = 'পাঠকের ডায়েরি খোলা হচ্ছে...';
             break;
         case 'secret-vault':
-            iconHtml = '<i class="fas fa-key anim-mic" style="color: #ff9a9e;"></i>';
+            iconHtml = '<img src="icons/sayeri.png" class="loader-sketch-img" alt="">';
             textMsg = 'ভল্ট আনলক করা হচ্ছে...';
             break;
         default:
-            iconHtml = '<i class="fas fa-spinner fa-spin"></i>';
+            iconHtml = '<img src="icons/poetry.png" class="loader-sketch-img" alt="">';
             textMsg = 'অপেক্ষা করুন...';
     }
 
@@ -502,6 +530,7 @@ function playSectionLoader(viewId, callback) {
 // --- ADVANCED ROUTER SYSTEM ---
 function checkUrlHash() { 
     const hash = window.location.hash; 
+    if (!isReadingHash(hash)) clearReadingSubscribeTimer();
     if (hash === currentHashContext) return; // Prevent loop triggering
     
     if (!hash) {
@@ -608,6 +637,7 @@ function switchView(viewId) {
 }
 
 function goBack() { 
+    clearReadingSubscribeTimer();
     document.querySelectorAll('.full-view').forEach(el => el.style.display = 'none');
     document.getElementById('home-view').style.display = 'grid';
     window.location.hash = ''; 
@@ -634,6 +664,7 @@ function renderPoems() {
 }
 
 function openPoemDirectly(index) {
+    startReadingSubscribeTimer();
     document.getElementById('poem-title-display').innerText = allPoems[index].title;
     document.getElementById('poem-content-display').innerHTML = allPoems[index].text.replace(/\n/g, '<br>');
     document.title = `${allPoems[index].title} - ইয়াছিন কবির`;
@@ -1033,6 +1064,7 @@ function renderVideos() {
 // --- NOVEL / LETTER INTERFACE LOGICS ---
 function loadChapter() {
     if (!novelsDB[currentBookIndex] || !novelsDB[currentBookIndex].chapters[currentChapterIndex]) return;
+    startReadingSubscribeTimer();
     const ch = novelsDB[currentBookIndex].chapters[currentChapterIndex];
     document.getElementById('current-chapter-title').innerText = ch.title;
     document.getElementById('story-content').innerHTML = ch.text.replace(/\n/g, '<br>');
@@ -1066,11 +1098,15 @@ function updateChapSelect() {
 
 function startReading(bookIndex) { window.location.hash = `novel=${bookIndex}&chap=0`; }
 function openLettersLibrary() { switchView('letters-library'); }
-function backToLettersLibrary() { switchView('letters-library'); }
+function backToLettersLibrary() {
+    clearReadingSubscribeTimer();
+    switchView('letters-library');
+}
 function startReadingLetter(bookIndex) { window.location.hash = `letter=${bookIndex}&part=0`; }
 
 function loadLetterPart() {
     if (!lettersDB[currentLetterBookIndex] || !lettersDB[currentLetterBookIndex].parts[currentLetterPartIndex]) return;
+    startReadingSubscribeTimer();
     const pt = lettersDB[currentLetterBookIndex].parts[currentLetterPartIndex];
     document.getElementById('current-letter-title').innerText = pt.title;
     document.getElementById('letter-content').innerHTML = pt.text.replace(/\n/g, '<br>');
@@ -1103,6 +1139,7 @@ function openStory(index) { window.location.hash = `story=${index}`; }
 function openPdfLibrary() { switchView('pdf-library'); }
 
 function openStoryDirectly(index) {
+    startReadingSubscribeTimer();
     const story = allStories[index];
     const display = document.getElementById('poem-content-display');
     document.getElementById('poem-title-display').innerText = story.story_title;
@@ -1435,7 +1472,7 @@ function handleRealSubscribe() {
     const emailField = document.getElementById('sub-email');
     if (!emailField.value.trim()) return alert("দয়া করে একটি সঠিক ইমেইল আইডি লিখুন।");
     emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, { from_name: "New Website Subscriber", from_email: emailField.value.trim(), message: `নতুন সাবস্ক্রাইবার: ${emailField.value.trim()}` })
-    .then(() => { alert("সফলভাবে সাবস্ক্রাইব করা হয়েছে! আপনাকে ধন্যবাদ।"); emailField.value = ""; })
+    .then(() => { closeSubscribeModal(); alert("সফলভাবে সাবস্ক্রাইব করা হয়েছে! আপনাকে ধন্যবাদ।"); emailField.value = ""; })
     .catch(() => alert("দুঃখিত, এই মুহূর্তে সাবস্ক্রিপশন নেওয়া সম্ভব হচ্ছে না।")); 
 }
 
@@ -1460,7 +1497,10 @@ function sendDiaryToEmail() {
 
 function toggleSettings() { const panel = document.getElementById('settings-panel'); if(panel) panel.style.display = panel.style.display === 'block' ? 'none' : 'block'; }
 function changeFont(dir) { const root = document.documentElement; let current = parseFloat(getComputedStyle(root).getPropertyValue('--text-size')); root.style.setProperty('--text-size', (current + (dir * 0.1)) + 'rem'); }
-function backToLibrary() { switchView('novel-library'); }
+function backToLibrary() {
+    clearReadingSubscribeTimer();
+    switchView('novel-library');
+}
 function openNovelLibrary() { switchView('novel-library'); }
 function openPoemLibrary() { switchView('poem-library'); }
 
@@ -1694,6 +1734,20 @@ function scrollToTop() {
 function openAuthModal() { document.getElementById('auth-modal-overlay').classList.add('active'); }
 function closeAuthModal(e) {
     if (!e || e.target.id === 'auth-modal-overlay' || e.target.closest('.close-auth-btn')) { document.getElementById('auth-modal-overlay').classList.remove('active'); }
+}
+function openSubscribeModal() {
+    const modal = document.getElementById('subscribe-modal-overlay');
+    clearReadingSubscribeTimer();
+    sessionStorage.setItem('sub_popup_shown', 'true');
+    if (modal) modal.classList.add('active');
+}
+function closeSubscribeModal(e) {
+    if (!e || e.target.id === 'subscribe-modal-overlay' || e.target.closest('.close-auth-btn')) {
+        const modal = document.getElementById('subscribe-modal-overlay');
+        clearReadingSubscribeTimer();
+        sessionStorage.setItem('sub_popup_shown', 'true');
+        if (modal) modal.classList.remove('active');
+    }
 }
 function toggleUserDropdown() { document.getElementById('user-dropdown').classList.toggle('active'); }
 
